@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    double screen(Phone p){ try { String s=p.display.replace(",","."); int i=s.indexOf("""); return Double.parseDouble(s.substring(0,i)); } catch(Exception e){ return 999; } }
+    double screen(Phone p){ try { String s=p.display.replace(",","."); int i=s.indexOf("\""); return Double.parseDouble(s.substring(0,i)); } catch(Exception e){ return 999; } }
     double weight(Phone p){ try { return Double.parseDouble(p.weight.replace(" g","").replace("—","9999")); } catch(Exception e){ return 9999; } }
 
     void showDetails(Phone p){
