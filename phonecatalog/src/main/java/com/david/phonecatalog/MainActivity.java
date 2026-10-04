@@ -467,10 +467,23 @@ public class MainActivity extends Activity {
     }
 
     Button actionButton(String s){
-        Button b=new Button(this);b.setText(s);b.setTextSize(14*scale);b.setAllCaps(false);
-        b.setTextColor(Color.rgb(12,58,92));b.setPadding(dp(8),0,dp(8),0);b.setMinHeight(0);b.setMinWidth(0);
+        Button b=new Button(this);
+        b.setText(s);
+        b.setTextSize(14*scale);
+        b.setAllCaps(false);
+        b.setGravity(Gravity.CENTER);
+        b.setSingleLine(true);
+        b.setEllipsize(null);
+        b.setTextColor(Color.rgb(12,58,92));
+        b.setPadding(dp(4),0,dp(4),0);
+        b.setMinHeight(0);
+        b.setMinWidth(0);
+        b.setMinimumHeight(0);
+        b.setMinimumWidth(0);
+        b.setIncludeFontPadding(false);
+        b.setTypeface(Typeface.create("sans-serif-medium",Typeface.NORMAL));
         b.setBackground(roundBg(Color.rgb(248,251,253),dp(12),Color.rgb(194,209,222)));
-        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,dp(46));p.setMargins(0,dp(5),0,dp(5));b.setLayoutParams(p);return b;
+        return b;
     }
 
     SpinnerAdapter simpleAdapter(String[] x){return new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,x);}
@@ -520,12 +533,15 @@ public class MainActivity extends Activity {
             title=txt("",16,true);title.setTextColor(Color.rgb(16,50,78));box.addView(title);
             desc=txt("",13,false);desc.setTextColor(Color.rgb(76,89,104));box.addView(desc);
             actions=new LinearLayout(MainActivity.this);
+            actions.setOrientation(LinearLayout.HORIZONTAL);
             actions.setGravity(Gravity.CENTER_VERTICAL);
-            details=actionButton("פרטים");compareBtn=actionButton("השווה");
-            LinearLayout.LayoutParams dp1=new LinearLayout.LayoutParams(0,dp(40),1);
-            dp1.setMargins(0,dp(7),dp(5),0);
-            LinearLayout.LayoutParams dp2=new LinearLayout.LayoutParams(0,dp(40),1);
-            dp2.setMargins(dp(5),dp(7),0,0);
+            actions.setPadding(dp(2),0,dp(2),0);
+            details=actionButton("פרטים");
+            compareBtn=actionButton("השווה");
+            LinearLayout.LayoutParams dp1=new LinearLayout.LayoutParams(0,dp(42),1);
+            dp1.setMargins(0,dp(9),dp(7),0);
+            LinearLayout.LayoutParams dp2=new LinearLayout.LayoutParams(0,dp(42),1);
+            dp2.setMargins(dp(7),dp(9),0,0);
             actions.addView(details,dp1);
             actions.addView(compareBtn,dp2);
             box.addView(actions);
@@ -633,7 +649,15 @@ public class MainActivity extends Activity {
 
     int dp(int v){return Math.round(v*getResources().getDisplayMetrics().density);}
     GradientDrawable roundBg(int fill,int radius,int stroke){GradientDrawable g=new GradientDrawable();g.setColor(fill);g.setCornerRadius(radius);g.setStroke(dp(1),stroke);return g;}
-    TextView txt(String s,float z,boolean bold){TextView t=new TextView(this);t.setText(s);t.setTextSize(z*scale);if(bold)t.setTypeface(Typeface.DEFAULT,Typeface.BOLD);return t;}
+    TextView txt(String s,float z,boolean bold){
+        TextView t=new TextView(this);
+        t.setText(s);
+        t.setTextSize(z*scale);
+        t.setIncludeFontPadding(false);
+        t.setTypeface(Typeface.create("sans-serif",bold?Typeface.BOLD:Typeface.NORMAL));
+        if(bold)t.setTypeface(Typeface.create("sans-serif-medium",Typeface.NORMAL));
+        return t;
+    }
 
     void addSpecObject(LinearLayout parent,JSONObject obj,int depth){
         if(obj==null||depth>4)return;
