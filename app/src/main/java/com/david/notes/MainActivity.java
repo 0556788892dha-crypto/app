@@ -160,7 +160,7 @@ public class MainActivity extends Activity {
         Button back = b("← תיקיות");
         back.setOnClickListener(v -> folders());
         list.addView(back);
-        list.addView(t(s.name(folder), 23));
+        list.addView(t(name(folder), 23));
 
         ArrayList<Note> arr = s.notes(folder);
         for(final Note n : arr){
