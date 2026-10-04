@@ -87,7 +87,8 @@ idx = 1
 for category, query in CATEGORIES:
     got = 0
     seen = set()
-    target = EXTRA_TARGETS.get(category, TARGET_PER_CATEGORY)\n    for title, url in candidates(query):
+    target = EXTRA_TARGETS.get(category, TARGET_PER_CATEGORY)
+    for title, url in candidates(query):
         if title in seen:
             continue
         seen.add(title)
