@@ -136,8 +136,6 @@ public class MainActivity extends Activity {
         LinearLayout top=new LinearLayout(this); top.setGravity(Gravity.CENTER_VERTICAL);
         TextView title=txt(activeTab==0?"מכשירים":activeTab==1?"השוואה":activeTab==2?"דירוגים":"הגדרות",22,true);
         title.setTextColor(Color.rgb(18,48,76)); top.addView(title,new LinearLayout.LayoutParams(0,-2,1));
-        ImageView mini=new ImageView(this);mini.setImageResource(R.drawable.ic_logo);mini.setAlpha(.92f);
-        top.addView(mini,new LinearLayout.LayoutParams(dp(38),dp(38)));
         root.addView(top);
 
         if(activeTab==0) buildDevices();
