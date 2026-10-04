@@ -64,9 +64,9 @@ jobs:
           set -euo pipefail
           APK=$(find phonecatalog/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | head -n 1)
           if gh release view da-digital-v1.43 >/dev/null 2>&1; then
-            gh release upload da-phones-v1.42 "$APK" DA-PHONES-SHA256.txt --clobber
+            gh release upload da-digital-v1.43 "$APK" DA-DIGITAL-SHA256.txt --clobber
           else
-            gh release create da-phones-v1.42 "$APK" DA-PHONES-SHA256.txt \
+            gh release create da-digital-v1.43 "$APK" DA-DIGITAL-SHA256.txt \
               --title "DA DIGITAL v1.43" \
               --notes "Verified offline DA DIGITAL APK. Built by GitHub Actions from the repository source."
           fi
