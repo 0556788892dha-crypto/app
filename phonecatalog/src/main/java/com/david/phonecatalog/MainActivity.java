@@ -292,12 +292,21 @@ public class MainActivity extends Activity {
     }
 
     LinearLayout buildTabs(){
-        LinearLayout nav=new LinearLayout(this);nav.setGravity(Gravity.CENTER);nav.setPadding(0,dp(6),0,dp(7));
-        String[] labels={"מכשירים","השוואה","דירוגים","הגדרות"};
+        LinearLayout nav=new LinearLayout(this);
+        nav.setGravity(Gravity.CENTER);
+        nav.setPadding(0,dp(6),0,dp(7));
+        String[] icons={"⌂","⚖","★","⚙"};
+        String[] descriptions={"מכשירים","השוואה","דירוגים","הגדרות"};
         for(int i=0;i<4;i++){
-            final int idx=i; TextView t=txt(labels[i],13,true);t.setGravity(Gravity.CENTER);
-            t.setPadding(dp(5),dp(8),dp(5),dp(8));tabs[i]=t;applyTabStyle(t,i==activeTab);
-            t.setOnClickListener(v->{activeTab=idx;ui();});nav.addView(t,new LinearLayout.LayoutParams(0,dp(48),1));
+            final int idx=i;
+            TextView t=txt(icons[i],25,true);
+            t.setGravity(Gravity.CENTER);
+            t.setContentDescription(descriptions[i]);
+            t.setPadding(dp(5),dp(4),dp(5),dp(4));
+            tabs[i]=t;
+            applyTabStyle(t,i==activeTab);
+            t.setOnClickListener(v->{activeTab=idx;ui();});
+            nav.addView(t,new LinearLayout.LayoutParams(0,dp(48),1));
         }
         return nav;
     }
@@ -580,7 +589,64 @@ public class MainActivity extends Activity {
     String stripHtml(String x){return x.replaceAll("<[^>]*>","").replace("&amp;","&").trim();}
 
     void settings(){activeTab=3;ui();}
-    void about(){new AlertDialog.Builder(this).setTitle("אודות DA DIGITAL").setMessage("DA DIGITAL\\n\\nמאגר מידע והשוואת מכשירים: טלפונים, טאבלטים, שעונים חכמים ודגמי נישה.\\n\\nמטרה: מאגר מדויק, שקוף ואופליין.").setPositiveButton("סגור",null).show();}
+    void about(){
+        LinearLayout box=new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setGravity(Gravity.CENTER_HORIZONTAL);
+        box.setPadding(dp(18),dp(8),dp(18),dp(12));
+
+        ImageView logo=new ImageView(this);
+        logo.setImageResource(R.drawable.ic_logo);
+        logo.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        box.addView(logo,new LinearLayout.LayoutParams(-1,dp(92)));
+
+        TextView name=txt("DA DIGITAL",24,true);
+        name.setGravity(Gravity.CENTER);
+        name.setTextColor(Color.rgb(16,50,78));
+        box.addView(name);
+
+        TextView version=txt("גרסה 1.43",14,true);
+        version.setGravity(Gravity.CENTER);
+        version.setTextColor(Color.rgb(70,88,105));
+        box.addView(version);
+
+        TextView rights=txt("© 2026 DA DIGITAL — כל הזכויות שמורות",13,false);
+        rights.setGravity(Gravity.CENTER);
+        rights.setPadding(0,dp(4),0,dp(12));
+        box.addView(rights);
+
+        TextView intro=txt("מאגר מידע והשוואת מכשירים אופליין: טלפונים, טאבלטים, שעונים חכמים ודגמי נישה.",13,false);
+        intro.setGravity(Gravity.CENTER);
+        box.addView(intro);
+
+        TextView changes=txt(
+            "מה חדש בגרסה 1.43\n"+
+            "• מסך פתיחה חדש עם סמל DA DIGITAL\n"+
+            "• איור מכשירים משודרג ומראה מודרני יותר\n"+
+            "• שדרוג הגדרות ותיקון מסך ההגדרות\n"+
+            "• לשוניות ניווט עם סמלים ברורים\n\n"+
+            "גרסה 1.42\n"+
+            "• מאגר מכשירים אופליין\n"+
+            "• חיפוש וסינון לפי קטגוריה ומותג\n"+
+            "• מיון לפי דירוג וגודל מסך\n"+
+            "• מסך פרטי מכשיר והשוואה עד 4 מכשירים\n"+
+            "• דירוג DA וממשק עברי\n\n"+
+            "גרסאות קודמות\n"+
+            "הגרסאות המוקדמות שימשו כבסיס לפיתוח המאגר, מנגנון החיפוש, ההשוואה והתצוגה האופליין.",
+            13,false);
+        changes.setGravity(Gravity.RIGHT);
+        changes.setPadding(0,dp(16),0,dp(4));
+        box.addView(changes);
+
+        ScrollView sv=new ScrollView(this);
+        sv.addView(box,new ScrollView.LayoutParams(-1,-2));
+
+        new AlertDialog.Builder(this)
+            .setTitle("אודות DA DIGITAL")
+            .setView(sv)
+            .setPositiveButton("סגור",null)
+            .show();
+    }
 
     @Override protected void onDestroy(){
         super.onDestroy();
