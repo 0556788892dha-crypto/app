@@ -1,12 +1,14 @@
 import csv
 import hashlib
 import json
-import os
 import re
 import time
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from io import BytesIO
 from pathlib import Path
+
+from PIL import Image
 
 SOURCE_DIR = Path(".cache/device_specs_gsmarena")
 CSV_URL = "https://raw.githubusercontent.com/AayushChhuka7/mobile-recommendation-system/fe193eeca58e7e342a3b93c22c7e36d8f7e8ac7d/.ipynb_checkpoints/GSMArena_all_Dataset-checkpoint.csv"
@@ -14,21 +16,35 @@ NICHE = Path(".github/scripts/niche_devices.json")
 OUT = Path("phonecatalog/src/main/assets/catalog.json")
 IMAGE_DIR = Path("phonecatalog/src/main/assets/images")
 
+NON_PHONE_TERMS = (
+    "ipad", "watch", "galaxy tab", "redmi pad", "matepad", "tablet",
+    "surface pro", "chromebook", "laptop", "macbook"
+)
+
 
 def clean(value):
     return re.sub(r"<[^>]+>", "", str(value or "")).replace("&amp;", "&").strip()
 
 
+def is_probable_phone(name, url):
+    text = (name + " " + url).lower()
+    return not any(term in text for term in NON_PHONE_TERMS)
+
+
+def image_path(brand, name, image_url):
+    if not image_url:
+        return ""
+    ident = hashlib.sha1((brand + "|" + name).encode("utf-8")).hexdigest()[:16]
+    return "images/" + ident + ".webp"
+
+
 def normalize_niche(item):
     brand = clean(item.get("brand"))
     name = clean(item.get("model", item.get("name")))
-    if not brand or not name:
+    if not brand or not name or not is_probable_phone(name, ""):
         return None
+
     image_url = clean(item.get("imageUrl", item.get("image_url")))
-    image = ""
-    if image_url:
-        ident = hashlib.sha1((brand + "|" + name).encode("utf-8")).hexdigest()[:16]
-        image = "images/" + ident + ".jpg"
     summary_fields = [
         item.get("screen_size"),
         item.get("chipset"),
@@ -37,15 +53,16 @@ def normalize_niche(item):
         item.get("battery_capacity"),
         item.get("os"),
     ]
-    summary = " • ".join(clean(v) for v in summary_fields if clean(v))
+
     return {
         "brand": brand,
         "name": name,
-        "slug": "",
+        "slug": clean(item.get("slug")),
         "image_url": image_url,
-        "image": image,
-        "summary": summary,
+        "image": image_path(brand, name, image_url),
+        "summary": " • ".join(clean(v) for v in summary_fields if clean(v)),
         "detail": item,
+        "source": "DA PHONES curated niche catalog",
     }
 
 
@@ -61,11 +78,10 @@ def normalize_gsmarena(item, fallback_brand):
     brand = clean(data.get("brand") or fallback_brand)
     name = clean(data.get("model") or data.get("name"))
     image_url = clean(data.get("imageUrl"))
-    if not brand or not name:
+
+    if not brand or not name or not is_probable_phone(name, clean(data.get("review_url"))):
         return None
 
-    ident = hashlib.sha1((brand + "|" + name).encode("utf-8")).hexdigest()[:16]
-    image = "images/" + ident + ".jpg" if image_url else ""
     summary_fields = [
         display.get("Size"),
         platform.get("Chipset"),
@@ -74,17 +90,63 @@ def normalize_gsmarena(item, fallback_brand):
         data.get("os"),
         network.get("Technology"),
     ]
-    summary = " • ".join(clean(v) for v in summary_fields if clean(v))
 
     return {
         "brand": brand,
         "name": name,
         "slug": clean(data.get("review_url")),
         "image_url": image_url,
-        "image": image,
-        "summary": summary,
+        "image": image_path(brand, name, image_url),
+        "summary": " • ".join(clean(v) for v in summary_fields if clean(v)),
         "detail": data,
+        "source": "GSMArena detailed snapshot",
     }
+
+
+def normalize_csv_row(row):
+    brand = clean(row.get("Brand"))
+    name = clean(row.get("Model_Name"))
+    url = clean(row.get("Model_URL"))
+    image_url = clean(row.get("Model_Image"))
+
+    if not brand or not name or not is_probable_phone(name, url):
+        return None
+
+    detail = {key: clean(value) for key, value in row.items() if clean(value)}
+    summary_keys = (
+        "Display_Size_inch",
+        "Display_Type",
+        "Chipset",
+        "RAM_GB",
+        "Storage_GB",
+        "Battery_mAh",
+        "OS",
+    )
+
+    return {
+        "brand": brand,
+        "name": name,
+        "slug": url,
+        "image_url": image_url,
+        "image": image_path(brand, name, image_url),
+        "summary": " • ".join(clean(row.get(key)) for key in summary_keys if clean(row.get(key))),
+        "detail": detail,
+        "source": "GSMArena CSV snapshot",
+    }
+
+
+def load_csv_snapshot():
+    try:
+        request = urllib.request.Request(
+            CSV_URL,
+            headers={"User-Agent": "DA-PHONES/1.2"},
+        )
+        with urllib.request.urlopen(request, timeout=90) as response:
+            raw = response.read().decode("utf-8", errors="replace")
+        return [normalize_csv_row(row) for row in csv.DictReader(raw.splitlines())]
+    except Exception as exc:
+        print("CSV snapshot unavailable:", exc)
+        return []
 
 
 def load_niche():
@@ -99,18 +161,15 @@ def load_niche():
 
 def download_one(phone):
     url = phone.get("image_url", "")
-    rel = phone.get("image", "")
-    if not url or not rel:
+    relative = phone.get("image", "")
+    if not url or not relative:
         return False
 
-    output = Path("phonecatalog/src/main/assets") / rel
+    output = Path("phonecatalog/src/main/assets") / relative
     if output.exists() and output.stat().st_size > 0:
         return True
 
     try:
-        from io import BytesIO
-        from PIL import Image
-
         request = urllib.request.Request(
             url,
             headers={"User-Agent": "DA-PHONES/1.2"},
@@ -119,7 +178,7 @@ def download_one(phone):
             raw = response.read()
 
         image = Image.open(BytesIO(raw)).convert("RGB")
-        image.thumbnail((260, 420), Image.Resampling.LANCZOS)
+        image.thumbnail((180, 300), Image.Resampling.LANCZOS)
         output.parent.mkdir(parents=True, exist_ok=True)
         image.save(output, "WEBP", quality=62, method=6)
         return True
@@ -147,7 +206,15 @@ def main():
     phones = []
     seen = set()
 
-    snapshot = load_csv_snapshot()\n    for phone in snapshot:\n        if not phone:\n            continue\n        key=(phone["brand"].lower(),phone["name"].lower())\n        if key not in seen:\n            seen.add(key); phones.append(phone)\n\n    source_files = list(SOURCE_DIR.rglob("details.json")) if SOURCE_DIR.exists() else []
+    for phone in load_csv_snapshot():
+        if not phone:
+            continue
+        key = (phone["brand"].lower(), phone["name"].lower())
+        if key not in seen:
+            seen.add(key)
+            phones.append(phone)
+
+    source_files = list(SOURCE_DIR.rglob("details.json")) if SOURCE_DIR.exists() else []
     for file_path in source_files:
         try:
             item = json.loads(file_path.read_text(encoding="utf-8"))
@@ -175,10 +242,12 @@ def main():
     image_count = download_images(phones)
 
     payload = {
-        "version": 4,
+        "version": 5,
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "target": 13445,
         "sources": [
-            "bytecharts/device_specs_gsmarena",
+            "GSMArena CSV snapshot",
+            "GSMArena detailed snapshot",
             "DA PHONES curated niche catalog",
         ],
         "phones": phones,
@@ -190,8 +259,8 @@ def main():
     )
 
     print(
-        f"Embedded {len(phones)} unique devices; "
-        f"local images downloaded={image_count}; "
+        f"Embedded {len(phones)} unique phones; "
+        f"local images={image_count}; "
         f"catalog_bytes={OUT.stat().st_size}"
     )
 
