@@ -3,6 +3,10 @@ name: Build DA PHONES APK
 permissions:
   contents: write
 
+concurrency:
+  group: da-phones-build-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   workflow_dispatch:
   push:
