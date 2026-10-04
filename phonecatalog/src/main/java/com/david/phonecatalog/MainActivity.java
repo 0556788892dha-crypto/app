@@ -319,7 +319,8 @@ public class MainActivity extends Activity {
 
     Button actionButton(String s){
         Button b=new Button(this);b.setText(s);b.setTextSize(14*scale);b.setAllCaps(false);
-        b.setTextColor(Color.rgb(12,58,92));b.setBackground(roundBg(Color.WHITE,dp(10),Color.rgb(200,214,226)));
+        b.setTextColor(Color.rgb(12,58,92));b.setPadding(dp(8),0,dp(8),0);b.setMinHeight(0);b.setMinWidth(0);
+        b.setBackground(roundBg(Color.rgb(248,251,253),dp(12),Color.rgb(194,209,222)));
         LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,dp(46));p.setMargins(0,dp(5),0,dp(5));b.setLayoutParams(p);return b;
     }
 
@@ -361,17 +362,23 @@ public class MainActivity extends Activity {
         LinearLayout card,box,actions; ImageView pic;TextView title,desc;Button details,compareBtn;
         Holder(){
             card=new LinearLayout(MainActivity.this);card.setOrientation(LinearLayout.HORIZONTAL);
-            card.setPadding(dp(8),dp(7),dp(8),dp(7));card.setGravity(Gravity.CENTER_VERTICAL);
-            card.setBackground(roundBg(Color.WHITE,dp(12),Color.rgb(225,232,239)));
+            card.setPadding(dp(12),dp(11),dp(12),dp(11));card.setGravity(Gravity.CENTER_VERTICAL);
+            card.setBackground(roundBg(Color.WHITE,dp(16),Color.rgb(216,226,235)));
             pic=new ImageView(MainActivity.this);pic.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             card.addView(pic,new LinearLayout.LayoutParams(dp(74),dp(92)));
             box=new LinearLayout(MainActivity.this);box.setOrientation(LinearLayout.VERTICAL);
+            box.setPadding(dp(8),dp(2),dp(4),dp(2));
             title=txt("",16,true);title.setTextColor(Color.rgb(16,50,78));box.addView(title);
             desc=txt("",13,false);desc.setTextColor(Color.rgb(76,89,104));box.addView(desc);
             actions=new LinearLayout(MainActivity.this);
+            actions.setGravity(Gravity.CENTER_VERTICAL);
             details=actionButton("פרטים");compareBtn=actionButton("השווה");
-            actions.addView(details,new LinearLayout.LayoutParams(0,dp(40),1));
-            actions.addView(compareBtn,new LinearLayout.LayoutParams(0,dp(40),1));
+            LinearLayout.LayoutParams dp1=new LinearLayout.LayoutParams(0,dp(40),1);
+            dp1.setMargins(0,dp(7),dp(5),0);
+            LinearLayout.LayoutParams dp2=new LinearLayout.LayoutParams(0,dp(40),1);
+            dp2.setMargins(dp(5),dp(7),0,0);
+            actions.addView(details,dp1);
+            actions.addView(compareBtn,dp2);
             box.addView(actions);
             card.addView(box,new LinearLayout.LayoutParams(0,-2,1));
         }
@@ -393,7 +400,7 @@ public class MainActivity extends Activity {
             final Button compareButton=h.compareBtn;
             compareButton.setOnClickListener(v->{toggle(p);compareButton.setText(compare.contains(p)?"✓ בהשוואה":"⚖ השווה");});
             loadPhoneImage(h.pic,p);
-            LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,dp(4),0,dp(4));h.card.setLayoutParams(lp);
+            LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,dp(8),0,dp(8));h.card.setLayoutParams(lp);
             return convert;
         }
     }
