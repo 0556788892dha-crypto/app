@@ -17,7 +17,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.graphics.drawable.GradientDrawable;
 
-public class MainActivity {
+public class MainActivity extends Activity {
     private GridLayout grid;
     private String selectedCategory = "הכול";
 
