@@ -1,4 +1,5 @@
 name: Build DA PHONES APK
+# v1.2 catalog/image pipeline
 on:
   workflow_dispatch:
   push:
