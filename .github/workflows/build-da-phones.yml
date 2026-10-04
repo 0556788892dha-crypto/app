@@ -1,4 +1,4 @@
-name: Build DA PHONES APK
+name: Build DA DIGITAL APK
 # v1.4 multi-device catalog pipeline
 permissions:
   contents: write
@@ -67,8 +67,8 @@ jobs:
             gh release upload da-phones-v1.42 "$APK" DA-PHONES-SHA256.txt --clobber
           else
             gh release create da-phones-v1.42 "$APK" DA-PHONES-SHA256.txt \
-              --title "DA PHONES v1.42" \
-              --notes "Verified offline DA PHONES APK. Built by GitHub Actions from the repository source."
+              --title "DA DIGITAL v1.42" \
+              --notes "Verified offline DA DIGITAL APK. Built by GitHub Actions from the repository source."
           fi
 
       - uses: actions/upload-artifact@v4
