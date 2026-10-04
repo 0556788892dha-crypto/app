@@ -109,8 +109,6 @@ public class MainActivity extends Activity {
             phones.addAll(loaded);
             catalogLoaded=true;
             ui();
-            root.setAlpha(0f);
-            root.animate().alpha(1f).setDuration(220).start();
         },wait);
     }
 
@@ -236,6 +234,8 @@ public class MainActivity extends Activity {
 
         root.addView(buildTabs());
         setContentView(root);
+        root.setAlpha(0f);
+        root.animate().alpha(1f).setDuration(180).start();
         if(activeTab==0)render(false);
     }
 
@@ -257,7 +257,11 @@ public class MainActivity extends Activity {
         filters.addView(sort,new LinearLayout.LayoutParams(0,dp(42),1));
         root.addView(filters);
         status=txt("",12,false);status.setTextColor(Color.rgb(80,95,110));root.addView(status);
-        list=new ListView(this);list.setDivider(null);list.setSelector(android.R.color.transparent);list.setCacheColorHint(Color.TRANSPARENT);
+        list=new ListView(this);
+        list.setDivider(new ColorDrawable(Color.TRANSPARENT));
+        list.setDividerHeight(dp(10));
+        list.setSelector(android.R.color.transparent);
+        list.setCacheColorHint(Color.TRANSPARENT);
         list.setAdapter(new Adapter()); root.addView(list,new LinearLayout.LayoutParams(-1,0,1));
 
         TextWatcher tw=new TextWatcher(){
@@ -545,7 +549,9 @@ public class MainActivity extends Activity {
             final Button compareButton=h.compareBtn;
             compareButton.setOnClickListener(v->{toggle(p);compareButton.setText(compare.contains(p)?"✓ בהשוואה":"⚖ השווה");});
             loadPhoneImage(h.pic,p);
-            LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,dp(8),0,dp(8));h.card.setLayoutParams(lp);
+            LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);
+            lp.setMargins(0,0,0,0);
+            h.card.setLayoutParams(lp);
             return convert;
         }
     }
