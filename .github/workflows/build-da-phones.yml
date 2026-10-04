@@ -1,5 +1,5 @@
 name: Build DA DIGITAL APK
-# v1.4 multi-device catalog pipeline
+# v1.42 final main verification pipeline
 permissions:
   contents: write
 
