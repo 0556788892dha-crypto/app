@@ -117,7 +117,10 @@ public class MainActivity extends Activity {
     void loadAsync(){
         ioPool.execute(()->{
             final ArrayList<Phone> loaded=new ArrayList<>();
-            seedInto(loaded);
+            final HashSet<String> keys=new HashSet<>();
+
+            // Load the generated offline catalog first. Curated records contain
+            // richer details and local image paths for niche devices.
             try{
                 BufferedReader r=new BufferedReader(new InputStreamReader(getAssets().open("catalog.json"),"UTF-8"),64*1024);
                 StringBuilder s=new StringBuilder(8*1024*1024);
@@ -126,8 +129,6 @@ public class MainActivity extends Activity {
                 r.close();
                 JSONObject o=new JSONObject(s.toString());
                 JSONArray a=o.optJSONArray("phones");
-                HashSet<String> keys=new HashSet<>(Math.max(32,a==null?0:a.length()*2));
-                for(Phone p:loaded) keys.add(key(p)+"|"+p.category);
                 if(a!=null) for(int i=0;i<a.length();i++){
                     JSONObject x=a.optJSONObject(i); if(x==null) continue;
                     Phone p=new Phone();
@@ -148,6 +149,15 @@ public class MainActivity extends Activity {
                     if(!p.brand.isEmpty()&&!p.name.isEmpty()&&keys.add(key(p)+"|"+p.category))loaded.add(p);
                 }
             }catch(Exception ignored){}
+
+            // Seed only devices that are absent from the generated catalog.
+            // This prevents fallback summaries from replacing richer records.
+            ArrayList<Phone> fallback=new ArrayList<>();
+            seedInto(fallback);
+            for(Phone p:fallback){
+                if(p!=null&&!p.brand.isEmpty()&&!p.name.isEmpty()&&keys.add(key(p)+"|"+p.category))loaded.add(p);
+            }
+
             mainHandler.post(()->finishSplashAndShowUi(loaded));
         });
     }
