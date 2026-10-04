@@ -448,7 +448,7 @@ public class MainActivity extends Activity {
         return v==null||v.trim().isEmpty()||v.equals("לא צוין") ? "לא צוין" : v;
     }
 
-    boolean hasFeature(Phone p,String f){
+    String hasFeature(Phone p,String f){
         String v=find(p,f);
         if(v.equals("לא צוין")){
             JSONObject d=parseDetail(p);
