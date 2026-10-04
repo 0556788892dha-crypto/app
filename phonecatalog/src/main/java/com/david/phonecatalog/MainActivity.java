@@ -29,6 +29,8 @@ public class MainActivity extends Activity {
 
     final ArrayList<Phone> phones=new ArrayList<>(), selected=new ArrayList<>();
     final ArrayList<String[]> brands=new ArrayList<>();
+    final HashSet<String> loadedBrands=new HashSet<>();
+    final ArrayList<Phone> visible=new ArrayList<>();
     LinearLayout root;
     ListView listView;
     PhoneAdapter adapter;
