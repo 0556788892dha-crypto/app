@@ -796,9 +796,9 @@ public class MainActivity extends Activity {
     }
 
     void applyTabStyle(TextView t,boolean selected){
-        t.setTextColor(selected?Color.WHITE:Color.rgb(45,69,91));
-        t.setBackground(roundBg(selected?Color.rgb(16,78,121):Color.WHITE,dp(14),
-                selected?Color.rgb(16,78,121):Color.rgb(220,228,235)));
+        t.setTextColor(selected?Color.WHITE:Color.rgb(38,65,86));
+        t.setBackground(roundBg(selected?Color.rgb(20,103,145):Color.rgb(248,251,253),dp(14),
+                selected?Color.rgb(20,103,145):Color.rgb(213,225,235)));
     }
 
     Button actionButton(String s){
@@ -809,15 +809,17 @@ public class MainActivity extends Activity {
         b.setGravity(Gravity.CENTER);
         b.setSingleLine(true);
         b.setEllipsize(null);
-        b.setTextColor(Color.rgb(12,58,92));
-        b.setPadding(dp(4),0,dp(4),0);
+        b.setTextColor(Color.rgb(13,69,101));
+        b.setPadding(dp(9),0,dp(9),0);
         b.setMinHeight(0);
         b.setMinWidth(0);
         b.setMinimumHeight(0);
         b.setMinimumWidth(0);
         b.setIncludeFontPadding(false);
         b.setTypeface(Typeface.create("sans-serif-medium",Typeface.NORMAL));
-        b.setBackground(roundBg(Color.rgb(248,251,253),dp(12),Color.rgb(194,209,222)));
+        b.setBackground(roundBg(Color.rgb(239,247,252),dp(14),Color.rgb(183,208,224)));
+        b.setMinimumHeight(dp(48));
+        b.setHeight(dp(48));
         return b;
     }
 
