@@ -89,7 +89,7 @@ public class MainActivity extends Activity{
   row.addView(v,new LinearLayout.LayoutParams(0,-2,1));
   parent.addView(row);
  }
- String cleanValue(String x){return stripHtml(x.replace("[","").replace("]","").replace("\\"","\"").trim());}
+ String cleanValue(String x){return stripHtml(x.trim());}
 
  String format(Phone p){StringBuilder s=new StringBuilder();if(p.summary!=null&&!p.summary.isEmpty())s.append(p.summary).append("\n\n");s.append("קטגוריה: ").append(catLabel(p.category)).append("\n");s.append("דירוג DA PHONES: ").append(Math.round(p.score)).append("/100\n");s.append("מקור נתונים: ").append(p.source==null||p.source.isEmpty()?(p.detail!=null?"מפרט מפורט":"רשומת בסיס"):p.source).append("\n\n");if(p.detail!=null)json(p.detail,s,0);return s.toString();}
  void json(JSONObject o,StringBuilder s,int d){
