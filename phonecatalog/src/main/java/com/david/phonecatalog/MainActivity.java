@@ -54,7 +54,7 @@ public class MainActivity extends Activity{
 }
 boolean hidden(String k){
  String x=k.toLowerCase(Locale.ROOT);
- return x.equals("review_url")||x.equals("imageurl")||x.equals("device_images")||x.equals("picturespagedata")||x.equals("slug")||x.equals("source");
+ return x.equals("review_url")||x.equals("imageurl")||x.equals("device_images")||x.equals("picturespagedata")||x.equals("slug")||x.equals("source")||x.equals("category");
 }
 String pretty(String k){
  String x=k.replace("_"," ").trim(),l=x.toLowerCase(Locale.ROOT);
@@ -153,10 +153,17 @@ String spec(Phone p,String group,String key,String topKey){
    else if(topKey.equals("nfc"))csvKey="NFC";
    else if(topKey.equals("weight_g"))csvKey="Weight_g";
    else if(topKey.equals("dimensions"))csvKey="Dimensions";
-   else if(topKey.equals("os"))csvKey="OS";
+   else if(topKey.equals("os")){csvKey="OS";}
    if(!csvKey.isEmpty()){
     v=d.optString(csvKey,"").trim();
     if(!v.isEmpty())return stripHtml(v);
+   }
+   if(topKey.equals("os")){
+    JSONObject platform=d.optJSONObject("Platform");
+    if(platform!=null){
+     String os=platform.optString("OS","").trim();
+     if(!os.isEmpty())return stripHtml(os);
+    }
    }
    if(topKey.equals("5g_support")){
     JSONObject n=d.optJSONObject("Network");
