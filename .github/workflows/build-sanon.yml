@@ -20,7 +20,6 @@ jobs:
           curl -fsSL -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-8.11.1-bin.zip
           unzip -q /tmp/gradle.zip -d /opt
           echo /opt/gradle-8.11.1/bin >> $GITHUB_PATH
-      - uses: android-actions/setup-android@v3
       - run: yes | sdkmanager --licenses > /dev/null || true
       - run: gradle --no-daemon :sanon:assembleRelease
       - run: |
