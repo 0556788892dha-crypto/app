@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
         brandSpinner=new Spinner(this); ArrayList<String> brands=new ArrayList<>(); brands.add("כל המותגים"); for(Phone p:phones) if(!brands.contains(p.brand)) brands.add(p.brand);
         brandSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,brands)); root.addView(brandSpinner);
         Button compare=new Button(this); compare.setText("השווה נבחרים ("+selected.size()+")"); root.addView(compare); compare.setOnClickListener(v->showCompare());
-        TextView info=new TextView(this); info.setText("✓ מאומת = נתוני מפרט ממקור מזוהה. נתוני Geekbench מוצגים רק כשיש מקור/בדיקה מזוהה. דירוג "שלי" הוא ציון הערכה אישי ולא ציון יצרן."); info.setTextSize(12); info.setPadding(0,8,0,8); root.addView(info);
+        TextView info=new TextView(this); info.setText("✓ מאומת = נתוני מפרט ממקור מזוהה. נתוני Geekbench מוצגים רק כשיש מקור/בדיקה מזוהה. דירוג אישי הוא ציון הערכה אישי ולא ציון יצרן."); info.setTextSize(12); info.setPadding(0,8,0,8); root.addView(info);
         ScrollView sv=new ScrollView(this); list=new LinearLayout(this); list.setOrientation(LinearLayout.VERTICAL); sv.addView(list); root.addView(sv,new LinearLayout.LayoutParams(-1,0,1));
         search.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int c,int a){} public void onTextChanged(CharSequence s,int st,int b,int c){render();} public void afterTextChanged(android.text.Editable e){}});
         brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,View v,int pos,long id){render();}});
