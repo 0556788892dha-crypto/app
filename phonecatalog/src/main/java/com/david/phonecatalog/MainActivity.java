@@ -29,7 +29,70 @@ public class MainActivity extends Activity{
  void toggle(Phone p){if(compare.contains(p))compare.remove(p);else{if(compare.size()>=4){Toast.makeText(this,"עד 4 מכשירים",0).show();return;}compare.add(p);}render();}
  void details(Phone p){ScrollView s=new ScrollView(this);LinearLayout b=new LinearLayout(this);b.setOrientation(LinearLayout.VERTICAL);b.addView(txt(format(p),15,false));Button c=btn(compare.contains(p)?"הסר מהשוואה":"הוסף להשוואה");c.setOnClickListener(v->{toggle(p);c.setText(compare.contains(p)?"הסר מהשוואה":"הוסף להשוואה");});b.addView(c);s.addView(b);new AlertDialog.Builder(this).setTitle(p.brand+" "+p.name).setView(s).setPositiveButton("סגור",null).show();}
  String format(Phone p){StringBuilder s=new StringBuilder();if(p.summary!=null&&!p.summary.isEmpty())s.append(p.summary).append("\n\n");s.append("דירוג DA PHONES: ").append(Math.round(p.score)).append("/100\n");s.append("מקור נתונים: ").append(p.detail!=null?"מפרט מפורט":"רשומת בסיס").append("\n\n");if(p.detail!=null)json(p.detail,s,0);return s.toString();}
- void json(JSONObject o,StringBuilder s,int d){if(o==null||d>6)return;Iterator<String>it=o.keys();while(it.hasNext()){String k=it.next();Object v=o.opt(k);if(v instanceof JSONObject){s.append("\n").append(k).append(":\n");json((JSONObject)v,s,d+1);}else if(v!=JSONObject.NULL)s.append(k).append(": ").append(v).append("\n");}}
+ void json(JSONObject o,StringBuilder s,int d){
+ if(o==null||d>6)return;
+ Iterator<String>it=o.keys();
+ while(it.hasNext()){
+  String k=it.next();
+  if(hidden(k))continue;
+  Object v=o.opt(k);
+  if(v instanceof JSONObject){
+   s.append("\n").append(pretty(k)).append(":\n");
+   json((JSONObject)v,s,d+1);
+  }else if(v instanceof JSONArray){
+   if(((JSONArray)v).length()>0 && ((JSONArray)v).length()<8)s.append(pretty(k)).append(": ").append(v).append("\n");
+  }else if(v!=JSONObject.NULL){
+   String value=stripHtml(String.valueOf(v).trim());
+   if(!value.isEmpty()&&!value.equalsIgnoreCase("null"))s.append(pretty(k)).append(": ").append(value).append("\n");
+  }
+ }
+}
+boolean hidden(String k){
+ String x=k.toLowerCase(Locale.ROOT);
+ return x.equals("review_url")||x.equals("imageurl")||x.equals("device_images")||x.equals("picturespagedata")||x.equals("slug")||x.equals("source");
+}
+String pretty(String k){
+ String x=k.replace("_"," ").trim(),l=x.toLowerCase(Locale.ROOT);
+ if(l.equals("network"))return "רשת";
+ if(l.equals("launch"))return "השקה";
+ if(l.equals("body"))return "גוף ומידות";
+ if(l.equals("display"))return "מסך";
+ if(l.equals("platform"))return "מערכת ושבב";
+ if(l.equals("memory"))return "זיכרון ואחסון";
+ if(l.equals("main camera"))return "מצלמה ראשית";
+ if(l.equals("selfie camera"))return "מצלמה קדמית";
+ if(l.equals("sound"))return "שמע";
+ if(l.equals("comms"))return "תקשורת וקישוריות";
+ if(l.equals("features"))return "חיישנים ותכונות";
+ if(l.equals("battery"))return "סוללה וטעינה";
+ if(l.equals("misc"))return "מידע נוסף";
+ if(l.equals("technology"))return "טכנולוגיה";
+ if(l.equals("2g bands"))return "תדרי 2G";
+ if(l.equals("3g bands"))return "תדרי 3G";
+ if(l.equals("4g bands"))return "תדרי 4G";
+ if(l.equals("5g bands"))return "תדרי 5G";
+ if(l.equals("sim"))return "SIM";
+ if(l.equals("dimensions"))return "מידות";
+ if(l.equals("weight"))return "משקל";
+ if(l.equals("chipset"))return "ערכת שבבים";
+ if(l.equals("cpu"))return "CPU";
+ if(l.equals("gpu"))return "GPU";
+ if(l.equals("internal"))return "אחסון פנימי";
+ if(l.equals("card slot"))return "חריץ microSD";
+ if(l.equals("resolution"))return "רזולוציה";
+ if(l.equals("protection"))return "הגנה";
+ if(l.equals("refresh rate hz"))return "קצב רענון";
+ if(l.equals("battery mah"))return "קיבולת סוללה";
+ if(l.equals("wired charging w"))return "טעינה חוטית";
+ if(l.equals("wireless charging w"))return "טעינה אלחוטית";
+ if(l.equals("nfc"))return "NFC";
+ if(l.equals("bluetooth version"))return "Bluetooth";
+ if(l.equals("usb type"))return "USB";
+ if(l.equals("headphone jack"))return "שקע אוזניות";
+ if(l.equals("model name"))return "שם הדגם";
+ if(l.equals("model url"))return "קישור לדגם";
+ return x;
+}
  void compareDialog(){if(compare.size()<2){Toast.makeText(this,"בחר לפחות שני מכשירים",0).show();return;}StringBuilder s=new StringBuilder();String[] fields={"מסך","רזולוציה","ערכת שבבים","RAM","אחסון","מצלמה","סוללה","טעינה","5G","NFC","משקל","מידות","מערכת הפעלה"};for(String f:fields){s.append("\n").append(f).append("\n");for(Phone p:compare)s.append("• ").append(p.brand+" "+p.name).append(": ").append(find(p,f)).append("\n");}new AlertDialog.Builder(this).setTitle("DA PHONES — השוואה").setMessage(s).setPositiveButton("סגור",null).setNeutralButton("נקה",(d,w)->{compare.clear();render();}).show();}
  String find(Phone p,String f){
  if(f.equals("מסך"))return spec(p,"Display","Size","screen_size");
