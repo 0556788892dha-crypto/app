@@ -17,8 +17,7 @@ import org.json.*;
 
 public class MainActivity extends Activity {
     static class Phone {
-        String category="phone", brand="", name="", image="", summary="", source="", searchText="";
-        JSONObject detail;
+        String category="phone", brand="", name="", image="", summary="", source="", searchText="", detailRaw="";
         double score, screenSize=99;
     }
 
@@ -94,11 +93,12 @@ public class MainActivity extends Activity {
                     p.image=x.optString("image","");
                     p.summary=x.optString("summary","");
                     p.source=x.optString("source","");
-                    p.detail=x.optJSONObject("detail");
-                    String flat=flat(p.detail);
+                    JSONObject d=x.optJSONObject("detail");
+                    String flat=flat(d);
+                    p.detailRaw=d==null?"":flat;
                     p.score=score(p.summary+" "+flat);
-                    p.screenSize=screenValue(p,flat);
-                    p.searchText=(p.brand+" "+p.name+" "+p.summary+" "+flat).toLowerCase(Locale.ROOT);
+                    p.screenSize=screenFromObject(d,p.summary);
+                    p.searchText=(p.brand+" "+p.name+" "+p.summary+" "+compactSearch(d)).toLowerCase(Locale.ROOT);
                     if(!p.brand.isEmpty()&&!p.name.isEmpty()&&keys.add(key(p)+"|"+p.category))loaded.add(p);
                 }
             }catch(Exception ignored){}
@@ -361,7 +361,7 @@ public class MainActivity extends Activity {
         LinearLayout b=new LinearLayout(this);b.setOrientation(LinearLayout.VERTICAL);b.setPadding(dp(6),dp(4),dp(6),dp(12));
         TextView cat=txt(catLabel(p.category),13,true);cat.setPadding(dp(12),dp(7),dp(12),dp(7));cat.setBackground(roundBg(Color.rgb(241,247,252),dp(10),Color.rgb(210,222,232)));b.addView(cat);
         if(p.summary!=null&&!p.summary.trim().isEmpty()){TextView summary=txt(p.summary,14,false);summary.setPadding(dp(12),dp(10),dp(12),dp(10));summary.setBackground(roundBg(Color.WHITE,dp(10),Color.rgb(220,228,235)));LinearLayout.LayoutParams sp=new LinearLayout.LayoutParams(-1,-2);sp.setMargins(0,dp(8),0,dp(8));b.addView(summary,sp);}
-        if(p.detail!=null)addSpecObject(b,p.detail,0);
+        JSONObject d=parseDetail(p); if(d!=null)addSpecObject(b,d,0);
         TextView source=txt("מקור: "+(p.source==null||p.source.isEmpty()?"לא צוין":p.source),11,false);source.setPadding(dp(12),dp(10),dp(12),dp(10));b.addView(source);
         Button cmpBtn=actionButton(compare.contains(p)?"הסר מההשוואה":"הוסף להשוואה");cmpBtn.setOnClickListener(v->{toggle(p);cmpBtn.setText(compare.contains(p)?"הסר מההשוואה":"הוסף להשוואה");});b.addView(cmpBtn);
         s.addView(b);
@@ -421,7 +421,7 @@ public class MainActivity extends Activity {
 
     String spec(Phone p,String group,String key,String topKey){
         try{
-            JSONObject d=p.detail;if(d!=null){
+            JSONObject d=parseDetail(p);if(d!=null){
                 if(!group.isEmpty()){
                     JSONObject specs=d.optJSONObject("specifications");JSONObject g=specs!=null?specs.optJSONObject(group):null;if(g==null)g=d.optJSONObject(group);
                     if(g!=null){String gv=g.optString(key,"").trim();if(!gv.isEmpty())return stripHtml(gv);}
@@ -464,9 +464,41 @@ public class MainActivity extends Activity {
         brand.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,x));
     }
 
-    double screenValue(Phone p,String fallback){
-        String x=spec(p,"Display","Size","screen_size");if(x.equals("לא צוין"))x=fallback;
-        String m=extract(x,"([2-8](?:\\.[0-9]+)?)");if(!m.isEmpty())try{return Double.parseDouble(m);}catch(Exception ignored){}return 99;
+    double screenFromObject(JSONObject d,String fallback){
+        String x=""; try{
+            if(d!=null){
+                JSONObject specs=d.optJSONObject("specifications");
+                JSONObject g=specs!=null?specs.optJSONObject("Display"):d.optJSONObject("Display");
+                if(g!=null)x=g.optString("Size","").trim();
+                if(x.isEmpty())x=d.optString("screen_size","").trim();
+            }
+        }catch(Exception ignored){}
+        if(x.isEmpty())x=fallback;
+        String m=extract(x,"([2-8](?:\\.[0-9]+)?)");
+        if(!m.isEmpty())try{return Double.parseDouble(m);}catch(Exception ignored){}
+        return 99;
+    }
+    JSONObject parseDetail(Phone p){
+        if(p==null||p.detailRaw==null||p.detailRaw.isEmpty())return null;
+        try{return new JSONObject(p.detailRaw);}catch(Exception e){return null;}
+    }
+    String compactSearch(JSONObject d){
+        if(d==null)return "";
+        StringBuilder s=new StringBuilder(1800);
+        collectSearch(d,s,0);
+        return s.toString();
+    }
+    void collectSearch(JSONObject o,StringBuilder s,int depth){
+        if(o==null||depth>5||s.length()>2400)return;
+        Iterator<String> it=o.keys();
+        while(it.hasNext()&&s.length()<2400){
+            String k=it.next(); Object v=o.opt(k);
+            if(v instanceof JSONObject){collectSearch((JSONObject)v,s,depth+1);}
+            else if(v!=JSONObject.NULL && v instanceof String){
+                String z=String.valueOf(v).trim();
+                if(!z.isEmpty()){s.append(' ').append(z);}
+            }
+        }
     }
 
     String extract(String text,String regex){try{java.util.regex.Matcher m=java.util.regex.Pattern.compile(regex,java.util.regex.Pattern.CASE_INSENSITIVE).matcher(text==null?"":text);return m.find()?m.group(1):"";}catch(Exception e){return "";}}
