@@ -19,6 +19,9 @@ CATEGORIES = [
     ("מים", "ocean OR sea OR waterfall"),
     ("לילה", "night"),
     ("צבעוני", "colorful OR flowers"),
+    ("אנשים", "people OR person OR human"),
+    ("רחוב ואנשים", "street photography OR people in streets"),
+    ("פעילות ואנשים", "people OR crowd OR group"),
 ]
 TARGET_PER_CATEGORY = 10
 API = "https://commons.wikimedia.org/w/api.php"
