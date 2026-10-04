@@ -274,21 +274,268 @@ public class MainActivity extends Activity {
     }
 
     void buildCompare(){
-        LinearLayout box=new LinearLayout(this);box.setOrientation(LinearLayout.VERTICAL);
-        TextView intro=txt("השוואה מהירה",18,true);intro.setTextColor(Color.rgb(18,48,76));box.addView(intro);
-        TextView info=txt("בחר עד 4 מכשירים במסך המכשירים כדי להשוות ביניהם.",14,false);info.setPadding(0,dp(6),0,dp(10));box.addView(info);
-        Button open=actionButton("פתח בחירת מכשירים");
+        LinearLayout box=new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setPadding(0,dp(6),0,dp(10));
+
+        TextView intro=txt("השוואת מכשירים",21,true);
+        intro.setTextColor(Color.rgb(16,78,121));
+        box.addView(intro);
+
+        TextView info=txt(compare.isEmpty()
+            ?"בחר עד 4 מכשירים במסך המכשירים כדי להשוות ביניהם."
+            :"הצגה מסודרת לפי קטגוריות. הנתון החזק ביותר בכל שורה מודגש בירוק.",14,false);
+        info.setTextColor(Color.rgb(82,100,116));
+        info.setPadding(0,dp(6),0,dp(12));
+        box.addView(info);
+
+        Button open=actionButton(compare.isEmpty()?"פתח בחירת מכשירים":"הוסף / החלף מכשירים");
         open.setOnClickListener(v->{activeTab=0;ui();});
         box.addView(open);
-        if(!compare.isEmpty()){
+
+        if(compare.isEmpty()){
+            TextView empty=txt("אין כרגע מכשירים להשוואה.",16,true);
+            empty.setGravity(Gravity.CENTER);
+            empty.setTextColor(Color.rgb(100,115,128));
+            empty.setPadding(0,dp(28),0,dp(28));
+            box.addView(empty);
+        }else{
+            LinearLayout selected=new LinearLayout(this);
+            selected.setOrientation(LinearLayout.HORIZONTAL);
+            selected.setPadding(0,dp(8),0,dp(6));
             for(Phone p:compare){
-                TextView row=txt("✓  "+p.brand+" "+p.name,15,true);row.setPadding(dp(14),dp(12),dp(14),dp(12));row.setBackground(roundBg(Color.WHITE,dp(10),Color.rgb(218,226,234)));box.addView(row);
+                TextView chip=txt("✓ "+p.brand+" "+p.name,12,true);
+                chip.setGravity(Gravity.CENTER);
+                chip.setTextColor(Color.rgb(16,78,121));
+                chip.setPadding(dp(7),dp(7),dp(7),dp(7));
+                chip.setBackground(roundBg(Color.rgb(236,245,252),dp(12),Color.rgb(190,211,228)));
+                LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(0,dp(40),1);
+                cp.setMargins(dp(3),0,dp(3),0);
+                selected.addView(chip,cp);
             }
-            Button go=actionButton("הצג השוואה מלאה");
-            go.setOnClickListener(v->compareDialog());box.addView(go);
-            Button clear=actionButton("נקה השוואה");clear.setOnClickListener(v->{compare.clear();ui();});box.addView(clear);
+            box.addView(selected);
+
+            box.addView(buildCompareTable(),new LinearLayout.LayoutParams(-1,0,1));
+
+            Button clear=actionButton("נקה השוואה");
+            clear.setOnClickListener(v->{compare.clear();ui();});
+            box.addView(clear);
         }
-        root.addView(box);
+        root.addView(box,new LinearLayout.LayoutParams(-1,0,1));
+    }
+
+    HorizontalScrollView buildCompareTable(){
+        TableLayout table=new TableLayout(this);
+        table.setStretchAllColumns(false);
+        table.setShrinkAllColumns(false);
+        table.setPadding(dp(4),dp(4),dp(4),dp(10));
+
+        ArrayList<String> fields=new ArrayList<>();
+        Collections.addAll(fields,
+            "דירוג DA","מסך","רזולוציה","ערכת שבבים","RAM","אחסון",
+            "מצלמה אחורית","מצלמה קדמית","סוללה","טעינה","5G","NFC",
+            "Wi‑Fi","Bluetooth","GPS","משקל","מידות","מערכת הפעלה");
+
+        TableRow header=new TableRow(this);
+        header.setBackground(roundBg(Color.rgb(16,78,121),dp(12),Color.rgb(16,78,121)));
+        addTableCell(header,"נתון",true,false);
+        for(Phone p:compare)addTableCell(header,p.brand+"\n"+p.name,true,false);
+        table.addView(header,new TableLayout.LayoutParams(-2,-2));
+
+        for(int rowIndex=0;rowIndex<fields.size();rowIndex++){
+            String field=fields.get(rowIndex);
+            TableRow row=new TableRow(this);
+            int bg=(rowIndex%2==0)?Color.WHITE:Color.rgb(247,250,253);
+            row.setBackground(roundBg(bg,dp(9),Color.rgb(222,230,237)));
+            addTableCell(row,field,true,false);
+            double best=bestMetric(field);
+            for(Phone p:compare){
+                String value=findCompare(p,field);
+                boolean winner=isWinner(field,p,best);
+                addTableCell(row,(winner?"✓ ":"")+value,false,winner);
+            }
+            TableLayout.LayoutParams rp=new TableLayout.LayoutParams(-2,-2);
+            rp.setMargins(0,0,0,dp(5));
+            table.addView(row,rp);
+        }
+
+        HorizontalScrollView hsv=new HorizontalScrollView(this);
+        hsv.setFillViewport(false);
+        hsv.setHorizontalScrollBarEnabled(true);
+        hsv.addView(table,new HorizontalScrollView.LayoutParams(-2,-2));
+        return hsv;
+    }
+
+    void addTableCell(TableRow row,String value,boolean header,boolean winner){
+        TextView cell=txt(value,header?14:13,header);
+        cell.setGravity(Gravity.CENTER);
+        cell.setTextColor(header?Color.WHITE:(winner?Color.rgb(25,98,52):Color.rgb(35,55,72)));
+        cell.setPadding(dp(9),dp(9),dp(9),dp(9));
+        cell.setMinHeight(dp(52));
+        cell.setMaxWidth(dp(220));
+        cell.setBackground(roundBg(
+            header?Color.rgb(16,78,121):(winner?Color.rgb(224,246,231):Color.WHITE),
+            dp(9),header?Color.rgb(16,78,121):(winner?Color.rgb(154,211,169):Color.rgb(224,230,236))
+        ));
+        TableRow.LayoutParams lp=new TableRow.LayoutParams(dp(156),-2);
+        lp.setMargins(dp(3),dp(2),dp(3),dp(2));
+        row.addView(cell,lp);
+    }
+
+    String findCompare(Phone p,String field){
+        if(field.equals("דירוג DA"))return Math.round(p.score)+"/100";
+        if(field.equals("מסך"))return spec(p,"Display","Size","screen_size");
+        if(field.equals("רזולוציה"))return spec(p,"Display","Resolution","resolution");
+        if(field.equals("ערכת שבבים"))return spec(p,"Platform","Chipset","chipset");
+        if(field.equals("RAM"))return extractRam(p);
+        if(field.equals("אחסון"))return extractStorage(p);
+        if(field.equals("מצלמה אחורית"))return extractCamera(p,false);
+        if(field.equals("מצלמה קדמית"))return extractCamera(p,true);
+        if(field.equals("סוללה"))return spec(p,"Battery","Type","battery_capacity");
+        if(field.equals("טעינה"))return spec(p,"Battery","Charging","charging_w");
+        if(field.equals("5G"))return hasFeature(p,"5G");
+        if(field.equals("NFC"))return hasFeature(p,"NFC");
+        if(field.equals("Wi‑Fi"))return firstSpec(p,"Wi-Fi","wifi","WiFi");
+        if(field.equals("Bluetooth"))return firstSpec(p,"Bluetooth","bluetooth","Bluetooth");
+        if(field.equals("GPS"))return firstSpec(p,"GPS","gps","GPS");
+        if(field.equals("משקל"))return spec(p,"Body","Weight","weight_g");
+        if(field.equals("מידות"))return spec(p,"Body","Dimensions","dimensions");
+        if(field.equals("מערכת הפעלה"))return spec(p,"","os","os");
+        return "לא צוין";
+    }
+
+    String extractRam(Phone p){
+        String v=firstSpec(p,"Internal","ram","RAM_GB");
+        if(v.equals("לא צוין"))return v;
+        String m=extract(v,"([0-9]+(?:\\.[0-9]+)?)\\s*(?:GB|G)");
+        return m.isEmpty()?v:m+" GB";
+    }
+
+    String extractStorage(Phone p){
+        String v=firstSpec(p,"Internal","storage","Storage_GB");
+        if(v.equals("לא צוין"))return v;
+        String m=extract(v,"([0-9]+(?:\\.[0-9]+)?)\\s*(?:TB|GB)");
+        if(m.isEmpty())return v;
+        return v;
+    }
+
+    String extractCamera(Phone p,boolean front){
+        JSONObject d=parseDetail(p);
+        if(d==null)return "לא צוין";
+        String[] groups=front?new String[]{"Selfie Camera","Front Camera","Camera"}:new String[]{"Main Camera","Rear Camera","Camera"};
+        String[] keys=front?new String[]{"Front","MP","Resolution"}:new String[]{"Rear","Main","Quad","Triple","Dual","Single","MP","Resolution"};
+        for(String g:groups){
+            JSONObject obj=d.optJSONObject(g);
+            if(obj!=null){
+                for(String k:keys){
+                    String v=obj.optString(k,"").trim();
+                    if(!v.isEmpty())return stripHtml(v);
+                }
+            }
+        }
+        String raw=d.toString();
+        java.util.regex.Pattern pat=java.util.regex.Pattern.compile(front
+            ?"front[^}]{0,120}?(\\d+(?:\\.\\d+)?)\\s*MP"
+            :"(?:rear|main|camera)[^}]{0,120}?(\\d+(?:\\.\\d+)?)\\s*MP",
+            java.util.regex.Pattern.CASE_INSENSITIVE);
+        java.util.regex.Matcher mm=pat.matcher(raw);
+        if(mm.find())return mm.group(1)+" MP";
+        return "לא צוין";
+    }
+
+    String firstSpec(Phone p,String group,String key1,String key2){
+        String v=spec(p,group,key1,key2);
+        return v==null||v.trim().isEmpty()||v.equals("לא צוין") ? "לא צוין" : v;
+    }
+
+    boolean hasFeature(Phone p,String f){
+        String v=find(p,f);
+        if(v.equals("לא צוין")){
+            JSONObject d=parseDetail(p);
+            if(d!=null){
+                String raw=d.toString().toLowerCase(Locale.ROOT);
+                if(f.equals("5G") && raw.contains("5g"))return "כן";
+                if(f.equals("NFC") && raw.contains("nfc") && !raw.contains("not specified") && !raw.contains("no"))return "כן";
+            }
+            return "לא";
+        }
+        return v;
+    }
+
+    double bestMetric(String field){
+        double best=-1;
+        for(Phone p:compare){
+            double v=metric(p,field);
+            if(v>best)best=v;
+        }
+        return best;
+    }
+
+    boolean isWinner(String field,Phone p,double best){
+        double v=metric(p,field);
+        return best>=0 && v>=0 && Math.abs(v-best)<0.0001;
+    }
+
+    double metric(Phone p,String field){
+        String v=findCompare(p,field);
+        if(v==null||v.isEmpty()||v.equals("לא צוין")||v.equals("לא"))return -1;
+        if(field.equals("דירוג DA"))return p.score;
+        if(field.equals("מסך"))return numeric(v);
+        if(field.equals("רזולוציה")){
+            java.util.regex.Matcher m=java.util.regex.Pattern.compile("(\\d+)\\s*[x×]\\s*(\\d+)").matcher(v);
+            return m.find()?Double.parseDouble(m.group(1))*Double.parseDouble(m.group(2)):-1;
+        }
+        if(field.equals("ערכת שבבים"))return chipsetMetric(v);
+        if(field.equals("RAM"))return numeric(v);
+        if(field.equals("אחסון"))return storageMetric(v);
+        if(field.equals("מצלמה אחורית")||field.equals("מצלמה קדמית"))return numeric(v);
+        if(field.equals("סוללה"))return numeric(v);
+        if(field.equals("טעינה"))return numeric(v);
+        if(field.equals("5G")||field.equals("NFC"))return v.toLowerCase(Locale.ROOT).contains("yes")||v.contains("כן")?1:0;
+        return -1;
+    }
+
+    double numeric(String v){
+        String m=extract(v,"([0-9]+(?:\\.[0-9]+)?)");
+        if(m.isEmpty())return -1;
+        try{return Double.parseDouble(m);}catch(Exception e){return -1;}
+    }
+
+    double storageMetric(String v){
+        try{
+            java.util.regex.Matcher tb=java.util.regex.Pattern.compile("([0-9]+(?:\\.[0-9]+)?)\\s*TB",java.util.regex.Pattern.CASE_INSENSITIVE).matcher(v);
+            if(tb.find())return Double.parseDouble(tb.group(1))*1024;
+            java.util.regex.Matcher gb=java.util.regex.Pattern.compile("([0-9]+(?:\\.[0-9]+)?)\\s*GB",java.util.regex.Pattern.CASE_INSENSITIVE).matcher(v);
+            if(gb.find())return Double.parseDouble(gb.group(1));
+        }catch(Exception ignored){}
+        return -1;
+    }
+
+    double chipsetMetric(String v){
+        String x=v.toLowerCase(Locale.ROOT);
+        String[] strong={"snapdragon 8 elite","snapdragon 8 gen 4","dimensity 9500","a19"};
+        for(int i=0;i<strong.length;i++)if(x.contains(strong[i]))return 100-i;
+        if(x.contains("snapdragon 8 gen 3"))return 96;
+        if(x.contains("dimensity 9400"))return 95;
+        if(x.contains("snapdragon 8 gen 2")||x.contains("dimensity 9300"))return 92;
+        if(x.contains("snapdragon 8 gen 1"))return 88;
+        if(x.contains("dimensity 8400"))return 86;
+        if(x.contains("7+ gen 3"))return 84;
+        if(x.contains("dimensity 8300"))return 82;
+        if(x.contains("snapdragon 7 gen 3")||x.contains("dimensity 8200"))return 78;
+        if(x.contains("dimensity 7300"))return 72;
+        if(x.contains("dimensity 7200"))return 70;
+        if(x.contains("helio g100"))return 62;
+        if(x.contains("helio g99"))return 58;
+        if(x.contains("helio g85"))return 50;
+        if(x.contains("helio g81"))return 47;
+        if(x.contains("helio p70"))return 39;
+        if(x.contains("helio p60"))return 34;
+        if(x.contains("helio a22"))return 25;
+        if(x.contains("mt6739"))return 15;
+        if(x.contains("sc9863"))return 12;
+        if(x.contains("sc9820"))return 8;
+        return -1;
     }
 
     void buildExtras(){
