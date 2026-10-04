@@ -1999,7 +1999,8 @@
     "gps": "GPS",
     "nfc": "Not specified",
     "ir": "IR blaster",
-    "source": "BLUEFOX official; AIPHOR official international-store information"
+    "source": "BLUEFOX official; AIPHOR official international-store information",
+    "image_url": "https://aiphor.com/cdn/shop/files/09_0e2c2855-cd81-4bf0-99c0-cd02d6d567e1.jpg?v=1751095139&width=3840"
   },
   {
     "category": "phone",
@@ -2056,7 +2057,8 @@
     "bluetooth": "Not specified",
     "nfc": "Yes",
     "ir": "IR blaster",
-    "source": "AIPHOR official international product page"
+    "source": "AIPHOR official international product page",
+    "image_url": "https://aiphor.com/cdn/shop/files/8_1fb1f6d4-61ae-48b7-8697-3bcab34ac470.jpg?v=1788005456&width=3840"
   },
   {
     "category": "phone",
@@ -2084,7 +2086,8 @@
     "gps": "GPS/A-GPS/BDS",
     "nfc": "No",
     "ir": "IR blaster",
-    "source": "QIN product documents/manuals and cross-checked specification sources"
+    "source": "QIN product documents/manuals and cross-checked specification sources",
+    "image_url": "https://qinphone.com/cdn/shop/files/1_33_e2308148-7d45-4531-8b85-b9bea6a7b05b.jpg?v=1736088396&width=1946"
   },
   {
     "category": "phone",
@@ -2109,7 +2112,8 @@
     "gps": "Not specified",
     "nfc": "No",
     "ir": "IR blaster",
-    "source": "QIN F22 Pro user manual / specification document"
+    "source": "QIN F22 Pro user manual / specification document",
+    "image_url": "https://qinphone.com/cdn/shop/files/13_b0a3be4f-d7db-4121-8b5c-8d5c2e060184.jpg?v=1789610320&width=1946"
   },
   {
     "category": "phone",
@@ -2192,5 +2196,203 @@
     "nfc": "No",
     "ir": "Not specified",
     "source": "Current DOOV/UNIWA R77 Pro manual/specification sources"
+  },
+  {
+    "category": "phone",
+    "brand": "QIN",
+    "model": "J36",
+    "screen_size": "2.8 inch IPS touchscreen",
+    "resolution": "480×640",
+    "dimensions": "Not reliably verified",
+    "weight": "Not reliably verified",
+    "chipset": "MTK8766V",
+    "ram": "3GB",
+    "storage": "32GB",
+    "os": "Android 13",
+    "rear_camera": "13MP AF",
+    "front_camera": "2MP",
+    "battery_capacity": "2600mAh",
+    "charging": "USB-C, 5V/2A",
+    "sim": "Dual Nano-SIM",
+    "cellular": "2G/3G/4G LTE; VoLTE",
+    "wifi": "Dual-band 2.4GHz/5GHz",
+    "bluetooth": "Supported",
+    "gps": "Yes",
+    "nfc": "Not specified",
+    "ir": "Infrared remote",
+    "image_url": "https://qinphone.com/cdn/shop/files/J36-_-01.png?v=1786441896&width=1946",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "2.8 inch",
+          "Resolution": "480×640"
+        },
+        "Platform": {
+          "Chipset": "MTK8766V",
+          "OS": "Android 13"
+        },
+        "Memory": {
+          "Internal": "32GB 3GB RAM"
+        },
+        "Main_Camera": {
+          "Rear": "13MP AF"
+        },
+        "Selfie_Camera": {
+          "Front": "2MP"
+        },
+        "Battery": {
+          "Type": "2600mAh",
+          "Charging": "5V/2A USB-C"
+        },
+        "Network": {
+          "Technology": "GSM/WCDMA/4G LTE",
+          "2G Bands": "GSM 3/5/8",
+          "3G Bands": "WCDMA 1/5/8",
+          "4G Bands": "FDD 1/3/5/7/8/20/28a/28b; TDD 38/39/40/41"
+        },
+        "Comms": {
+          "WiFi": "2.4GHz + 5GHz",
+          "Bluetooth": "Supported",
+          "GPS": "Yes",
+          "IR": "Infrared"
+        },
+        "Features": {
+          "VoLTE": "Yes",
+          "FM": "Yes",
+          "Sensors": "Gravity, light, proximity"
+        },
+        "Body": {
+          "Sim": "Dual Nano-SIM",
+          "USB": "Type-C"
+        }
+      }
+    },
+    "source": "QIN official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "QIN",
+    "model": "F25",
+    "screen_size": "3.54 inch touchscreen",
+    "resolution": "Not specified",
+    "dimensions": "147.5 × 59.4 × 10.2 mm",
+    "weight": "Not specified",
+    "chipset": "MTK8786 octa-core",
+    "ram": "6GB",
+    "storage": "128GB",
+    "os": "Android 14",
+    "rear_camera": "8MP",
+    "front_camera": "2MP",
+    "battery_capacity": "2700mAh",
+    "charging": "Not specified",
+    "sim": "Dual Nano-SIM",
+    "cellular": "2G/3G/4G LTE; VoLTE not explicitly specified",
+    "wifi": "Wi-Fi",
+    "bluetooth": "Bluetooth",
+    "gps": "Not specified",
+    "nfc": "Not specified",
+    "ir": "Not specified",
+    "image_url": "https://qinphone.com/cdn/shop/files/01-1.png?v=1769945554&width=1946",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "3.54 inch"
+        },
+        "Platform": {
+          "Chipset": "MTK8786 octa-core",
+          "OS": "Android 14"
+        },
+        "Memory": {
+          "Internal": "128GB 6GB RAM"
+        },
+        "Main_Camera": {
+          "Rear": "8MP"
+        },
+        "Selfie_Camera": {
+          "Front": "2MP"
+        },
+        "Battery": {
+          "Type": "2700mAh"
+        },
+        "Network": {
+          "Technology": "GSM/WCDMA/FDD-LTE/TDD-LTE",
+          "2G Bands": "GSM 2/3/5/8",
+          "3G Bands": "WCDMA 1/2/5/8",
+          "4G Bands": "FDD 1/3/5/7/8/20/28a/28b; TDD 34/38/39/40/41"
+        },
+        "Comms": {
+          "WiFi": "Wi-Fi",
+          "Bluetooth": "Bluetooth"
+        },
+        "Body": {
+          "Dimensions": "147.5 × 59.4 × 10.2 mm",
+          "Sim": "Dual Nano-SIM"
+        }
+      }
+    },
+    "source": "QIN official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "SOYES",
+    "model": "XS16",
+    "screen_size": "3.0 inch",
+    "resolution": "854×480",
+    "dimensions": "89.5 × 45.5 × 11.5 mm",
+    "weight": "65g",
+    "chipset": "MTK6737 quad-core",
+    "ram": "3GB",
+    "storage": "64GB",
+    "os": "Android 10",
+    "rear_camera": "5MP",
+    "front_camera": "2MP",
+    "battery_capacity": "2000mAh",
+    "charging": "USB-C",
+    "sim": "Dual Nano-SIM / Nano-SIM + TF",
+    "cellular": "2G/3G/4G LTE",
+    "wifi": "802.11a/b/g/n 2.4GHz",
+    "bluetooth": "4.0",
+    "gps": "Yes",
+    "nfc": "Not specified",
+    "ir": "Not specified",
+    "image_url": "https://aiphor.com/cdn/shop/files/8_SOYES-XS16-4G-Mini-Smartphone-3-0-Inch-Display-Android-10-0-2000mAh-Small-Mobile-Phone_93abd38a-91ae-4a0b-857b-ce67f4268c7c.ef94a963489fa4b1cd019e60bdac005f.jpg?v=1750063586&width=1946",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "3.0 inch",
+          "Resolution": "854×480"
+        },
+        "Platform": {
+          "Chipset": "MTK6737 quad-core",
+          "OS": "Android 10"
+        },
+        "Memory": {
+          "Internal": "64GB 3GB RAM"
+        },
+        "Main_Camera": {
+          "Rear": "5MP"
+        },
+        "Selfie_Camera": {
+          "Front": "2MP"
+        },
+        "Battery": {
+          "Type": "2000mAh"
+        },
+        "Network": {
+          "Technology": "GSM/WCDMA/FDD-LTE/TDD-LTE"
+        },
+        "Comms": {
+          "WiFi": "802.11a/b/g/n 2.4GHz",
+          "Bluetooth": "4.0",
+          "GPS": "Yes"
+        },
+        "Body": {
+          "Dimensions": "89.5 × 45.5 × 11.5 mm",
+          "Weight": "65g",
+          "Sim": "Dual Nano-SIM / Nano-SIM + TF"
+        }
+      }
+    },
+    "source": "AIPHOR official product page"
   }
 ]
