@@ -217,141 +217,6 @@
   },
   {
     "category": "phone",
-    "brand": "Qin",
-    "name": "F21 Pro",
-    "image_url": "",
-    "image": "",
-    "summary": "2.8 inch • Unisoc T610 • 3GB • 32GB • 1700mAh • Android",
-    "detail": {
-      "specifications": {
-        "Display": {
-          "Size": "2.8 inch"
-        },
-        "Platform": {
-          "Chipset": "Unisoc T610",
-          "OS": "Android"
-        },
-        "Memory": {
-          "Internal": "32GB 3GB RAM"
-        },
-        "Battery": {
-          "Type": "1700mAh"
-        }
-      },
-      "category": "phone"
-    },
-    "source": "DA PHONES curated multi-device catalog"
-  },
-  {
-    "category": "phone",
-    "brand": "Qin",
-    "name": "F22 Pro",
-    "image_url": "",
-    "image": "",
-    "summary": "3.54 inch • Unisoc T610 • 4GB • 64GB • 2150mAh • Android",
-    "detail": {
-      "specifications": {
-        "Display": {
-          "Size": "3.54 inch"
-        },
-        "Platform": {
-          "Chipset": "Unisoc T610",
-          "OS": "Android"
-        },
-        "Memory": {
-          "Internal": "64GB 4GB RAM"
-        },
-        "Battery": {
-          "Type": "2150mAh"
-        }
-      },
-      "category": "phone"
-    },
-    "source": "DA PHONES curated multi-device catalog"
-  },
-  {
-    "category": "phone",
-    "brand": "Qin",
-    "name": "F30",
-    "image_url": "",
-    "image": "",
-    "summary": "3.0 inch • Unisoc • 4GB • 64GB • 2120mAh • Android",
-    "detail": {
-      "specifications": {
-        "Display": {
-          "Size": "3.0 inch"
-        },
-        "Platform": {
-          "Chipset": "Unisoc",
-          "OS": "Android"
-        },
-        "Memory": {
-          "Internal": "64GB 4GB RAM"
-        },
-        "Battery": {
-          "Type": "2120mAh"
-        }
-      },
-      "category": "phone"
-    },
-    "source": "DA PHONES curated multi-device catalog"
-  },
-  {
-    "category": "phone",
-    "brand": "DOOV",
-    "name": "S30",
-    "image_url": "",
-    "image": "",
-    "summary": "4.0 inch • Android",
-    "detail": {
-      "specifications": {
-        "Display": {
-          "Size": "4.0 inch"
-        },
-        "Platform": {
-          "Chipset": "",
-          "OS": "Android"
-        },
-        "Memory": {
-          "Internal": ""
-        },
-        "Battery": {
-          "Type": ""
-        }
-      },
-      "category": "phone"
-    },
-    "source": "DA PHONES curated multi-device catalog"
-  },
-  {
-    "category": "phone",
-    "brand": "DOOV",
-    "name": "D18",
-    "image_url": "",
-    "image": "",
-    "summary": "4.0 inch • Android",
-    "detail": {
-      "specifications": {
-        "Display": {
-          "Size": "4.0 inch"
-        },
-        "Platform": {
-          "Chipset": "",
-          "OS": "Android"
-        },
-        "Memory": {
-          "Internal": ""
-        },
-        "Battery": {
-          "Type": ""
-        }
-      },
-      "category": "phone"
-    },
-    "source": "DA PHONES curated multi-device catalog"
-  },
-  {
-    "category": "phone",
     "brand": "Blackview",
     "name": "N6000",
     "image_url": "",
@@ -2104,5 +1969,228 @@
       "category": "watch"
     },
     "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "phone",
+    "brand": "BLUEFOX",
+    "model": "NX1",
+    "screen_size": "4.0 inch IPS LCD",
+    "resolution": "1168×540",
+    "refresh_rate": "60Hz",
+    "brightness": "500 nits",
+    "ppi": "321",
+    "dimensions": "100.6 × 49.3 × 12.5 mm",
+    "weight": "106 g",
+    "chipset": "MediaTek Helio G81",
+    "cpu": "2× Cortex-A75 @2.0GHz + 6× Cortex-A55 @1.7GHz",
+    "gpu": "Mali-G52 MC2",
+    "ram": "4GB / 8GB",
+    "storage": "64GB / 128GB",
+    "memory_card": "microSD up to 2TB",
+    "os": "Android 15",
+    "rear_camera": "21MP Sony IMX230, AF, f/2.4",
+    "front_camera": "5MP",
+    "battery_capacity": "3000mAh",
+    "charging": "10W wired",
+    "sim": "Dual Nano-SIM",
+    "cellular": "4G LTE, VoLTE; no 5G",
+    "wifi": "Wi‑Fi 5",
+    "bluetooth": "5.0",
+    "gps": "GPS",
+    "nfc": "Not specified",
+    "ir": "IR blaster",
+    "source": "BLUEFOX official; AIPHOR official international-store information"
+  },
+  {
+    "category": "phone",
+    "brand": "BLUEFOX",
+    "model": "GT8 Pro",
+    "screen_size": "4.3 inch LCD",
+    "resolution": "1200×540",
+    "refresh_rate": "60Hz",
+    "brightness": "500 nits",
+    "ppi": "~309",
+    "dimensions": "111 × 52 × 9.9 mm",
+    "weight": "Not reliably verified",
+    "chipset": "MediaTek Helio P22",
+    "cpu": "Octa-core",
+    "gpu": "PowerVR GE8320",
+    "ram": "4GB",
+    "storage": "64GB",
+    "memory_card": "microSD up to 2TB (hybrid)",
+    "os": "Android 12",
+    "rear_camera": "13MP + ultrawide",
+    "front_camera": "5MP",
+    "battery_capacity": "2750mAh",
+    "charging": "Not reliably verified",
+    "sim": "Dual Nano-SIM / hybrid",
+    "cellular": "4G LTE, VoLTE; no 5G",
+    "wifi": "Wi‑Fi",
+    "bluetooth": "Not reliably verified",
+    "gps": "GPS",
+    "nfc": "Not specified",
+    "ir": "IR blaster",
+    "source": "BLUEFOX official product-family listing; cross-checked secondary specification sources"
+  },
+  {
+    "category": "phone",
+    "brand": "BLUEFOX",
+    "model": "Aura A1",
+    "screen_size": "4.7 inch LCD",
+    "refresh_rate": "90Hz",
+    "brightness": "up to 600 nits",
+    "ppi": "373",
+    "dimensions": "117 × 54.6 × 12.3 mm (estimated)",
+    "weight": "150 g",
+    "chipset": "MediaTek Helio G100",
+    "ram": "8GB / 12GB",
+    "storage": "128GB / 256GB",
+    "os": "Android (international GMS-certified version)",
+    "rear_camera": "64MP OmniVision OV64B40",
+    "front_camera": "16MP",
+    "battery_capacity": "3550mAh",
+    "charging": "18W",
+    "sim": "Dual SIM + microSD (2+1)",
+    "cellular": "4G",
+    "wifi": "Not specified",
+    "bluetooth": "Not specified",
+    "nfc": "Yes",
+    "ir": "IR blaster",
+    "source": "AIPHOR official international product page"
+  },
+  {
+    "category": "phone",
+    "brand": "QIN",
+    "model": "F21 Pro",
+    "screen_size": "2.8 inch IPS",
+    "resolution": "640×480",
+    "dimensions": "131 × 53.5 × 9.5 mm",
+    "weight": "~100 g",
+    "chipset": "MediaTek MT6761 (Helio A22)",
+    "cpu": "Quad-core 2.0GHz Cortex-A53",
+    "gpu": "PowerVR GE8300",
+    "ram": "3GB / 4GB",
+    "storage": "32GB / 64GB",
+    "memory_card": "No TF/microSD extension",
+    "os": "Android 11",
+    "rear_camera": "5MP AF",
+    "front_camera": "2MP",
+    "battery_capacity": "2120–2150mAh",
+    "charging": "USB-C; 7.5–10W depending version",
+    "sim": "1× Nano-SIM",
+    "cellular": "2G/3G/4G LTE; VoLTE",
+    "wifi": "2.4/5GHz Wi‑Fi",
+    "bluetooth": "5.0",
+    "gps": "GPS/A-GPS/BDS",
+    "nfc": "No",
+    "ir": "IR blaster",
+    "source": "QIN product documents/manuals and cross-checked specification sources"
+  },
+  {
+    "category": "phone",
+    "brand": "QIN",
+    "model": "F22 Pro",
+    "screen_size": "3.54 inch IPS",
+    "resolution": "960×640",
+    "dimensions": "147 × 58 × 9 mm",
+    "weight": "116 g",
+    "chipset": "MediaTek Helio G85",
+    "ram": "4GB",
+    "storage": "64GB",
+    "os": "Android 12",
+    "rear_camera": "8MP Sony IMX219 AF",
+    "front_camera": "2MP",
+    "battery_capacity": "2150mAh",
+    "charging": "10W USB-C",
+    "sim": "1× Nano-SIM",
+    "cellular": "2G/3G/4G LTE",
+    "wifi": "Wi‑Fi",
+    "bluetooth": "5.0",
+    "gps": "Not specified",
+    "nfc": "No",
+    "ir": "IR blaster",
+    "source": "QIN F22 Pro user manual / specification document"
+  },
+  {
+    "category": "phone",
+    "brand": "QIN",
+    "model": "F30",
+    "screen_size": "2.8 inch IPS touchscreen",
+    "resolution": "480×640",
+    "dimensions": "131.7 × 53.5 × 9.5 mm",
+    "weight": "~100 g",
+    "chipset": "MediaTek Helio A22",
+    "cpu": "Quad-core 2.0GHz Cortex-A53",
+    "gpu": "PowerVR GE8320",
+    "ram": "3GB / 4GB",
+    "storage": "32GB / 64GB",
+    "memory_card": "No card slot in standard spec",
+    "os": "Android 11",
+    "rear_camera": "5MP AF",
+    "front_camera": "2MP",
+    "battery_capacity": "2120–2150mAh",
+    "charging": "USB-C",
+    "sim": "1× Nano-SIM",
+    "cellular": "4G LTE; variants tailored for North America",
+    "wifi": "Wi‑Fi",
+    "bluetooth": "5.0",
+    "gps": "GPS",
+    "nfc": "Not specified",
+    "ir": "Not specified",
+    "source": "QIN/F30 specification sources cross-checked against current product listings"
+  },
+  {
+    "category": "phone",
+    "brand": "DOOV",
+    "model": "R17 Pro",
+    "screen_size": "3.5 inch",
+    "resolution": "Not reliably verified",
+    "dimensions": "143 × 60 × 10 mm",
+    "weight": "116 g",
+    "chipset": "MediaTek MT6761 (Helio A22)",
+    "ram": "4GB",
+    "storage": "64GB",
+    "memory_card": "up to 128GB",
+    "os": "Android 13",
+    "rear_camera": "8MP",
+    "front_camera": "5MP",
+    "battery_capacity": "2500mAh",
+    "charging": "USB-C",
+    "sim": "2× Nano-SIM or SIM + memory card",
+    "cellular": "4G LTE, VoLTE",
+    "wifi": "Wi‑Fi",
+    "bluetooth": "Not specified",
+    "gps": "GPS",
+    "nfc": "Not specified",
+    "ir": "Not specified",
+    "source": "Current Israeli retail specification listing; cross-checked community documentation"
+  },
+  {
+    "category": "phone",
+    "brand": "DOOV",
+    "model": "R77 Pro",
+    "screen_size": "2.8 inch IPS touchscreen",
+    "resolution": "640×480",
+    "dimensions": "133.2 × 54.2 × 9.5 mm",
+    "weight": "115 g",
+    "chipset": "MediaTek MT6762",
+    "cpu": "Octa-core up to 2.0GHz",
+    "gpu": "IMG GE8320",
+    "ram": "3GB",
+    "storage": "32GB",
+    "memory_card": "up to 128GB (shared SIM slot)",
+    "os": "Android 13",
+    "rear_camera": "5MP AF",
+    "front_camera": "2MP",
+    "battery_capacity": "3000mAh",
+    "charging": "USB-C; no fast charging",
+    "sim": "2× Nano-SIM / hybrid",
+    "cellular": "4G LTE; VoLTE",
+    "wifi": "2.4/5GHz",
+    "bluetooth": "4.1",
+    "gps": "GPS/A-GPS/Beidou",
+    "nfc": "No",
+    "ir": "Not specified",
+    "source": "Current DOOV/UNIWA R77 Pro manual/specification sources"
   }
 ]

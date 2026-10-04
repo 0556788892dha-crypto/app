@@ -68,7 +68,7 @@ def normalize_niche(item):
         "image": image_path(brand, name, image_url),
         "summary": " • ".join(clean(v) for v in summary_fields if clean(v)),
         "detail": item,
-        "source": "DA PHONES curated niche catalog",
+        "source": clean(item.get("source")) or "DA PHONES curated niche catalog",
     }
 
 
@@ -239,13 +239,28 @@ def main():
         except Exception:
             continue
 
+    # Curated niche records are authoritative overrides for matching models.
+    # This fixes cases where a broad snapshot has incomplete or stale niche specs.
+    niche_by_key = {}
     for phone in load_niche():
         if not phone:
             continue
         key = (phone["brand"].lower(), phone["name"].lower())
-        if key not in seen:
-            seen.add(key)
-            phones.append(phone)
+        niche_by_key[key] = phone
+
+    replaced = 0
+    for i, phone in enumerate(phones):
+        key = (phone["brand"].lower(), phone["name"].lower())
+        curated = niche_by_key.pop(key, None)
+        if curated:
+            phones[i] = curated
+            replaced += 1
+
+    for key, phone in niche_by_key.items():
+        phones.append(phone)
+        seen.add(key)
+
+    print(f"Curated overrides applied={replaced}; curated additions={len(niche_by_key)}")
 
     image_count = download_images(phones)
 
