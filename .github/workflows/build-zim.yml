@@ -14,13 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Install ZIM tools
         run: |
           sudo apt-get update
           sudo apt-get install -y zim-tools python3
-
-      - name: Download dataset and build site
+      - name: Build offline site
         run: |
           mkdir -p build/site/phones
           curl -L --fail --retry 3 -o build/phones.csv "https://raw.githubusercontent.com/prototorp/smartphone-dashboard/main/Mobiles%20Dataset%20%282025%29.csv"
@@ -30,8 +28,7 @@ jobs:
           root=Path("build/site")
           rows=list(csv.DictReader(open("build/phones.csv",encoding="utf-8-sig")))
           def esc(v): return html.escape(str(v or "").strip())
-          def slug(s):
-              return re.sub(r"[^a-zA-Z0-9]+","-",s.lower()).strip("-") or "phone"
+          def slug(s): return re.sub(r"[^a-zA-Z0-9]+","-",s.lower()).strip("-") or "phone"
           phones=[]; seen=set(); used={}
           for r in rows:
               brand=r.get("Company Name","").strip(); model=r.get("Model Name","").strip()
@@ -47,9 +44,17 @@ jobs:
               base=slug(brand+"-"+model); used[base]=used.get(base,0)+1
               p["url"]="phones/%s-%d.html"%(base,used[base]); phones.append(p)
           brands=sorted(set(p["brand"] for p in phones))
-          (root/"data.json").write_text(json.dumps(phones,ensure_ascii=False),encoding="utf-8")
-          (root/"style.css").write_text("body{font-family:system-ui,Arial;margin:0;background:#f5f7fb;color:#172033}header{background:#111827;color:#fff;padding:22px}main{max-width:1200px;margin:auto;padding:20px}.search{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}input,select{padding:12px;border:1px solid #ccd3df;border-radius:10px;font-size:15px}button{padding:11px 16px;border:0;border-radius:10px;background:#2563eb;color:#fff;font-weight:700}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}.card{background:#fff;border:1px solid #e1e6ef;border-radius:14px;padding:16px;box-shadow:0 2px 8px #0000000a}.muted{color:#667085}.spec{display:grid;grid-template-columns:180px 1fr;border-top:1px solid #eee}.spec b,.spec span{padding:10px}a{color:#185adb;text-decoration:none}",encoding="utf-8")
-          js="const D="+json.dumps(phones,ensure_ascii=False)+";function render(){const q=document.getElementById('q').value.toLowerCase(),b=document.getElementById('brand').value;const a=D.filter(p=>(!q||(p.brand+' '+p.model).toLowerCase().includes(q))&&(!b||p.brand===b));document.getElementById('results').innerHTML=a.map(function(p){return '<div class="card"><h2><a href="'+p.url+'">'+p.brand+' '+p.model+'</a></h2><div class="muted">'+p.year+'</div><p>📱 '+p.screen+' · 💾 '+p.ram+' · 🔋 '+p.battery+'</p><p>⚙️ '+p.processor+'</p><p>📷 '+p.back+'</p></div>'}).join('')||'<p>לא נמצאו מכשירים.</p>'}render();document.getElementById('q').addEventListener('input',render);document.getElementById('brand').addEventListener('change',render);"
+          (root/"style.css").write_text("body{font-family:system-ui,Arial;margin:0;background:#f5f7fb;color:#172033}header{background:#111827;color:#fff;padding:22px}main{max-width:1200px;margin:auto;padding:20px}.search{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}input,select{padding:12px;border:1px solid #ccd3df;border-radius:10px;font-size:15px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}.card{background:#fff;border:1px solid #e1e6ef;border-radius:14px;padding:16px}.muted{color:#667085}.spec{display:grid;grid-template-columns:180px 1fr;border-top:1px solid #eee}.spec b,.spec span{padding:10px}a{color:#185adb;text-decoration:none}",encoding="utf-8")
+          js = """const D=PHONES;
+          function render(){
+            const q=document.getElementById("q").value.toLowerCase(), b=document.getElementById("brand").value;
+            const a=D.filter(function(p){return (!q||(p.brand+" "+p.model).toLowerCase().includes(q))&&(!b||p.brand===b)});
+            document.getElementById("results").innerHTML=a.map(function(p){
+              return "<div class='card'><h2><a href='"+p.url+"'>"+p.brand+" "+p.model+"</a></h2><div class='muted'>"+p.year+"</div><p>📱 "+p.screen+" · 💾 "+p.ram+" · 🔋 "+p.battery+"</p><p>⚙️ "+p.processor+"</p><p>📷 "+p.back+"</p></div>"
+            }).join("")||"<p>לא נמצאו מכשירים.</p>";
+          }
+          render();document.getElementById("q").addEventListener("input",render);document.getElementById("brand").addEventListener("change",render);"""
+          js=js.replace("PHONES",json.dumps(phones,ensure_ascii=False))
           opts="".join("<option>"+esc(b)+"</option>" for b in brands)
           index='''<!doctype html><html dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>DA PHONES Offline</title><link rel="stylesheet" href="style.css"></head><body><header><main><h1>📱 DA PHONES Offline</h1><div>מאגר טלפונים ומפרטים — ללא אינטרנט</div></main></header><main><p><b>%s</b> מכשירים · <b>%s</b> יצרנים</p><div class="search"><input id="q" placeholder="חיפוש דגם או יצרן..." style="flex:1"><select id="brand"><option value="">כל היצרנים</option>%s</select></div><div id="results" class="grid"></div></main><script>%s</script></body></html>'''%(len(phones),len(brands),opts,js)
           (root/"index.html").write_text(index,encoding="utf-8")
@@ -60,14 +65,15 @@ jobs:
               (root/p["url"]).write_text(page,encoding="utf-8")
           PY
           python3 build/make_site.py
-          printf '\x89PNG\r\n\x1a\n' > build/site/zim_favicon.png
-
+          python3 - <<'PY'
+          from PIL import Image
+          Image.new("RGB",(48,48),"white").save("build/site/zim_favicon.png")
+          PY
       - name: Create and validate ZIM
         run: |
           mkdir -p dist
           zimwriterfs --welcome=index.html --illustration=zim_favicon.png --language=heb --title="DA PHONES Offline" --name="da-phones-offline" --description="Offline smartphone specifications database" --creator="DA PHONES" --publisher="DA PHONES" --withFullTextIndex build/site dist/DA_PHONES_Offline.zim
           zimcheck dist/DA_PHONES_Offline.zim
-
       - name: Upload ZIM
         uses: actions/upload-artifact@v4
         with:
