@@ -1,123 +1,259 @@
 package com.david.phonecatalog;
 
 import android.app.*;
-import android.os.Bundle;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.os.*;
+import android.graphics.*;
+import android.graphics.drawable.GradientDrawable;
 import android.view.*;
 import android.widget.*;
-import java.util.*;
+import android.text.*;
 import android.content.*;
-import android.view.Gravity;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import org.json.*;
 
 public class MainActivity extends Activity {
+    static final String API="https://phone-specs-api.vercel.app";
     static class Phone {
-        String brand,name,os,chip,display,resolution,dimensions,weight,ram,storage,camera,battery,charging,network,source,quality;
-        Integer geek;
+        String brand,name,image,detail,summary,chip,display,ram,storage,os;
+        Integer geek, benchmark;
         double score;
-        Phone(String b,String n,String o,String c,String d,String r,String dim,String w,String rm,String st,String cam,String bat,String ch,String net,Integer g,double s,String src,String q){
-            brand=b; name=n; os=o; chip=c; display=d; resolution=r; dimensions=dim; weight=w; ram=rm; storage=st; camera=cam; battery=bat; charging=ch; network=net; geek=g; score=s; source=src; quality=q;
+        boolean remote;
+        Phone(String b,String n,String img,String det,String sum,boolean rem){
+            brand=b; name=n; image=img; detail=det; summary=sum; remote=rem;
+            score=estimateScore(sum,n);
         }
     }
 
     final ArrayList<Phone> phones=new ArrayList<>(), selected=new ArrayList<>();
-    LinearLayout list; EditText search; Spinner brandSpinner, sortSpinner;
+    final ArrayList<String[]> brands=new ArrayList<>();
+    LinearLayout list,root;
+    EditText search;
+    Spinner brandSpinner,sortSpinner;
+    TextView status;
+    boolean loading=false;
 
-    @Override public void onCreate(Bundle b){ super.onCreate(b); getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL); seed(); build(); }
-
-    void seed(){
-        // Only benchmark figures explicitly sourced from the public GSMArena test data are shown.
-        add("Samsung","Galaxy S25","Android 15","Snapdragon 8 Elite","6.2\" Dynamic AMOLED 2X 120Hz","1080×2340","146.9×70.5×7.2 mm","162 g","12 GB","128/256/512 GB","50+10+12 MP","4000 mAh","25W + 15W wireless","5G",10050,94,"https://www.gsmarena.com/samsung_galaxy_s25-13610.php","מאומת");
-        add("Google","Pixel 10","Android 16","Tensor G5","6.3\" OLED 120Hz","1080×2424","152.8×72×8.6 mm","204 g","12 GB","128/256 GB","48+10.8+13 MP","4970 mAh","30W + 15W wireless","5G",5857,91,"https://www.gsmarena.com/google_pixel_10-13979.php","מאומת");
-        add("Apple","iPhone 17","iOS 26","Apple A19","6.3\" LTPO OLED 120Hz","1206×2622","149.6×71.5×8.0 mm","177 g","8 GB","256/512 GB","48+48 MP","3692 mAh","25W wireless MagSafe/Qi2","5G",9360,95,"https://www.gsmarena.com/apple_iphone_17-14050.php","מאומת");
-        add("ASUS","Zenfone 10","Android 13","Snapdragon 8 Gen 2","5.9\" AMOLED 144Hz","1080×2400","146.5×68.1×9.4 mm","172 g","8/16 GB","128/256 GB","50+13 MP","4300 mAh","30W","5G",null,93,"https://www.gsmarena.com/asus_zenfone_10-12380.php","מפרט מאומת; benchmark לא הוזן");
-        add("ASUS","Zenfone 9","Android 12","Snapdragon 8+ Gen 1","5.9\" AMOLED 120Hz","1080×2400","146.5×68.1×9.1 mm","169 g","8/16 GB","128/256 GB","50+12 MP","4300 mAh","30W","5G",null,88,"https://www.gsmarena.com/asus_zenfone_9-11714.php","מפרט מאומת; benchmark לא הוזן");
-        add("Google","Pixel 4","Android 10","Snapdragon 855","5.7\" P-OLED 90Hz","1080×2280","147.1×68.8×8.2 mm","162 g","6 GB","64/128 GB","12.2+16 MP","2800 mAh","18W","4G",null,72,"https://www.gsmarena.com/google_pixel_4-9896.php","מפרט מאומת; benchmark לא הוזן");
-        add("Sony","Xperia 10 VI","Android 14","Snapdragon 6 Gen 1","6.1\" OLED 60Hz","1080×2520","155×68×8.3 mm","164 g","8 GB","128 GB + microSD","48+8 MP","5000 mAh","30W","5G",null,84,"https://www.gsmarena.com/sony_xperia_10_vi-13002.php","מאומת");
-        add("Samsung","Galaxy A07 4G","Android 15","Helio G99","6.7\" LCD 90Hz","720×1600","167.4×77.4×7.6 mm","184 g","4/6/8 GB","64/128/256 GB","50+2 MP","5000 mAh","25W","4G",null,77,"https://www.gsmarena.com/samsung_galaxy_a07-14098.php","מאומת");
-        add("Unihertz","Jelly Star","Android 13","Helio G99","3.0\" IPS","480×854","95.1×49.6×18.7 mm","116 g","8 GB","256 GB","48 MP","2000 mAh","10W","4G",null,78,"https://www.unihertz.com/products/jelly-star","מפרט יצרן; benchmark לא הוזן");
-        add("Unihertz","Jelly 2E","Android 10","Helio P60","3.0\" IPS","480×854","95×49.4×16.5 mm","110 g","6 GB","128 GB","16 MP","2000 mAh","10W","4G",null,69,"https://www.unihertz.com/products/jelly-2e","מפרט יצרן; benchmark לא הוזן");
-        add("Unihertz","Jelly Max","Android 14","Dimensity 7300","5.05\" IPS 120Hz","720×1520","137.7×62.7×16.3 mm","180 g","12 GB","256 GB","100+8 MP","4000 mAh","66W","5G",null,84,"https://www.unihertz.com/products/jelly-max","מפרט יצרן; benchmark לא הוזן");
-        add("Qin","F21 Pro","Android 11","Unisoc T610","2.8\" IPS","640×1136","130×53.5×9.9 mm","105 g","3 GB","32 GB","8 MP","1700 mAh","10W","4G",null,65,"https://www.gsmarena.com/xiaomi_qin_f21_pro-11813.php","מפרט מקורות ציבוריים; benchmark לא הוזן");
-        add("Qin","F22 Pro","Android 12","Unisoc T610","3.54\" IPS","640×1136","130.7×55.7×9.5 mm","116 g","4 GB","64 GB","8 MP","2150 mAh","10W","4G",null,68,"https://www.gsmarena.com/xiaomi_qin_f22_pro-11808.php","מפרט מקורות ציבוריים; benchmark לא הוזן");
-        add("BlueFox","NX1","Android 13","MediaTek MT6769","4.0\" IPS","480×800","125×59×12 mm","—","4 GB","64 GB","13 MP","3000 mAh","—","4G",null,70,"","נתונים חלקיים — לא הוצג benchmark כאילו הוא מאומת");
-        add("KingKong","Mini 4","Android 14","MediaTek G99","4.0\" IPS","—","132×61×15 mm","—","8 GB","256 GB","48 MP","3000 mAh","—","4G",null,80,"","נתונים חלקיים — לא הוצג benchmark כאילו הוא מאומת");
-        add("Samsung","Galaxy S24","Android 14","Snapdragon 8 Gen 3 / Exynos 2400","6.2\" Dynamic AMOLED 2X 120Hz","1080×2340","147×70.6×7.6 mm","167/168 g","8/12 GB","128/256/512 GB","50+10+12 MP","4000 mAh","25W + 15W wireless","5G",null,92,"https://www.gsmarena.com/samsung_galaxy_s24-12773.php","מפרט מאומת; benchmark לא הוזן");
-        add("Samsung","Galaxy S23","Android 13","Snapdragon 8 Gen 2","6.1\" Dynamic AMOLED 2X 120Hz","1080×2340","146.3×70.9×7.6 mm","168 g","8 GB","128/256 GB","50+10+12 MP","3900 mAh","25W + 15W wireless","5G",null,90,"https://www.gsmarena.com/samsung_galaxy_s23-12082.php","מפרט מאומת; benchmark לא הוזן");
-        add("Google","Pixel 9","Android 14","Tensor G4","6.3\" OLED 120Hz","1080×2424","152.8×72×8.5 mm","198 g","12 GB","128/256 GB","50+48 MP","4700 mAh","27W + wireless","5G",null,90,"https://www.gsmarena.com/google_pixel_9-13220.php","מפרט מאומת; benchmark לא הוזן");
-        add("Sony","Xperia 1 VI","Android 14","Snapdragon 8 Gen 3","6.5\" LTPO OLED 120Hz","1080×2340","162×74×8.2 mm","192 g","12/16 GB","256/512 GB + microSD","48+12+12 MP","5000 mAh","30W + wireless","5G",null,91,"https://www.gsmarena.com/sony_xperia_1_vi-12821.php","מפרט מאומת; benchmark לא הוזן");
-        add("Nothing","Phone (2a)","Android 14","Dimensity 7200 Pro","6.7\" AMOLED 120Hz","1084×2412","161.7×76.3×8.6 mm","190 g","8/12 GB","128/256 GB","50+50 MP","5000 mAh","45W","5G",null,86,"https://www.gsmarena.com/nothing_phone_(2a)-12760.php","מפרט מאומת; benchmark לא הוזן");
-        add("HMD","Skyline","Android 14","Snapdragon 7s Gen 2","6.55\" pOLED 144Hz","1080×2400","159.8×75.7×8.9 mm","209 g","8/12 GB","128/256 GB + microSD","108+50+13 MP","4600 mAh","33W + wireless","5G",null,82,"https://www.gsmarena.com/hmd_skyline-13163.php","מפרט מאומת; benchmark לא הוזן");
+    @Override public void onCreate(Bundle b){
+        super.onCreate(b);
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        seedLocal();
+        build();
+        loadBrands();
     }
 
-    void add(String b,String n,String o,String c,String d,String r,String dim,String w,String rm,String st,String cam,String bat,String ch,String net,Integer g,double s,String src,String q){
-        phones.add(new Phone(b,n,o,c,d,r,dim,w,rm,st,cam,bat,ch,net,g,s,src,q));
+    void seedLocal(){
+        addLocal("Unihertz","Jelly Star","https://www.unihertz.com/cdn/shop/files/Jelly_Star_01.jpg","","3.0\" IPS • Helio G99 • 8GB/256GB • 2000mAh");
+        addLocal("Unihertz","Jelly 2E","","","3.0\" IPS • Helio P60 • 6GB/128GB • 2000mAh");
+        addLocal("Unihertz","Jelly Max","","","5.05\" IPS 120Hz • Dimensity 7300 • 12GB/256GB • 4000mAh");
+        addLocal("Qin","F21 Pro","","","2.8\" IPS • Unisoc T610 • 3GB/32GB • 1700mAh");
+        addLocal("Qin","F22 Pro","","","3.54\" IPS • Unisoc T610 • 4GB/64GB • 2150mAh");
+        addLocal("BlueFox","NX1","","","4.0\" IPS • 4GB/64GB • 3000mAh");
+        addLocal("KingKong","Mini 4","","","4.0\" IPS • 8GB/256GB • 3000mAh");
+    }
+    void addLocal(String b,String n,String img,String d,String s){
+        Phone p=new Phone(b,n,img,d,s,false); phones.add(p);
     }
 
     void build(){
-        LinearLayout root=new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL); root.setPadding(16,16,16,16);
-        TextView title=new TextView(this); title.setText("DA - PHONES"); title.setTextSize(28); title.setTextColor(Color.rgb(21,101,192)); title.setTypeface(Typeface.DEFAULT,Typeface.BOLD); root.addView(title);
-        TextView sub=new TextView(this); sub.setText("קטלוג סמארטפונים • מפרטים • השוואה • Geekbench מאומת • דירוג אישי"); root.addView(sub);
-        search=new EditText(this); search.setHint("חיפוש דגם, מותג, מעבד..."); root.addView(search);
-        brandSpinner=new Spinner(this); ArrayList<String> brands=new ArrayList<>(); brands.add("כל המותגים"); for(Phone p:phones) if(!brands.contains(p.brand)) brands.add(p.brand);
-        brandSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,brands)); root.addView(brandSpinner);
-        sortSpinner=new Spinner(this); ArrayList<String> sorts=new ArrayList<>(Arrays.asList("מיון: מותג ודגם","מיון: דירוג אישי","מיון: גודל מסך — קטן לגדול","מיון: משקל — קל לכבד","מיון: Geekbench — גבוה לנמוך")); sortSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,sorts)); root.addView(sortSpinner);
-        Button compare=new Button(this); compare.setText("השווה נבחרים ("+selected.size()+")"); root.addView(compare); compare.setOnClickListener(v->showCompare());
-        TextView info=new TextView(this); info.setText("✓ מאומת = נתוני מפרט ממקור מזוהה. נתוני Geekbench מוצגים רק כשיש מקור/בדיקה מזוהה. דירוג אישי הוא ציון הערכה אישי ולא ציון יצרן."); info.setTextSize(12); info.setPadding(0,8,0,8); root.addView(info);
+        root=new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL); root.setPadding(18,14,18,14);
+        GradientDrawable bg=new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{Color.rgb(245,249,255),Color.WHITE});
+        root.setBackground(bg);
+
+        LinearLayout header=new LinearLayout(this); header.setGravity(Gravity.CENTER_VERTICAL);
+        ImageView logo=new ImageView(this); logo.setImageResource(com.david.phonecatalog.R.drawable.ic_phone);
+        header.addView(logo,new LinearLayout.LayoutParams(62,62));
+        TextView title=new TextView(this); title.setText("DA PHONES"); title.setTextSize(27); title.setTypeface(Typeface.DEFAULT,Typeface.BOLD); title.setTextColor(Color.rgb(20,83,145)); header.addView(title);
+        root.addView(header);
+
+        TextView sub=new TextView(this); sub.setText("קטלוג מכשירים • מפרטים • תמונות • דירוגים • מילון מושגים"); sub.setTextSize(14); sub.setPadding(0,0,0,8); root.addView(sub);
+
+        LinearLayout tabs=new LinearLayout(this); tabs.setOrientation(LinearLayout.HORIZONTAL);
+        Button catalog=new Button(this); catalog.setText("📱 מכשירים"); Button ratings=new Button(this); ratings.setText("🏆 דירוגים"); Button glossary=new Button(this); glossary.setText("📘 מושגים");
+        tabs.addView(catalog,new LinearLayout.LayoutParams(0,-2,1)); tabs.addView(ratings,new LinearLayout.LayoutParams(0,-2,1)); tabs.addView(glossary,new LinearLayout.LayoutParams(0,-2,1)); root.addView(tabs);
+
+        search=new EditText(this); search.setHint("חיפוש דגם, מותג או מעבד..."); root.addView(search);
+        brandSpinner=new Spinner(this); root.addView(brandSpinner);
+        sortSpinner=new Spinner(this);
+        sortSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"מיון: מותג ודגם","מיון: הדירוג שלי","מיון: Geekbench","מיון: Benchmark","מיון: גודל מסך"}));
+        root.addView(sortSpinner);
+
+        status=new TextView(this); status.setText("טוען רשימת מותגים..."); status.setTextSize(12); status.setPadding(0,6,0,6); root.addView(status);
         ScrollView sv=new ScrollView(this); list=new LinearLayout(this); list.setOrientation(LinearLayout.VERTICAL); sv.addView(list); root.addView(sv,new LinearLayout.LayoutParams(-1,0,1));
-        search.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int c,int a){} public void onTextChanged(CharSequence s,int st,int b,int c){render();} public void afterTextChanged(android.text.Editable e){}});
-        brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,View v,int pos,long id){render();}});
-        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,View v,int pos,long id){render();}});
-        setContentView(root); render();
+
+        catalog.setOnClickListener(v->{render();});
+        ratings.setOnClickListener(v->showRatings());
+        glossary.setOnClickListener(v->showGlossary());
+        search.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int a,int c,int d){} public void onTextChanged(CharSequence s,int a,int b,int c){render();} public void afterTextChanged(Editable e){}});
+        brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,View v,int pos,long id){if(pos>0) loadBrand(brands.get(pos-1)); render();}});
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,int pos,long id){render();}});
+        setContentView(root);
+        render();
+    }
+
+    void loadBrands(){
+        new Thread(()->{
+            try{
+                JSONObject o=getJson(API+"/brands");
+                JSONArray a=o.optJSONArray("data");
+                if(a==null && o.optJSONObject("data")!=null) a=o.getJSONObject("data").optJSONArray("brands");
+                final ArrayList<String[]> out=new ArrayList<>();
+                if(a!=null) for(int i=0;i<a.length();i++){
+                    JSONObject x=a.getJSONObject(i);
+                    String name=x.optString("name").trim();
+                    String slug=x.optString("slug",x.optString("id"));
+                    if(!name.isEmpty()&&!slug.isEmpty()) out.add(new String[]{name,slug});
+                }
+                runOnUiThread(()->{
+                    brands.clear(); brands.addAll(out);
+                    ArrayList<String> names=new ArrayList<>(); names.add("כל המותגים");
+                    for(String[] b:brands) names.add(b[0]);
+                    brandSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,names));
+                    status.setText("קטלוג GSMArena זמין לפי מותג • "+brands.size()+" מותגים • "+phones.size()+" מכשירים מקומיים/נוספים");
+                    render();
+                });
+            }catch(Exception e){runOnUiThread(()->status.setText("לא ניתן לטעון כרגע את קטלוג GSMArena; המכשירים המקומיים עדיין זמינים."));}
+        }).start();
+    }
+
+    void loadBrand(String[] b){
+        if(loading)return; loading=true; status.setText("טוען את כל הדגמים של "+b[0]+"...");
+        new Thread(()->{
+            try{
+                ArrayList<Phone> got=new ArrayList<>();
+                int page=1,last=1;
+                do{
+                    JSONObject o=getJson(API+"/brands/"+b[1]+"?page="+page);
+                    JSONObject data=o.optJSONObject("data");
+                    if(data==null)break;
+                    last=Math.max(page,data.optInt("last_page",page));
+                    JSONArray a=data.optJSONArray("phones");
+                    if(a!=null) for(int i=0;i<a.length();i++){
+                        JSONObject x=a.getJSONObject(i);
+                        String n=x.optString("phone_name",x.optString("name"));
+                        if(n.isEmpty())continue;
+                        got.add(new Phone(b[0],n,x.optString("image"),x.optString("detail"),x.optString("description",x.optString("summary")),true));
+                    }
+                    page++;
+                }while(page<=last && page<=50);
+                runOnUiThread(()->{
+                    phones.removeIf(p->p.remote && p.brand.equals(b[0]));
+                    phones.addAll(got);
+                    loading=false; status.setText(b[0]+": נטענו "+got.size()+" דגמים.");
+                    render();
+                });
+            }catch(Exception e){loading=false; runOnUiThread(()->status.setText("שגיאה בטעינת "+b[0]));}
+        }).start();
+    }
+
+    JSONObject getJson(String u)throws Exception{
+        HttpURLConnection c=(HttpURLConnection)new URL(u).openConnection();
+        c.setConnectTimeout(12000); c.setReadTimeout(20000); c.setRequestProperty("Accept","application/json");
+        InputStream in=c.getInputStream(); BufferedReader r=new BufferedReader(new InputStreamReader(in));
+        StringBuilder s=new StringBuilder(); String line; while((line=r.readLine())!=null)s.append(line); r.close(); c.disconnect();
+        return new JSONObject(s.toString());
     }
 
     void render(){
-        list.removeAllViews(); String q=search.getText().toString().toLowerCase(Locale.ROOT); String brand=(String)brandSpinner.getSelectedItem();
+        if(list==null)return; list.removeAllViews();
+        String q=search==null?"":search.getText().toString().toLowerCase(Locale.ROOT);
+        String brand=brandSpinner==null||brandSpinner.getSelectedItem()==null?"כל המותגים":brandSpinner.getSelectedItem().toString();
         ArrayList<Phone> shown=new ArrayList<>();
         for(Phone p:phones){
-            if(!brand.equals("כל המותגים")&&!p.brand.equals(brand)) continue;
-            if(!q.isEmpty() && !(p.name+" "+p.brand+" "+p.chip).toLowerCase(Locale.ROOT).contains(q)) continue;
+            if(!brand.equals("כל המותגים")&&!p.brand.equals(brand))continue;
+            if(!q.isEmpty()&&!(p.brand+" "+p.name+" "+p.summary).toLowerCase(Locale.ROOT).contains(q))continue;
             shown.add(p);
         }
-        int sort=sortSpinner.getSelectedItemPosition();
+        int s=sortSpinner==null?0:sortSpinner.getSelectedItemPosition();
         Collections.sort(shown,(a,b)->{
-            if(sort==1) return Double.compare(b.score,a.score);
-            if(sort==2) return Double.compare(screen(a),screen(b));
-            if(sort==3) return Double.compare(weight(a),weight(b));
-            if(sort==4) return Integer.compare(b.geek==null?-1:b.geek,a.geek==null?-1:a.geek);
+            if(s==1)return Double.compare(b.score,a.score);
+            if(s==2)return Integer.compare(b.geek==null?-1:b.geek,a.geek==null?-1:a.geek);
+            if(s==3)return Integer.compare(b.benchmark==null?-1:b.benchmark,a.benchmark==null?-1:a.benchmark);
+            if(s==4)return Double.compare(screen(a),screen(b));
             int x=a.brand.compareToIgnoreCase(b.brand); return x!=0?x:a.name.compareToIgnoreCase(b.name);
         });
-        for(Phone p:shown){
-            LinearLayout card=new LinearLayout(this); card.setOrientation(LinearLayout.VERTICAL); card.setPadding(14,14,14,14);
-            TextView t=new TextView(this); t.setText(p.brand+" "+p.name); t.setTextSize(20); t.setTypeface(Typeface.DEFAULT,Typeface.BOLD); card.addView(t);
-            TextView s=new TextView(this); s.setText(p.display+" • "+p.dimensions+"\n"+p.chip+" • "+p.ram+" RAM • "+p.storage+"\nGeekbench 6: "+(p.geek==null?"לא הוזן":p.geek)+" • שלי: "+p.score+"/100\n"+p.quality); card.addView(s);
-            LinearLayout buttons=new LinearLayout(this);
-            Button details=new Button(this); details.setText("פרטים"); buttons.addView(details);
-            Button pick=new Button(this); pick.setText(selected.contains(p)?"✓ נבחר":"השווה"); buttons.addView(pick);
-            details.setOnClickListener(v->showDetails(p)); pick.setOnClickListener(v->{if(selected.contains(p)) selected.remove(p); else if(selected.size()<4) selected.add(p); render();});
-            card.addView(buttons); list.addView(card);
+        if(shown.isEmpty()){
+            TextView empty=new TextView(this); empty.setText("בחר מותג כדי לטעון את הדגמים שלו. הקטלוג המלא נטען לפי דרישה כדי שהאפליקציה לא תהיה כבדה."); empty.setTextSize(16); empty.setPadding(12,30,12,30); list.addView(empty); return;
         }
+        for(Phone p:shown) addCard(p);
     }
 
-    double screen(Phone p){ try { String s=p.display.replace(",","."); int i=s.indexOf("\""); return Double.parseDouble(s.substring(0,i)); } catch(Exception e){ return 999; } }
-    double weight(Phone p){ try { return Double.parseDouble(p.weight.replace(" g","").replace("—","9999")); } catch(Exception e){ return 9999; } }
+    void addCard(Phone p){
+        LinearLayout card=new LinearLayout(this); card.setOrientation(LinearLayout.HORIZONTAL); card.setPadding(10,10,10,10);
+        GradientDrawable gd=new GradientDrawable(); gd.setColor(Color.WHITE); gd.setCornerRadius(22); gd.setStroke(1,Color.rgb(220,228,238)); card.setBackground(gd);
+        ImageView im=new ImageView(this); im.setScaleType(ImageView.ScaleType.CENTER_INSIDE); card.addView(im,new LinearLayout.LayoutParams(105,125));
+        if(!p.image.isEmpty())loadImage(p.image,im);
+        LinearLayout info=new LinearLayout(this); info.setOrientation(LinearLayout.VERTICAL); info.setPadding(10,0,0,0);
+        TextView t=new TextView(this); t.setText(p.brand+" "+p.name); t.setTextSize(18); t.setTypeface(Typeface.DEFAULT,Typeface.BOLD); info.addView(t);
+        TextView sm=new TextView(this); sm.setText((p.summary==null?"":p.summary)+"\nDA: "+fmt(p.score)+"/100 • Geekbench: "+(p.geek==null?"—":p.geek)+" • Benchmark: "+(p.benchmark==null?"—":p.benchmark)); info.addView(sm);
+        Button d=new Button(this); d.setText("פרטים"); d.setOnClickListener(v->showDetails(p)); info.addView(d);
+        card.addView(info,new LinearLayout.LayoutParams(0,-2,1)); list.addView(card);
+        Space sp=new Space(this); list.addView(sp,new LinearLayout.LayoutParams(1,8));
+    }
+
+    void loadImage(String url,ImageView view){
+        new Thread(()->{try{
+            HttpURLConnection c=(HttpURLConnection)new URL(url).openConnection(); c.setConnectTimeout(8000); c.setReadTimeout(12000);
+            Bitmap b=BitmapFactory.decodeStream(c.getInputStream()); c.disconnect();
+            runOnUiThread(()->{if(b!=null)view.setImageBitmap(b);});
+        }catch(Exception ignored){}}).start();
+    }
+
+    double screen(Phone p){
+        try{String x=p.summary==null?"":p.summary.replace(",","."); int i=x.indexOf("""); int j=x.lastIndexOf(" ",Math.max(0,i)); return Double.parseDouble(x.substring(Math.max(0,j),i));}catch(Exception e){return 99;}
+    }
+    double estimateScore(String s,String n){
+        String x=(s+" "+n).toLowerCase(Locale.ROOT); double v=70;
+        if(x.contains("8 elite")||x.contains("a19")||x.contains("dimensity 9500")||x.contains("snapdragon 8 gen 5"))v=97;
+        else if(x.contains("8 gen 3")||x.contains("8 gen 2")||x.contains("tensor g5")||x.contains("dimensity 9300"))v=92;
+        else if(x.contains("8+ gen 1")||x.contains("7+ gen 3")||x.contains("dimensity 8300"))v=86;
+        else if(x.contains("7 gen")||x.contains("7s gen")||x.contains("dimensity 7"))v=80;
+        else if(x.contains("g99")||x.contains("helio g99"))v=72;
+        return v;
+    }
+    String fmt(double x){return String.format(Locale.US,"%.0f",x);}
 
     void showDetails(Phone p){
-        String src=p.source.isEmpty()?"לא קיים קישור מקור":p.source;
-        String msg="מערכת: "+p.os+"\nמעבד: "+p.chip+"\nמסך: "+p.display+"\nרזולוציה: "+p.resolution+"\nמידות: "+p.dimensions+"\nמשקל: "+p.weight+"\nRAM: "+p.ram+"\nאחסון: "+p.storage+"\nמצלמות: "+p.camera+"\nסוללה: "+p.battery+"\nטעינה: "+p.charging+"\nרשת: "+p.network+"\nGeekbench 6: "+(p.geek==null?"לא הוזן":p.geek)+"\nהדירוג שלי: "+p.score+"/100\n\nסטטוס נתונים: "+p.quality+"\nמקור: "+src;
-        new AlertDialog.Builder(this).setTitle(p.brand+" "+p.name).setMessage(msg).setPositiveButton("סגור",null).show();
+        String m=""+p.brand+" "+p.name+"\n\n"+(p.summary==null?"אין תקציר זמין.":p.summary)+
+                "\n\nדירוג DA PHONES: "+fmt(p.score)+"/100"+
+                "\nGeekbench: "+(p.geek==null?"לא קיים נתון מאומת במאגר":p.geek)+
+                "\nBenchmark: "+(p.benchmark==null?"לא קיים נתון מאומת במאגר":p.benchmark)+
+                "\n\nתמונה: "+(p.image.isEmpty()?"אין":p.image)+
+                "\n\nמקור נתוני המכשיר: GSMArena/API כאשר המכשיר נטען מהקטלוג.";
+        new AlertDialog.Builder(this).setTitle(p.brand+" "+p.name).setMessage(m).setPositiveButton("סגור",null).show();
     }
 
-    void showCompare(){
-        if(selected.size()<2){new AlertDialog.Builder(this).setMessage("בחר לפחות שני מכשירים להשוואה.").setPositiveButton("סגור",null).show();return;}
-        StringBuilder x=new StringBuilder();
-        String[] labels={"מסך","רזולוציה","מידות","משקל","מעבד","RAM","אחסון","מצלמות","סוללה","טעינה","רשת","Geekbench 6","דירוג אישי"};
-        for(String label:labels){x.append("\n").append(label).append(":\n"); for(Phone p:selected) x.append("• ").append(p.brand).append(" ").append(p.name).append(": ").append(value(p,label)).append("\n");}
-        new AlertDialog.Builder(this).setTitle("השוואה — עד 4 מכשירים").setMessage(x.toString()).setPositiveButton("סגור",null).show();
+    void showRatings(){
+        ArrayList<Phone> x=new ArrayList<>(phones); Collections.sort(x,(a,b)->Double.compare(b.score,a.score));
+        StringBuilder s=new StringBuilder("🏆 דירוג DA PHONES\n\n");
+        int i=1; for(Phone p:x){s.append(i++).append(". ").append(p.brand).append(" ").append(p.name)
+                .append(" — ").append(fmt(p.score)).append("/100")
+                .append(" | GB ").append(p.geek==null?"—":p.geek)
+                .append(" | BM ").append(p.benchmark==null?"—":p.benchmark).append("\n"); if(i>101)break;}
+        new AlertDialog.Builder(this).setTitle("דירוגים").setMessage(s.toString()).setPositiveButton("סגור",null).show();
     }
-    String value(Phone p,String l){
-        if(l.equals("מסך"))return p.display; if(l.equals("רזולוציה"))return p.resolution; if(l.equals("מידות"))return p.dimensions; if(l.equals("משקל"))return p.weight;
-        if(l.equals("מעבד"))return p.chip; if(l.equals("RAM"))return p.ram; if(l.equals("אחסון"))return p.storage; if(l.equals("מצלמות"))return p.camera;
-        if(l.equals("סוללה"))return p.battery; if(l.equals("טעינה"))return p.charging; if(l.equals("רשת"))return p.network; if(l.equals("Geekbench 6"))return p.geek==null?"—":String.valueOf(p.geek); return p.score+"/100";
+
+    void showGlossary(){
+        String s="📘 מילון מושגים\n\n"+
+        "AMOLED — מסך שבו כל פיקסל מייצר אור בעצמו. שחור עמוק וניגודיות גבוהה.\n\n"+
+        "OLED — משפחת מסכים עם פיקסלים פולטי-אור; AMOLED היא מימוש נפוץ בסמארטפונים.\n\n"+
+        "LCD / IPS — מסך עם תאורה אחורית. לרוב זול יותר, אך השחור פחות עמוק מ-OLED.\n\n"+
+        "LTPO — טכנולוגיית backplane שמאפשרת קצב רענון משתנה וחיסכון בסוללה.\n\n"+
+        "Hz — מספר רענוני המסך בשנייה. 120Hz בדרך כלל מרגיש חלק יותר מ-60Hz.\n\n"+
+        "SoC / Chipset — השבב הראשי שמרכז CPU, GPU ורכיבים נוספים.\n\n"+
+        "CPU — המעבד הכללי שמבצע חישובים ומריץ את מערכת ההפעלה והאפליקציות.\n\n"+
+        "GPU — מעבד גרפי שמטפל בגרפיקה, משחקים, ופעולות מקביליות מסוימות.\n\n"+
+        "RAM — זיכרון עבודה זמני לאפליקציות ולמערכת. יותר RAM מאפשר לרוב להשאיר יותר אפליקציות פעילות.\n\n"+
+        "UFS — תקן אחסון מהיר. מספר גבוה יותר בדרך כלל מצביע על דור חדש ומהיר יותר.\n\n"+
+        "LPDDR — סוג זיכרון RAM חסכוני המיועד למכשירים ניידים.\n\n"+
+        "nits — יחידת בהירות. יותר nits = מסך בהיר יותר, בעיקר בחוץ.\n\n"+
+        "OIS — ייצוב אופטי למצלמה, המסייע להפחתת רעידות.\n\n"+
+        "IP68 — דירוג עמידות בפני אבק ומים לפי תנאי הבדיקה של היצרן.\n\n"+
+        "5G / 4G — דורות של רשתות סלולריות; 5G יכול לספק מהירות וקיבולת גבוהות יותר בהתאם לרשת.\n\n"+
+        "Geekbench — מבחן ביצועים ל-CPU; יש להבדיל בין Single-Core ל-Multi-Core.\n\n"+
+        "Benchmark — ציון ממבחן ביצועים. הציון תלוי במבחן, בגרסה ובתנאי הבדיקה ולכן לא משווים מספרים ממבחנים שונים כאילו הם אותו דבר.\n\n"+
+        "DA PHONES — הציון שלי הוא דירוג משוקלל משוער של חומרה, מסך, סוללה, מצלמות, תוכנה ותמורה; הוא לא ציון רשמי של יצרן.";
+        new AlertDialog.Builder(this).setTitle("מילון DA PHONES").setMessage(s).setPositiveButton("סגור",null).show();
     }
 }
