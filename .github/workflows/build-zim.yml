@@ -77,7 +77,7 @@ jobs:
       - name: Create and validate ZIM
         run: |
           mkdir -p dist
-          zimwriterfs --welcome=index.html --illustration=zim_favicon.png --language=heb --title="DA PHONES Offline" --name="da-phones-offline" --description="Offline smartphone specifications database" --creator="DA PHONES" --publisher="DA PHONES" --withFullTextIndex build/site dist/DA_PHONES_Offline.zim
+          zimwriterfs --welcome=index.html --illustration=zim_favicon.png --language=heb --title="DA PHONES Offline" --name="da-phones-offline" --description="Offline smartphone specifications database" --longDescription="DA PHONES offline smartphone database with searchable specifications and individual device pages." --creator="DA PHONES" --publisher="DA PHONES" --withFullTextIndex build/site dist/DA_PHONES_Offline.zim
           zimcheck dist/DA_PHONES_Offline.zim
       - name: Upload ZIM
         uses: actions/upload-artifact@v4
