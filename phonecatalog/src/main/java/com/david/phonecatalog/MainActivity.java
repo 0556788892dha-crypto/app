@@ -311,7 +311,8 @@ public class MainActivity extends Activity {
             h.desc.setText(p.summary+"\\nDA: "+Math.round(p.score)+"/100");
             h.compareBtn.setText(compare.contains(p)?"✓ בהשוואה":"⚖ השווה");
             h.details.setOnClickListener(v->details(p));
-            h.compareBtn.setOnClickListener(v->{toggle(p);h.compareBtn.setText(compare.contains(p)?"✓ בהשוואה":"⚖ השווה");});
+            final Button compareButton=h.compareBtn;
+            compareButton.setOnClickListener(v->{toggle(p);compareButton.setText(compare.contains(p)?"✓ בהשוואה":"⚖ השווה");});
             loadPhoneImage(h.pic,p);
             LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,dp(4),0,dp(4));h.card.setLayoutParams(lp);
             return convert;
