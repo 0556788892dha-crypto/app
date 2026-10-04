@@ -48,24 +48,65 @@ public class MainActivity extends Activity {
         loadAsync();
     }
 
+    long splashStartedAt=0L;
+
     void showSplash(){
+        splashStartedAt=SystemClock.uptimeMillis();
         LinearLayout box=new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setGravity(Gravity.CENTER);
-        box.setPadding(dp(24),dp(24),dp(24),dp(24));
+        box.setPadding(dp(20),dp(26),dp(20),dp(18));
         box.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,
-                new int[]{Color.rgb(9,31,55),Color.rgb(18,78,121)}));
-        ImageView logo=new ImageView(this);
-        logo.setImageResource(R.drawable.ic_logo);
-        logo.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        box.addView(logo,new LinearLayout.LayoutParams(dp(170),dp(170)));
-        TextView title=txt("DA PHONES",30,true); title.setTextColor(Color.WHITE); title.setGravity(Gravity.CENTER);
-        box.addView(title);
-        TextView sub=txt("קטלוג מכשירים אופליין",15,false); sub.setTextColor(Color.rgb(220,238,250)); sub.setGravity(Gravity.CENTER);
-        box.addView(sub);
-        ProgressBar p=new ProgressBar(this); p.setIndeterminate(true);
-        LinearLayout.LayoutParams pp=new LinearLayout.LayoutParams(dp(42),dp(42));pp.topMargin=dp(22);box.addView(p,pp);
+                new int[]{Color.rgb(5,24,42),Color.rgb(16,67,104),Color.rgb(5,24,42)}));
+
+        TextView da=txt("DA",52,true);
+        da.setGravity(Gravity.CENTER);
+        da.setTextColor(Color.WHITE);
+        da.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD_ITALIC));
+        box.addView(da,new LinearLayout.LayoutParams(-1,dp(70)));
+
+        ImageView devices=new ImageView(this);
+        devices.setImageResource(R.drawable.ic_splash_devices);
+        devices.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        box.addView(devices,new LinearLayout.LayoutParams(-1,0,1));
+
+        TextView sub=txt("Phone specifications and comparisons",17,false);
+        sub.setGravity(Gravity.CENTER);
+        sub.setTextColor(Color.rgb(215,236,249));
+        sub.setTypeface(Typeface.create(Typeface.SERIF,Typeface.ITALIC));
+        LinearLayout.LayoutParams sp=new LinearLayout.LayoutParams(-1,dp(54));
+        sp.topMargin=dp(4);
+        box.addView(sub,sp);
+
+        ProgressBar p=new ProgressBar(this);
+        p.setIndeterminate(true);
+        LinearLayout.LayoutParams pp=new LinearLayout.LayoutParams(dp(30),dp(30));
+        pp.topMargin=dp(8);
+        box.addView(p,pp);
+
+        da.setAlpha(0f); devices.setAlpha(0f); sub.setAlpha(0f); p.setAlpha(0f);
+        da.setScaleX(.94f); da.setScaleY(.94f);
+        devices.setScaleX(.96f); devices.setScaleY(.96f);
+
+        da.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(420).start();
+        devices.animate().alpha(1f).scaleX(1f).scaleY(1f).setStartDelay(120).setDuration(520).start();
+        sub.animate().alpha(1f).setStartDelay(320).setDuration(500).start();
+        p.animate().alpha(1f).setStartDelay(450).setDuration(350).start();
+
         setContentView(box);
+    }
+
+    void finishSplashAndShowUi(ArrayList<Phone> loaded){
+        long elapsed=SystemClock.uptimeMillis()-splashStartedAt;
+        long wait=Math.max(0L,1200L-elapsed);
+        mainHandler.postDelayed(()->{
+            phones.clear();
+            phones.addAll(loaded);
+            catalogLoaded=true;
+            ui();
+            root.setAlpha(0f);
+            root.animate().alpha(1f).setDuration(220).start();
+        },wait);
     }
 
     void loadAsync(){
@@ -102,11 +143,7 @@ public class MainActivity extends Activity {
                     if(!p.brand.isEmpty()&&!p.name.isEmpty()&&keys.add(key(p)+"|"+p.category))loaded.add(p);
                 }
             }catch(Exception ignored){}
-            mainHandler.post(()->{
-                phones.clear(); phones.addAll(loaded); catalogLoaded=true;
-                ui();
-                mainHandler.postDelayed(()->{ if(root!=null) root.setAlpha(1f); },80);
-            });
+            mainHandler.post(()->finishSplashAndShowUi(loaded));
         });
     }
 
