@@ -30,7 +30,7 @@
     "category": "phone",
     "brand": "Unihertz",
     "name": "Jelly Pro",
-    "image_url": "",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/jelly-pro-small-4g-smartphone-910255.jpg?v=1698816311&width=600",
     "image": "",
     "summary": "2.45 inch • MediaTek MT6737T • 2GB • 16GB • 950mAh • Android",
     "detail": {
@@ -57,7 +57,7 @@
     "category": "phone",
     "brand": "Unihertz",
     "name": "Jelly 2",
-    "image_url": "",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/jelly-2-small-android-11-phone-general-366428.jpg?v=1698816209&width=589",
     "image": "",
     "summary": "3.0 inch • Helio P60 • 6GB • 128GB • 2000mAh • Android",
     "detail": {
@@ -84,7 +84,7 @@
     "category": "phone",
     "brand": "Unihertz",
     "name": "Atom",
-    "image_url": "",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/atom-small-rugged-4g-smartphone-814919.jpg?v=1698816513&width=600",
     "image": "",
     "summary": "2.45 inch • Helio P23 • 4GB • 64GB • 2000mAh • Android",
     "detail": {
@@ -111,7 +111,7 @@
     "category": "phone",
     "brand": "Unihertz",
     "name": "Titan Pocket",
-    "image_url": "",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/titan-pocket-the-new-qwerty-android-11-smartphone-703721.jpg?v=1698816416&width=600",
     "image": "",
     "summary": "3.1 inch • Helio P70 • 6GB • 128GB • 4000mAh • Android",
     "detail": {
@@ -138,7 +138,7 @@
     "category": "phone",
     "brand": "Unihertz",
     "name": "Titan Slim",
-    "image_url": "",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/titan-slim-the-new-sleek-qwerty-smartphone-221100.jpg?v=1698816369&width=600",
     "image": "",
     "summary": "4.0 inch • Helio P70 • 6GB • 256GB • 4100mAh • Android",
     "detail": {
@@ -165,7 +165,7 @@
     "category": "phone",
     "brand": "Unihertz",
     "name": "TickTock",
-    "image_url": "",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/ticktock-5g-rugged-phone-with-dual-screen-201683.jpg?v=1711608784&width=600",
     "image": "",
     "summary": "6.5 inch • Dimensity 700 • 8GB • 256GB • 6000mAh • Android",
     "detail": {
@@ -192,7 +192,7 @@
     "category": "phone",
     "brand": "Unihertz",
     "name": "TickTock-E",
-    "image_url": "",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/ticktock-e-full-featured-android-smartphone-with-dual-screen-885737.jpg?v=1711608778&width=600",
     "image": "",
     "summary": "6.5 inch • Helio P22 • 4GB • 64GB • 6000mAh • Android",
     "detail": {
@@ -2394,5 +2394,89 @@
       }
     },
     "source": "AIPHOR official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "Jelly 2E",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/jelly-2e-new-choice-for-a-mini-phone-657696.jpg?v=1698816267&width=1000",
+    "source": "Unihertz official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "Jelly Star",
+    "image_url": "https://www.unihertz.com/cdn/shop/files/JSUS-02-US-5.jpg?v=1753942408&width=1000",
+    "source": "Unihertz official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "Jelly Max",
+    "image_url": "https://www.unihertz.com/cdn/shop/files/jelly-max-the-smallest-5g-smartphone-unihertz-smartphones-unihertz-872508.jpg?v=1731627004&width=1000",
+    "source": "Unihertz official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "Atom L",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/atom-l-small-rugged-smartphone-ip68-rating-888402.jpg?v=1698816558&width=600",
+    "source": "Unihertz official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "Atom XL",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/atom-xl-4-inch-walkie-talkie-rugged-smartphone-179351.jpg?v=1698816609&width=600",
+    "source": "Unihertz official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "Titan",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/titan-the-ultimate-rugged-qwerty-phone-155502.jpg?v=1698816460&width=600",
+    "source": "Unihertz official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "Titan 2",
+    "image_url": "https://www.unihertz.com/cdn/shop/files/titan-2-the-latest-5g-qwerty-physical-keyboard-smartphone-unihertz-smartphones-unihertz-2923626.jpg?v=1767631146&width=1000",
+    "source": "Unihertz official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "TickTock-S",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/ticktock-s-dual-screen-5g-slim-rugged-smartphone-for-everyday-useunihertz-452415.jpg?v=1711608770&width=1000",
+    "source": "Unihertz official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "Tank 3 Pro",
+    "image_url": "https://www.unihertz.com/cdn/shop/files/tank-3-pro-23800mah-5g-rugged-smartphone-with-built-in-dlp-projector-unihertz-smartphones-unihertz-840165.jpg?v=1719973691&width=1000",
+    "source": "Unihertz official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "Tank Mini",
+    "image_url": "https://www.unihertz.com/cdn/shop/files/tank-mini-43-inch-mini-rugged-smartphone-8gb-ram-version-unihertz-smartphones-unihertz-434566.jpg?v=1732041269&width=1000",
+    "source": "Unihertz official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "Golden Eye",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/golden-eye-5g-slim-rugged-camping-light-smartphone-for-explorersunihertzsmartphonesunihertz-318178.jpg?v=1698816690&width=1000",
+    "source": "Unihertz official product page"
+  },
+  {
+    "category": "phone",
+    "brand": "Unihertz",
+    "model": "Luna",
+    "image_url": "https://www.unihertz.com/cdn/shop/products/luna-transparent-back-designed-light-emitting-4g-phoneunihertzsmartphonesunihertz-445632.jpg?v=1753943019&width=1000",
+    "source": "Unihertz official product page"
   }
 ]
