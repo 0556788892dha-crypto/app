@@ -9,6 +9,7 @@ on:
       - 'settings.gradle'
       - 'gradle.properties'
       - '.github/workflows/build-da-phones.yml'
+      - '.github/scripts/build_catalog.py'
 
 jobs:
   build:
