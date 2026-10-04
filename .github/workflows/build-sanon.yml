@@ -1,0 +1,24 @@
+name: Build SANON APK
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'sanon/**'
+      - '.github/workflows/build-sanon.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '17'}
+      - uses: android-actions/setup-android@v3
+      - run: yes | sdkmanager --licenses > /dev/null || true
+      - run: ./gradlew :sanon:assembleRelease
+      - run: |
+          ls -lh sanon/build/outputs/apk/release/*.apk
+          test $(stat -c%s sanon/build/outputs/apk/release/*.apk) -le 52428800
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SANON-release
+          path: sanon/build/outputs/apk/release/*.apk
