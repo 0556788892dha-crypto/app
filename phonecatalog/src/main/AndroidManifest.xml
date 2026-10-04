@@ -3,8 +3,8 @@
     <application
         android:theme="@style/AppTheme"
         android:label="DA PHONES"
-        android:icon="@drawable/ic_phone"
-        android:roundIcon="@drawable/ic_phone"
+        android:icon="@drawable/ic_logo"
+        android:roundIcon="@drawable/ic_logo"
         android:allowBackup="false"
         android:supportsRtl="true">
         <activity
