@@ -20,10 +20,10 @@ public class MainActivity extends Activity{
  AdapterView.OnItemSelectedListener sel=new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){}public void onItemSelected(AdapterView<?> p,View v,int x,long id){render();}};
  TextView txt(String s,float z,boolean bold){TextView t=new TextView(this);t.setText(s);t.setTextSize(z*scale);if(bold)t.setTypeface(Typeface.DEFAULT,Typeface.BOLD);return t;}Button btn(String s){Button b=new Button(this);b.setText(s);return b;}
  Spinner category;
- String catLabel(String c){return c.equals("tablet")?"טאבלטים":c.equals("watch")?"שעונים חכמים":"טלפונים";}
+ String catLabel(String c){return c.equals("tablet")?"טאבלטים":c.equals("watch")?"שעונים חכמים":c.equals("all")?"כל הקטגוריות":"טלפונים";}
  String catValue(){if(category==null||category.getSelectedItem()==null)return "all";String x=String.valueOf(category.getSelectedItem());if(x.equals("טלפונים"))return "phone";if(x.equals("טאבלטים"))return "tablet";if(x.equals("שעונים חכמים"))return "watch";return "all";}
  void brands(){ArrayList<String>x=new ArrayList<>();x.add("כל המותגים");TreeSet<String>s=new TreeSet<>(String.CASE_INSENSITIVE_ORDER);for(Phone p:phones)s.add(p.brand);x.addAll(s);brand.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,x));}
- void render(){String q=search==null?"":search.getText().toString().toLowerCase(Locale.ROOT).trim();String b=brand==null?"כל המותגים":String.valueOf(brand.getSelectedItem());String cat=catValue();visible.clear();for(Phone p:phones){if(!cat.equals("all")&&!p.category.equals(cat))continue;if(!b.equals("כל המותגים")&&!p.brand.equals(b))continue;if(!q.isEmpty()&&!(p.brand+" "+p.name+" "+p.summary+" "+flat(p.detail)).toLowerCase(Locale.ROOT).contains(q))continue;visible.add(p);}int s=sort==null?0:sort.getSelectedItemPosition();Collections.sort(visible,(x,y)->s==1?Double.compare(y.score,x.score):s==2?Double.compare(screen(x),screen(y)):(x.brand+" "+x.name).compareToIgnoreCase(y.brand+" "+y.name));if(list!=null&&list.getAdapter()!=null)((BaseAdapter)list.getAdapter()).notifyDataSetChanged();if(status!=null)status.setText("מוצגים "+visible.size()+" מתוך "+phones.size()+" דגמים • "+catLabel(cat.equals("all")?"phone":cat)+" • אופליין");}
+ void render(){String q=search==null?"":search.getText().toString().toLowerCase(Locale.ROOT).trim();String b=brand==null?"כל המותגים":String.valueOf(brand.getSelectedItem());String cat=catValue();visible.clear();for(Phone p:phones){if(!cat.equals("all")&&!p.category.equals(cat))continue;if(!b.equals("כל המותגים")&&!p.brand.equals(b))continue;if(!q.isEmpty()&&!(p.brand+" "+p.name+" "+p.summary+" "+flat(p.detail)).toLowerCase(Locale.ROOT).contains(q))continue;visible.add(p);}int s=sort==null?0:sort.getSelectedItemPosition();Collections.sort(visible,(x,y)->s==1?Double.compare(y.score,x.score):s==2?Double.compare(screen(x),screen(y)):(x.brand+" "+x.name).compareToIgnoreCase(y.brand+" "+y.name));if(list!=null&&list.getAdapter()!=null)((BaseAdapter)list.getAdapter()).notifyDataSetChanged();if(status!=null)status.setText("מוצגים "+visible.size()+" מתוך "+phones.size()+" דגמים • "+catLabel(cat)+" • אופליין");}
  class Adapter extends BaseAdapter{public int getCount(){return visible.size();}public Object getItem(int p){return visible.get(p);}public long getItemId(int p){return p;}public View getView(int i,View v,ViewGroup g){Phone p=visible.get(i);LinearLayout card=new LinearLayout(MainActivity.this);card.setOrientation(LinearLayout.HORIZONTAL);card.setPadding(8,8,8,8);ImageView pic=new ImageView(MainActivity.this); loadPhoneImage(pic,p);card.addView(pic,new LinearLayout.LayoutParams(82,105));LinearLayout box=new LinearLayout(MainActivity.this);box.setOrientation(LinearLayout.VERTICAL);box.addView(txt(catLabel(p.category)+" • "+p.brand+" "+p.name,17,true));TextView d=txt(p.summary+"\nDA: "+Math.round(p.score)+"/100",13,false);box.addView(d);LinearLayout bs=new LinearLayout(MainActivity.this);Button details=btn("פרטים");Button c=btn(compare.contains(p)?"✓ בהשוואה":"⚖ השווה");details.setOnClickListener(x->details(p));c.setOnClickListener(x->{toggle(p);c.setText(compare.contains(p)?"✓ בהשוואה":"⚖ השווה");});bs.addView(details,new LinearLayout.LayoutParams(0,-2,1));bs.addView(c,new LinearLayout.LayoutParams(0,-2,1));box.addView(bs);card.addView(box,new LinearLayout.LayoutParams(0,-2,1));return card;}}
  void loadPhoneImage(ImageView v, Phone p){
   v.setImageResource(R.drawable.ic_phone);
@@ -32,7 +32,65 @@ public class MainActivity extends Activity{
   try{InputStream in=getAssets().open(path.replaceFirst("^assets/",""));BitmapDrawable d=new BitmapDrawable(getResources(),in);in.close();v.setImageDrawable(d);v.setScaleType(ImageView.ScaleType.CENTER_INSIDE);}catch(Exception ignored){}
  }
  void toggle(Phone p){if(compare.contains(p))compare.remove(p);else{if(compare.size()>=4){Toast.makeText(this,"עד 4 מכשירים",0).show();return;}compare.add(p);}render();}
- void details(Phone p){ScrollView s=new ScrollView(this);LinearLayout b=new LinearLayout(this);b.setOrientation(LinearLayout.VERTICAL);b.addView(txt(format(p),15,false));Button c=btn(compare.contains(p)?"הסר מהשוואה":"הוסף להשוואה");c.setOnClickListener(v->{toggle(p);c.setText(compare.contains(p)?"הסר מהשוואה":"הוסף להשוואה");});b.addView(c);s.addView(b);new AlertDialog.Builder(this).setTitle(p.brand+" "+p.name).setView(s).setPositiveButton("סגור",null).show();}
+ void details(Phone p){
+  ScrollView s=new ScrollView(this);
+  LinearLayout b=new LinearLayout(this);
+  b.setOrientation(LinearLayout.VERTICAL);
+  b.setPadding(dp(6),dp(4),dp(6),dp(12));
+  TextView cat=txt(catLabel(p.category),13,true);
+  cat.setPadding(dp(12),dp(7),dp(12),dp(7));
+  cat.setBackground(cardBg());
+  b.addView(cat);
+  if(p.summary!=null&&!p.summary.trim().isEmpty()){
+   TextView summary=txt(p.summary,14,false);
+   summary.setPadding(dp(12),dp(10),dp(12),dp(10));
+   summary.setBackground(cardBg());
+   LinearLayout.LayoutParams sp=new LinearLayout.LayoutParams(-1,-2);
+   sp.setMargins(0,dp(8),0,dp(8)); b.addView(summary,sp);
+  }
+  JSONObject d=p.detail;
+  if(d!=null) addSpecObject(b,d,0);
+  TextView source=txt("מקור: "+(p.source==null||p.source.isEmpty()?"לא צוין":p.source),11,false);
+  source.setPadding(dp(12),dp(10),dp(12),dp(10));
+  b.addView(source);
+  Button cmpBtn=btn(compare.contains(p)?"הסר מההשוואה":"הוסף להשוואה");
+  cmpBtn.setOnClickListener(v->{toggle(p);cmpBtn.setText(compare.contains(p)?"הסר מההשוואה":"הוסף להשוואה");});
+  b.addView(cmpBtn);
+  s.addView(b);
+  new AlertDialog.Builder(this).setTitle(p.brand+" "+p.name).setView(s).setPositiveButton("סגור",null).show();
+ }
+ int dp(int v){return Math.round(v*getResources().getDisplayMetrics().density);}
+ GradientDrawable cardBg(){GradientDrawable g=new GradientDrawable();g.setColor(Color.WHITE);g.setCornerRadius(dp(10));g.setStroke(dp(1),Color.LTGRAY);return g;}
+ void addSpecObject(LinearLayout parent,JSONObject obj,int depth){
+  if(obj==null||depth>4)return;
+  Iterator<String> it=obj.keys();
+  while(it.hasNext()){
+   String k=it.next();
+   if(hidden(k))continue;
+   Object v=obj.opt(k);
+   if(v instanceof JSONObject){
+    LinearLayout section=new LinearLayout(this);section.setOrientation(LinearLayout.VERTICAL);section.setPadding(dp(12),dp(8),dp(12),dp(8));section.setBackground(cardBg());
+    TextView head=txt(pretty(k),15,true);section.addView(head);
+    LinearLayout.LayoutParams pp=new LinearLayout.LayoutParams(-1,-2);pp.setMargins(0,dp(6),0,dp(6));parent.addView(section,pp);
+    addSpecObject(section,(JSONObject)v,depth+1);
+   }else if(v instanceof JSONArray){
+    String value=cleanValue(String.valueOf(v));
+    if(!value.isEmpty())addField(parent,pretty(k),value);
+   }else if(v!=JSONObject.NULL){
+    String value=cleanValue(String.valueOf(v));
+    if(!value.isEmpty())addField(parent,pretty(k),value);
+   }
+  }
+ }
+ void addField(LinearLayout parent,String label,String value){
+  LinearLayout row=new LinearLayout(this);row.setOrientation(LinearLayout.HORIZONTAL);row.setGravity(Gravity.CENTER_VERTICAL);row.setPadding(0,dp(7),0,dp(7));
+  TextView l=txt(label,14,true);TextView v=txt(value,14,false);l.setGravity(Gravity.RIGHT);v.setGravity(Gravity.RIGHT);
+  row.addView(l,new LinearLayout.LayoutParams(dp(125),-2));
+  row.addView(v,new LinearLayout.LayoutParams(0,-2,1));
+  parent.addView(row);
+ }
+ String cleanValue(String x){return stripHtml(x.replace("[","").replace("]","").replace("\\"","\"").trim());}
+
  String format(Phone p){StringBuilder s=new StringBuilder();if(p.summary!=null&&!p.summary.isEmpty())s.append(p.summary).append("\n\n");s.append("קטגוריה: ").append(catLabel(p.category)).append("\n");s.append("דירוג DA PHONES: ").append(Math.round(p.score)).append("/100\n");s.append("מקור נתונים: ").append(p.source==null||p.source.isEmpty()?(p.detail!=null?"מפרט מפורט":"רשומת בסיס"):p.source).append("\n\n");if(p.detail!=null)json(p.detail,s,0);return s.toString();}
  void json(JSONObject o,StringBuilder s,int d){
  if(o==null||d>6)return;
@@ -58,6 +116,28 @@ boolean hidden(String k){
 }
 String pretty(String k){
  String x=k.replace("_"," ").trim(),l=x.toLowerCase(Locale.ROOT);
+ if(l.equals("screen size"))return "גודל מסך";
+ if(l.equals("refresh rate"))return "קצב רענון";
+ if(l.equals("brightness"))return "בהירות";
+ if(l.equals("ppi"))return "צפיפות פיקסלים";
+ if(l.equals("resolution"))return "רזולוציה";
+ if(l.equals("ram"))return "RAM";
+ if(l.equals("storage"))return "אחסון";
+ if(l.equals("memory card"))return "כרטיס זיכרון";
+ if(l.equals("rear camera"))return "מצלמה אחורית";
+ if(l.equals("front camera"))return "מצלמה קדמית";
+ if(l.equals("battery capacity"))return "קיבולת סוללה";
+ if(l.equals("charging"))return "טעינה";
+ if(l.equals("cellular"))return "רשת סלולרית";
+ if(l.equals("wifi"))return "Wi‑Fi";
+ if(l.equals("gps"))return "מיקום / GPS";
+ if(l.equals("ir"))return "אינפרא אדום";
+ if(l.equals("nfc"))return "NFC";
+ if(l.equals("bluetooth"))return "Bluetooth";
+ if(l.equals("cpu"))return "מעבד CPU";
+ if(l.equals("gpu"))return "מעבד גרפי GPU";
+ if(l.equals("os"))return "מערכת הפעלה";
+ if(l.equals("dimensions"))return "מידות";
  if(l.equals("network"))return "רשת";
  if(l.equals("launch"))return "השקה";
  if(l.equals("body"))return "גוף ומידות";
