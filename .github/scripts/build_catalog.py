@@ -253,12 +253,32 @@ def main():
         key = (phone["brand"].lower(), phone["name"].lower())
         curated = niche_by_key.pop(key, None)
         if curated:
-            # Keep a verified image from the broad dataset when the curated
-            # record intentionally omits an image URL; the final APK remains offline.
-            if not curated.get("image_url") and phone.get("image_url"):
-                curated["image_url"] = phone.get("image_url")
-                curated["image"] = image_path(curated["brand"], curated["name"], curated["image_url"])
-            phones[i] = curated
+            # Curated records override only fields they actually provide.
+            # This keeps the rich GSMArena record intact while allowing
+            # curated niche records to add verified images/specs.
+            merged = dict(phone)
+            for field in ("category","brand","name","slug","image_url","image","summary","source"):
+                value = curated.get(field)
+                if isinstance(value, str) and value.strip():
+                    merged[field] = value
+            base_detail = phone.get("detail")
+            curated_detail = curated.get("detail")
+            if isinstance(base_detail, dict) and isinstance(curated_detail, dict):
+                detail = dict(base_detail)
+                for dk, dv in curated_detail.items():
+                    if isinstance(dv, dict) and isinstance(detail.get(dk), dict):
+                        nested = dict(detail[dk])
+                        nested.update(dv)
+                        detail[dk] = nested
+                    else:
+                        detail[dk] = dv
+                merged["detail"] = detail
+            elif isinstance(curated_detail, dict):
+                merged["detail"] = curated_detail
+            if merged.get("image_url"):
+                merged["image"] = image_path(merged["brand"], merged["name"], merged["image_url"])
+            merged["summary"] = merged.get("summary") or phone.get("summary","")
+            phones[i] = merged
             replaced += 1
 
     for key, phone in niche_by_key.items():
