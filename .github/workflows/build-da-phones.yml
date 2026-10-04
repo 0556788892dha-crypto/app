@@ -32,7 +32,7 @@ jobs:
         run: python .github/scripts/build_catalog.py
       - name: Audit catalog
         run: python .github/scripts/audit_catalog.py
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -59,9 +59,13 @@ jobs:
         run: |
           set -euo pipefail
           APK=$(find phonecatalog/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | head -n 1)
-          gh release create da-phones-v1.3 "$APK" DA-PHONES-SHA256.txt \
-            --title "DA PHONES v1.3" \
-            --notes "Verified offline DA PHONES APK. Built by GitHub Actions from the repository source."
+          if gh release view da-phones-v1.3 >/dev/null 2>&1; then
+            gh release upload da-phones-v1.3 "$APK" DA-PHONES-SHA256.txt --clobber
+          else
+            gh release create da-phones-v1.3 "$APK" DA-PHONES-SHA256.txt \
+              --title "DA PHONES v1.3" \
+              --notes "Verified offline DA PHONES APK. Built by GitHub Actions from the repository source."
+          fi
 
       - uses: actions/upload-artifact@v4
         with:
