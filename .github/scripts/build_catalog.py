@@ -39,9 +39,14 @@ def image_path(brand, name, image_url):
 
 
 def normalize_niche(item):
+    category = clean(item.get("category", "phone")).lower() or "phone"
+    if category not in ("phone", "tablet", "watch"):
+        category = "phone"
     brand = clean(item.get("brand"))
     name = clean(item.get("model", item.get("name")))
-    if not brand or not name or not is_probable_phone(name, ""):
+    if not brand or not name:
+        return None
+    if category == "phone" and not is_probable_phone(name, ""):
         return None
 
     image_url = clean(item.get("imageUrl", item.get("image_url")))
@@ -55,6 +60,7 @@ def normalize_niche(item):
     ]
 
     return {
+        "category": category,
         "brand": brand,
         "name": name,
         "slug": clean(item.get("slug")),
@@ -92,6 +98,7 @@ def normalize_gsmarena(item, fallback_brand):
     ]
 
     return {
+        "category": "phone",
         "brand": brand,
         "name": name,
         "slug": clean(data.get("review_url")),
@@ -124,6 +131,7 @@ def normalize_csv_row(row):
     )
 
     return {
+        "category": "phone",
         "brand": brand,
         "name": name,
         "slug": url,
@@ -259,8 +267,9 @@ def main():
     )
 
     print(
-        f"Embedded {len(phones)} unique phones; "
+        f"Embedded {len(phones)} unique devices; "
         f"local images={image_count}; "
+        f"categories={{c: sum(1 for p in phones if p.get('category','phone') == c) for c in ('phone','tablet','watch')}}; "
         f"catalog_bytes={OUT.stat().st_size}"
     )
 
