@@ -1,0 +1,162 @@
+[
+  {
+    "brand": "Unihertz",
+    "model": "Jelly",
+    "screen_size": "2.45 inch",
+    "chipset": "MediaTek MT6737",
+    "ram": "1GB",
+    "storage": "8GB",
+    "battery_capacity": "950mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Unihertz",
+    "model": "Jelly Pro",
+    "screen_size": "2.45 inch",
+    "chipset": "MediaTek MT6737T",
+    "ram": "2GB",
+    "storage": "16GB",
+    "battery_capacity": "950mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Unihertz",
+    "model": "Jelly 2",
+    "screen_size": "3.0 inch",
+    "chipset": "Helio P60",
+    "ram": "6GB",
+    "storage": "128GB",
+    "battery_capacity": "2000mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Unihertz",
+    "model": "Atom",
+    "screen_size": "2.45 inch",
+    "chipset": "Helio P23",
+    "ram": "4GB",
+    "storage": "64GB",
+    "battery_capacity": "2000mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Unihertz",
+    "model": "Titan Pocket",
+    "screen_size": "3.1 inch",
+    "chipset": "MediaTek Helio P70",
+    "ram": "6GB",
+    "storage": "128GB",
+    "battery_capacity": "4000mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Unihertz",
+    "model": "Titan Slim",
+    "screen_size": "4.0 inch",
+    "chipset": "MediaTek Helio P70",
+    "ram": "6GB",
+    "storage": "256GB",
+    "battery_capacity": "4100mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Unihertz",
+    "model": "TickTock",
+    "screen_size": "6.5 inch",
+    "chipset": "Dimensity 700",
+    "ram": "8GB",
+    "storage": "256GB",
+    "battery_capacity": "6000mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Unihertz",
+    "model": "TickTock-E",
+    "screen_size": "6.5 inch",
+    "chipset": "Helio P22",
+    "ram": "4GB",
+    "storage": "64GB",
+    "battery_capacity": "6000mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Qin",
+    "model": "F21 Pro",
+    "screen_size": "2.8 inch",
+    "chipset": "Unisoc T610",
+    "ram": "3GB",
+    "storage": "32GB",
+    "battery_capacity": "1700mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Qin",
+    "model": "F22 Pro",
+    "screen_size": "3.54 inch",
+    "chipset": "Unisoc T610",
+    "ram": "4GB",
+    "storage": "64GB",
+    "battery_capacity": "2150mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Qin",
+    "model": "F30",
+    "screen_size": "3.0 inch",
+    "chipset": "Unisoc",
+    "ram": "4GB",
+    "storage": "64GB",
+    "battery_capacity": "2120mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "DOOV",
+    "model": "S30",
+    "screen_size": "4.0 inch",
+    "os": "Android"
+  },
+  {
+    "brand": "DOOV",
+    "model": "D18",
+    "screen_size": "4.0 inch",
+    "os": "Android"
+  },
+  {
+    "brand": "Blackview",
+    "model": "N6000",
+    "screen_size": "4.3 inch",
+    "chipset": "Helio G99",
+    "ram": "8GB",
+    "storage": "256GB",
+    "battery_capacity": "3880mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Cubot",
+    "model": "Pocket 3",
+    "screen_size": "4.5 inch",
+    "chipset": "MediaTek",
+    "ram": "4GB",
+    "storage": "64GB",
+    "battery_capacity": "3000mAh",
+    "os": "Android"
+  },
+  {
+    "brand": "Ulefone",
+    "model": "Armor Mini 20",
+    "screen_size": "4.7 inch",
+    "os": "Android"
+  },
+  {
+    "brand": "Phonemax",
+    "model": "R4GT",
+    "screen_size": "4.0 inch",
+    "os": "Android"
+  },
+  {
+    "brand": "Minimal Phone",
+    "model": "Minimal Phone",
+    "screen_size": "4.3 inch",
+    "os": "Android"
+  }
+]
