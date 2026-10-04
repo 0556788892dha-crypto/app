@@ -320,7 +320,7 @@ public class MainActivity extends Activity {
                 }
                 mergePhones(got);
                 runOnUiThread(()->{
-                    status.setText("חיפוש מקוון: נמצאו/נוספו "+got.size()+" תוצאות עבור ""+q+""");
+                    status.setText("חיפוש מקוון: נמצאו/נוספו "+got.size()+" תוצאות עבור \\""+q+"\\"");
                     render();
                 });
             }catch(Exception ignored){}
