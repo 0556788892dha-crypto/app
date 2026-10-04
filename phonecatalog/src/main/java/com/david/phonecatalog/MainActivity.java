@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
 
     void build() {
         LinearLayout root=new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL); root.setPadding(16,16,16,16);
-        TextView title=new TextView(this); title.setText("Phone Atlas"); title.setTextSize(28); title.setTextColor(Color.rgb(21,101,192)); title.setTypeface(null,1);
+        TextView title=new TextView(this); title.setText("DA - PHONES"); title.setTextSize(28); title.setTextColor(Color.rgb(21,101,192)); title.setTypeface(null,1);
         root.addView(title);
         TextView sub=new TextView(this); sub.setText("מפרטים • השוואות • Geekbench • דירוג אישי"); sub.setTextSize(14); root.addView(sub);
 
