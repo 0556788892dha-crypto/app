@@ -28,10 +28,38 @@ public class MainActivity extends Activity{
  }
  void toggle(Phone p){if(compare.contains(p))compare.remove(p);else{if(compare.size()>=4){Toast.makeText(this,"עד 4 מכשירים",0).show();return;}compare.add(p);}render();}
  void details(Phone p){ScrollView s=new ScrollView(this);LinearLayout b=new LinearLayout(this);b.setOrientation(LinearLayout.VERTICAL);b.addView(txt(format(p),15,false));Button c=btn(compare.contains(p)?"הסר מהשוואה":"הוסף להשוואה");c.setOnClickListener(v->{toggle(p);c.setText(compare.contains(p)?"הסר מהשוואה":"הוסף להשוואה");});b.addView(c);s.addView(b);new AlertDialog.Builder(this).setTitle(p.brand+" "+p.name).setView(s).setPositiveButton("סגור",null).show();}
- String format(Phone p){StringBuilder s=new StringBuilder(p.summary+"\n\nדירוג DA PHONES: "+Math.round(p.score)+"/100\n\n");if(p.detail!=null)json(p.detail,s,0);return s.toString();}
+ String format(Phone p){StringBuilder s=new StringBuilder();if(p.summary!=null&&!p.summary.isEmpty())s.append(p.summary).append("\n\n");s.append("דירוג DA PHONES: ").append(Math.round(p.score)).append("/100\n");s.append("מקור נתונים: ").append(p.detail!=null?"מפרט מפורט":"רשומת בסיס").append("\n\n");if(p.detail!=null)json(p.detail,s,0);return s.toString();}
  void json(JSONObject o,StringBuilder s,int d){if(o==null||d>6)return;Iterator<String>it=o.keys();while(it.hasNext()){String k=it.next();Object v=o.opt(k);if(v instanceof JSONObject){s.append("\n").append(k).append(":\n");json((JSONObject)v,s,d+1);}else if(v!=JSONObject.NULL)s.append(k).append(": ").append(v).append("\n");}}
  void compareDialog(){if(compare.size()<2){Toast.makeText(this,"בחר לפחות שני מכשירים",0).show();return;}StringBuilder s=new StringBuilder();String[] fields={"מסך","רזולוציה","ערכת שבבים","RAM","אחסון","מצלמה","סוללה","טעינה","5G","NFC","משקל","מידות","מערכת הפעלה"};for(String f:fields){s.append("\n").append(f).append("\n");for(Phone p:compare)s.append("• ").append(p.brand+" "+p.name).append(": ").append(find(p,f)).append("\n");}new AlertDialog.Builder(this).setTitle("DA PHONES — השוואה").setMessage(s).setPositiveButton("סגור",null).setNeutralButton("נקה",(d,w)->{compare.clear();render();}).show();}
- String find(Phone p,String f){String x=flat(p.detail);int i=x.toLowerCase(Locale.ROOT).indexOf(f.toLowerCase(Locale.ROOT));if(i>=0)return x.substring(i,Math.min(i+100,x.length()));return f.equals("מסך")?p.summary:"לא צוין";}
+ String find(Phone p,String f){
+ if(f.equals("מסך"))return spec(p,"Display","Size","screen_size");
+ if(f.equals("רזולוציה"))return spec(p,"Display","Resolution","resolution");
+ if(f.equals("ערכת שבבים"))return spec(p,"Platform","Chipset","chipset");
+ if(f.equals("RAM"))return spec(p,"Memory","Internal","ram");
+ if(f.equals("אחסון"))return spec(p,"Memory","Internal","storage");
+ if(f.equals("מצלמה"))return spec(p,"Main Camera","Quad","main_camera_mp");
+ if(f.equals("סוללה"))return spec(p,"Battery","Type","battery_capacity");
+ if(f.equals("טעינה"))return spec(p,"Battery","Charging","charging_w");
+ if(f.equals("5G"))return spec(p,"Network","5G bands","5g_support");
+ if(f.equals("NFC"))return spec(p,"Comms","NFC","nfc");
+ if(f.equals("משקל"))return spec(p,"Body","Weight","weight_g");
+ if(f.equals("מידות"))return spec(p,"Body","Dimensions","dimensions");
+ if(f.equals("מערכת הפעלה"))return spec(p,"","os","os");
+ return "לא צוין";
+}
+String spec(Phone p,String group,String key,String topKey){
+ try{
+  JSONObject d=p.detail;
+  if(d!=null){
+   if(!group.isEmpty()){JSONObject specs=d.optJSONObject("specifications");if(specs!=null){JSONObject g=specs.optJSONObject(group);if(g!=null){String v=g.optString(key,"").trim();if(!v.isEmpty())return stripHtml(v);}}}
+   String v=d.optString(topKey,"").trim();if(!v.isEmpty())return stripHtml(v);
+   if(topKey.equals("5g_support")&&!topKey.isEmpty()){JSONObject n=d.optJSONObject("Network");if(n!=null&&n.optString("Technology","").contains("5G"))return "כן";}
+   if(topKey.equals("nfc")){JSONObject cc=d.optJSONObject("Comms");if(cc!=null){String v=cc.optString("NFC","").trim();if(!v.isEmpty())return stripHtml(v);}}
+  }
+ }catch(Exception ignored){}
+ return "לא צוין";
+}
+String stripHtml(String x){return x.replaceAll("<[^>]*>","").replace("&amp;","&").trim();}
  void settings(){LinearLayout b=new LinearLayout(this);b.setOrientation(LinearLayout.VERTICAL);TextView label=txt("גודל גופן: "+Math.round(scale*100)+"%",16,false);b.addView(label);SeekBar bar=new SeekBar(this);bar.setMax(50);bar.setProgress(Math.round((scale-.75f)*100));b.addView(bar);bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(SeekBar b,int p,boolean f){scale=.75f+p/100f;label.setText("גודל גופן: "+Math.round(scale*100)+"%");}public void onStartTrackingTouch(SeekBar b){}public void onStopTrackingTouch(SeekBar b){}});Button about=btn("אודות DA PHONES");about.setOnClickListener(v->about());b.addView(about);Button reset=btn("איפוס");reset.setOnClickListener(v->{scale=1;bar.setProgress(25);});b.addView(reset);new AlertDialog.Builder(this).setTitle("הגדרות").setView(b).setPositiveButton("שמירה",(d,w)->{prefs.edit().putFloat("font",scale).apply();recreate();}).setNegativeButton("ביטול",null).show();}
  void about(){new AlertDialog.Builder(this).setTitle("אודות DA PHONES").setMessage("DA PHONES\n\nמאגר מידע והשוואת מכשירים, כולל דגמי נישה וטלפונים קומפקטיים.\n\nמפתח: GPT בשיתוף Dudi Anael\n\nהמטרה: מאגר מדויק, שקוף ואופליין. נתון שלא אומת לא יוצג כעובדה.").setPositiveButton("סגור",null).show();}
  void ratings(){ArrayList<Phone>x=new ArrayList<>(phones);Collections.sort(x,(a,b)->Double.compare(b.score,a.score));StringBuilder s=new StringBuilder();for(int i=0;i<Math.min(100,x.size());i++)s.append(i+1).append(". ").append(x.get(i).brand+" "+x.get(i).name).append(" — ").append(Math.round(x.get(i).score)).append("/100\n");new AlertDialog.Builder(this).setTitle("דירוגים").setMessage(s).setPositiveButton("סגור",null).show();}
