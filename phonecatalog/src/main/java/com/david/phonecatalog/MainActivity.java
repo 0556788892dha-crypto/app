@@ -215,13 +215,13 @@ public class MainActivity extends Activity {
                 new int[]{Color.rgb(244,248,252),Color.WHITE}));
 
         LinearLayout top=new LinearLayout(this); top.setGravity(Gravity.CENTER_VERTICAL);
-        TextView title=txt(activeTab==0?"מכשירים":activeTab==1?"השוואה":activeTab==2?"דירוגים":"הגדרות",22,true);
+        TextView title=txt(activeTab==0?"מכשירים":activeTab==1?"השוואה":activeTab==2?"תוספות":"הגדרות",22,true);
         title.setTextColor(Color.rgb(18,48,76)); top.addView(title,new LinearLayout.LayoutParams(0,-2,1));
         root.addView(top);
 
         if(activeTab==0) buildDevices();
         else if(activeTab==1) buildCompare();
-        else if(activeTab==2) buildRatings();
+        else if(activeTab==2) buildExtras();
         else buildSettingsPage();
 
         root.addView(buildTabs());
@@ -277,16 +277,112 @@ public class MainActivity extends Activity {
         root.addView(box);
     }
 
-    void buildRatings(){
+    void buildExtras(){
+        LinearLayout box=new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setPadding(0,dp(4),0,dp(8));
+
+        TextView intro=txt("תוספות",18,true);
+        intro.setTextColor(Color.rgb(18,48,76));
+        box.addView(intro);
+        TextView hint=txt("כלים ומידע נוסף שיעזרו לך להבין ולהשוות מכשירים.",14,false);
+        hint.setPadding(0,dp(5),0,dp(12));
+        box.addView(hint);
+
+        Button ratings=actionButton("★  דירוגים");
+        ratings.setOnClickListener(v->buildRatingsDialog());
+        box.addView(ratings);
+
+        Button glossary=actionButton("📖  מילון מושגים");
+        glossary.setOnClickListener(v->buildGlossaryDialog());
+        box.addView(glossary);
+
+        root.addView(box);
+    }
+
+    void buildRatingsDialog(){
         ArrayList<Phone>x=new ArrayList<>(phones);
         Collections.sort(x,(a,b)->Double.compare(b.score,a.score));
-        root.addView(txt("100 המכשירים המובילים",18,true));
-        TextView listText=txt("",14,false);
         StringBuilder s=new StringBuilder();
         for(int i=0;i<Math.min(100,x.size());i++)
-            s.append(i+1).append(". ").append(x.get(i).brand+" "+x.get(i).name).append(" — ").append(Math.round(x.get(i).score)).append("/100\n");
-        listText.setText(s.toString());listText.setPadding(dp(4),dp(8),dp(4),dp(12));
-        ScrollView sv=new ScrollView(this);sv.addView(listText);root.addView(sv,new LinearLayout.LayoutParams(-1,0,1));
+            s.append(i+1).append(". ").append(x.get(i).brand+" "+x.get(i).name).append(" — ").append(Math.round(x.get(i).score)).append("/100\\n");
+        ScrollView sv=new ScrollView(this);
+        TextView listText=txt(s.toString(),14,false);
+        listText.setPadding(dp(8),dp(8),dp(8),dp(12));
+        sv.addView(listText);
+        new AlertDialog.Builder(this).setTitle("דירוגי DA — 100 המכשירים המובילים").setView(sv).setPositiveButton("סגור",null).show();
+    }
+
+    void buildGlossaryDialog(){
+        String[][] terms={
+            {"SoC / ערכת שבבים","השבב המרכזי של המכשיר. כולל בדרך כלל CPU, GPU ורכיבים נוספים ומשפיע על ביצועים, צריכת חשמל ויכולות קישוריות."},
+            {"CPU","יחידת העיבוד המרכזית. אחראית על הרצת מערכת ההפעלה והאפליקציות."},
+            {"GPU","מעבד גרפי. מטפל בגרפיקה, משחקים, ממשק ותצוגה."},
+            {"RAM","זיכרון עבודה זמני. יותר RAM מאפשר בדרך כלל להחזיק יותר אפליקציות פתוחות בלי לטעון אותן מחדש."},
+            {"ROM / אחסון","הזיכרון הקבוע שבו נשמרים מערכת ההפעלה, אפליקציות, תמונות וקבצים."},
+            {"UFS / eMMC","תקני אחסון פנימי. UFS בדרך כלל מהיר יותר מ-eMMC."},
+            {"microSD / TF","כרטיס זיכרון חיצוני להרחבת האחסון, אם המכשיר תומך בכך."},
+            {"IPS / LCD","טכנולוגיות תצוגה. IPS הוא סוג של LCD עם זוויות צפייה טובות יחסית."},
+            {"OLED / AMOLED","תצוגה שבה כל פיקסל מפיק אור בעצמו. בדרך כלל מאפשרת שחור עמוק וניגודיות גבוהה."},
+            {"Refresh Rate / Hz","מספר רענוני המסך בשנייה. 90Hz או 120Hz יכולים להרגיש חלקים יותר מ-60Hz."},
+            {"Resolution","מספר הפיקסלים במסך, למשל 1920×1080. רזולוציה גבוהה יותר אינה בהכרח איכותית יותר בכל מצב."},
+            {"PPI","צפיפות פיקסלים לאינץ'. ערך גבוה יותר בדרך כלל מאפשר טקסט ותמונה חדים יותר באותו גודל מסך."},
+            {"nits","יחידת בהירות. מספר גבוה יותר בדרך כלל מסייע בקריאה באור חזק."},
+            {"HDR","טווח דינמי רחב יותר בתמונה, עם יכולת להציג טווח גדול יותר של בהירות וצבעים בתוכן נתמך."},
+            {"Gorilla Glass / זכוכית מגן","שכבת זכוכית מחוזקת שמטרתה לשפר עמידות לשריטות ולמכות."},
+            {"IP67 / IP68","דירוגי עמידות בפני אבק ומים. יש לבדוק תמיד את תנאי היצרן ולא להניח שכל IP68 זהה."},
+            {"2G / 3G / 4G / LTE","דורות של רשתות סלולריות. LTE הוא שם נפוץ לטכנולוגיות 4G."},
+            {"5G","דור סלולרי חדש יותר. מהירות וכיסוי בפועל תלויים במפעיל, בתדרים ובמיקום."},
+            {"VoLTE","ביצוע שיחות קוליות על גבי רשת 4G LTE. נדרש בדרך כלל גם תמיכה של המכשיר והמפעיל."},
+            {"VoWiFi / Wi‑Fi Calling","ביצוע שיחות דרך רשת Wi‑Fi, כאשר המכשיר והמפעיל תומכים בכך."},
+            {"Dual SIM","יכולת להשתמש בשני קווי SIM, בהתאם למבנה המכשיר ולגרסה שלו."},
+            {"eSIM","SIM דיגיטלי המובנה במכשיר, ללא כרטיס SIM פיזי."},
+            {"Wi‑Fi","קישוריות לרשתות אלחוטיות מקומיות. Wi‑Fi 5/6/6E/7 הם דורות שונים של התקן."},
+            {"Bluetooth","תקשורת אלחוטית לטווח קצר, למשל לאוזניות, שעונים ורכב."},
+            {"NFC","תקשורת אלחוטית לטווח קצר מאוד, המשמשת בין היתר לתשלומים, תגיות וצימוד מהיר."},
+            {"GPS / GNSS","מערכות לקביעת מיקום. GNSS הוא המונח הרחב למספר מערכות לווייניות, כולל GPS."},
+            {"IR Blaster","משדר אינפרא-אדום שיכול לאפשר שליטה במכשירים תואמים כמו טלוויזיות ומזגנים."},
+            {"USB-C","מחבר USB מודרני. היכולות בפועל משתנות בין מכשירים, כולל מהירות נתונים, טעינה ותצוגה."},
+            {"OTG","יכולת לחבר התקני USB למכשיר, למשל דיסק-און-קי, מקלדת או עכבר, אם נתמך."},
+            {"mAh","קיבולת סוללה. ערך גבוה יותר אינו מבטיח זמן עבודה ארוך יותר, כי גם צריכת החשמל חשובה."},
+            {"W / Watt בטעינה","הספק הטעינה. מספר גבוה יותר עשוי לאפשר טעינה מהירה יותר, בהתאם למכשיר ולמטען."},
+            {"Wireless Charging / Qi","טעינה אלחוטית באמצעות משטח תואם, אם המכשיר תומך בתקן."},
+            {"SoC fabrication / nm","תהליך ייצור השבב בננומטרים. זהו מדד טכני אחד מבין כמה המשפיעים על יעילות וביצועים."},
+            {"Cores / ליבות","מספר יחידות העיבוד ב-CPU. מספר ליבות לבדו אינו קובע את ביצועי המכשיר."},
+            {"ARM Cortex","משפחת ליבות CPU נפוצה במכשירי Android. דגמים שונים מציעים ביצועים ויעילות שונים."},
+            {"AnTuTu / Geekbench","כלי benchmark למדידת ביצועים. תוצאות תלויות בגרסה, במצב המכשיר ובתנאי הבדיקה."},
+            {"OIS","ייצוב אופטי של המצלמה, המסייע להפחית רעידות בתמונות ובווידאו."},
+            {"EIS","ייצוב אלקטרוני באמצעות עיבוד תוכנה, בעיקר בווידאו."},
+            {"AF / Autofocus","מיקוד אוטומטי של המצלמה."},
+            {"MP / Megapixel","מספר המגה-פיקסלים בחיישן. יותר MP לא מבטיחים בהכרח תמונה טובה יותר."},
+            {"Aperture / צמצם","פתיחת העדשה, למשל f/1.8. מספר f קטן יותר מציין בדרך כלל פתח גדול יותר."},
+            {"Wide / Ultrawide / Telephoto","סוגי עדשות: רחבה, רחבה מאוד ועדשת טלפוטו להגדלה אופטית."},
+            {"Digital Zoom","הגדלה באמצעות חיתוך/עיבוד דיגיטלי; אינה שקולה לזום אופטי."},
+            {"Android / Android Go","מערכת ההפעלה של Google; Android Go היא מהדורה קלה למכשירים חלשים יחסית."},
+            {"GMS","Google Mobile Services, חבילת שירותי Google שמגיעה במכשירים מאושרים מסוימים."},
+            {"Bootloader","רכיב האתחול שמפעיל את מערכת ההפעלה. במכשירים מסוימים ניתן לפתוח אותו לצורכי פיתוח."},
+            {"OTA","עדכון תוכנה שמגיע ישירות למכשיר דרך האוויר."},
+            {"Android Auto","מערכת המאפשרת להשתמש בפונקציות נתמכות של הטלפון דרך מסך הרכב."},
+            {"Form Factor","הצורה והמידות הפיזיות של המכשיר, כולל גודל, עובי ומשקל."},
+            {"IP Rating","תקן המתאר רמת הגנה מפני אבק ומים."},
+            {"SAR","מדד לחשיפה לאנרגיית RF של מכשיר סלולרי בתנאי בדיקה מוגדרים."},
+            {"Carrier / Band","מפעיל סלולרי ותדרי הרשת שבהם המכשיר תומך. התאמה לתדרים חשובה לקליטה ולשירות."}
+        };
+        LinearLayout box=new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setPadding(dp(8),dp(4),dp(8),dp(12));
+        for(String[] t:terms){
+            TextView term=txt(t[0],15,true);
+            term.setTextColor(Color.rgb(16,78,121));
+            term.setPadding(0,dp(9),0,dp(2));
+            box.addView(term);
+            TextView desc=txt(t[1],13,false);
+            desc.setPadding(0,0,0,dp(8));
+            box.addView(desc);
+        }
+        ScrollView sv=new ScrollView(this);
+        sv.addView(box);
+        new AlertDialog.Builder(this).setTitle("מילון מושגים — DA DIGITAL").setView(sv).setPositiveButton("סגור",null).show();
     }
 
     void buildSettingsPage(){
@@ -334,8 +430,8 @@ public class MainActivity extends Activity {
         LinearLayout nav=new LinearLayout(this);
         nav.setGravity(Gravity.CENTER);
         nav.setPadding(0,dp(6),0,dp(7));
-        String[] icons={"⌂","⚖","★","⚙"};
-        String[] descriptions={"מכשירים","השוואה","דירוגים","הגדרות"};
+        String[] icons={"⌂","⚖","＋","⚙"};
+        String[] descriptions={"מכשירים","השוואה","תוספות","הגדרות"};
         for(int i=0;i<4;i++){
             final int idx=i;
             TextView t=txt(icons[i],25,true);
