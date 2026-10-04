@@ -217,60 +217,6 @@
   },
   {
     "category": "phone",
-    "brand": "DOOV",
-    "name": "S30",
-    "image_url": "",
-    "image": "",
-    "summary": "4.0 inch • Android",
-    "detail": {
-      "specifications": {
-        "Display": {
-          "Size": "4.0 inch"
-        },
-        "Platform": {
-          "Chipset": "",
-          "OS": "Android"
-        },
-        "Memory": {
-          "Internal": ""
-        },
-        "Battery": {
-          "Type": ""
-        }
-      },
-      "category": "phone"
-    },
-    "source": "DA PHONES curated multi-device catalog"
-  },
-  {
-    "category": "phone",
-    "brand": "DOOV",
-    "name": "D18",
-    "image_url": "",
-    "image": "",
-    "summary": "4.0 inch • Android",
-    "detail": {
-      "specifications": {
-        "Display": {
-          "Size": "4.0 inch"
-        },
-        "Platform": {
-          "Chipset": "",
-          "OS": "Android"
-        },
-        "Memory": {
-          "Internal": ""
-        },
-        "Battery": {
-          "Type": ""
-        }
-      },
-      "category": "phone"
-    },
-    "source": "DA PHONES curated multi-device catalog"
-  },
-  {
-    "category": "phone",
     "brand": "Blackview",
     "name": "N6000",
     "image_url": "",
