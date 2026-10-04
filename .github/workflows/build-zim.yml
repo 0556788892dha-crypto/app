@@ -45,18 +45,17 @@ jobs:
               p["url"]="phones/%s-%d.html"%(base,used[base]); phones.append(p)
           brands=sorted(set(p["brand"] for p in phones))
           (root/"style.css").write_text("body{font-family:system-ui,Arial;margin:0;background:#f5f7fb;color:#172033}header{background:#111827;color:#fff;padding:22px}main{max-width:1200px;margin:auto;padding:20px}.search{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}input,select{padding:12px;border:1px solid #ccd3df;border-radius:10px;font-size:15px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}.card{background:#fff;border:1px solid #e1e6ef;border-radius:14px;padding:16px}.muted{color:#667085}.spec{display:grid;grid-template-columns:180px 1fr;border-top:1px solid #eee}.spec b,.spec span{padding:10px}a{color:#185adb;text-decoration:none}",encoding="utf-8")
-          js = """const D=PHONES;
-          function render(){
+          cards="".join("<div class='card' data-brand='"+esc(p["brand"])+"' data-text='"+esc(p["brand"]+" "+p["model"]).lower()+"'><h2><a href='"+p["url"]+"'>"+esc(p["brand"])+" "+esc(p["model"])+"</a></h2><div class='muted'>"+esc(p["year"])+"</div><p>📱 "+esc(p["screen"])+" · 💾 "+esc(p["ram"])+" · 🔋 "+esc(p["battery"])+"</p><p>⚙️ "+esc(p["processor"])+"</p><p>📷 "+esc(p["back"])+"</p></div>" for p in phones)
+          js = """function render(){
             const q=document.getElementById("q").value.toLowerCase(), b=document.getElementById("brand").value;
-            const a=D.filter(function(p){return (!q||(p.brand+" "+p.model).toLowerCase().includes(q))&&(!b||p.brand===b)});
-            document.getElementById("results").innerHTML=a.map(function(p){
-              return "<div class='card'><h2><a href='"+p.url+"'>"+p.brand+" "+p.model+"</a></h2><div class='muted'>"+p.year+"</div><p>📱 "+p.screen+" · 💾 "+p.ram+" · 🔋 "+p.battery+"</p><p>⚙️ "+p.processor+"</p><p>📷 "+p.back+"</p></div>"
-            }).join("")||"<p>לא נמצאו מכשירים.</p>";
+            document.querySelectorAll("#results .card").forEach(function(el){
+              const ok=(!q||el.dataset.text.includes(q))&&(!b||el.dataset.brand===b);
+              el.style.display=ok?"block":"none";
+            });
           }
           render();document.getElementById("q").addEventListener("input",render);document.getElementById("brand").addEventListener("change",render);"""
-          js=js.replace("PHONES",json.dumps(phones,ensure_ascii=False))
           opts="".join("<option>"+esc(b)+"</option>" for b in brands)
-          index='''<!doctype html><html dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>DA PHONES Offline</title><link rel="stylesheet" href="style.css"></head><body><header><main><h1>📱 DA PHONES Offline</h1><div>מאגר טלפונים ומפרטים — ללא אינטרנט</div></main></header><main><p><b>%s</b> מכשירים · <b>%s</b> יצרנים</p><div class="search"><input id="q" placeholder="חיפוש דגם או יצרן..." style="flex:1"><select id="brand"><option value="">כל היצרנים</option>%s</select></div><div id="results" class="grid"></div></main><script>%s</script></body></html>'''%(len(phones),len(brands),opts,js)
+          index='''<!doctype html><html dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>DA PHONES Offline</title><link rel="stylesheet" href="style.css"></head><body><header><main><h1>📱 DA PHONES Offline</h1><div>מאגר טלפונים ומפרטים — ללא אינטרנט</div></main></header><main><p><b>%s</b> מכשירים · <b>%s</b> יצרנים</p><div class="search"><input id="q" placeholder="חיפוש דגם או יצרן..." style="flex:1"><select id="brand"><option value="">כל היצרנים</option>%s</select></div><div id="results" class="grid">%s</div></main><script>%s</script></body></html>'''%(len(phones),len(brands),opts,cards,js)
           (root/"index.html").write_text(index,encoding="utf-8")
           for p in phones:
               specs=[("יצרן",p["brand"]),("דגם",p["model"]),("שנת השקה",p["year"]),("משקל",p["weight"]),("RAM",p["ram"]),("מסך",p["screen"]),("מעבד",p["processor"]),("סוללה",p["battery"]),("מצלמה אחורית",p["back"]),("מצלמה קדמית",p["front"]),("מחיר ארה״ב בהשקה",p["price_us"]),("מחיר הודו בהשקה",p["price_in"]),("מחיר סין בהשקה",p["price_cn"]),("מחיר דובאי בהשקה",p["price_ae"])]
