@@ -21,6 +21,8 @@ CATEGORIES = [
     ("מים", "ocean OR sea OR waterfall"),
     ("חוף ים", "beach OR seaside OR shoreline OR coast"),
     ("חוף ים 2026", "beach 2026 OR seaside 2026 OR shoreline 2026"),
+    ("נשים בחוף", "women beach OR woman beach OR women seaside OR female beach photography"),
+    ("נשים בחוף 2026", "women beach 2026 OR women seaside 2026"),
     ("שקיעות בחוף", "beach sunset OR seaside sunset OR ocean sunset"),
     ("לילה", "night"),
     ("צבעוני", "colorful OR flowers"),
@@ -43,7 +45,9 @@ EXTRA_TARGETS = {
     "מסיבות והופעות": 25,
     "זוגות": 25,
 }
-# Extra weight for the categories requested for SANON\nEXTRA_TARGETS = {\n    "נשים": 30,\n    "נשים בטבע": 25,\n    "מסיבות טבע": 30,\n    "מסיבות והופעות": 25,\n    "זוגות": 25,\n    "חוף ים": 20,\n    "חוף ים 2026": 20,\n    "שקיעות בחוף": 15,\n}
+# Extra weight for the categories requested for SANON\nEXTRA_TARGETS = {\n    "נשים": 30,\n    "נשים בטבע": 25,\n    "מסיבות טבע": 30,\n    "מסיבות והופעות": 25,\n    "זוגות": 25,\n    "חוף ים": 20,\n    "חוף ים 2026": 20,
+    "נשים בחוף": 30,
+    "נשים בחוף 2026": 20,\n    "שקיעות בחוף": 15,\n}
 API = "https://commons.wikimedia.org/w/api.php"
 BAD = re.compile(r"(painting|portrait|drawing|illustration|map|diagram|scan|poster|logo|medal|coin|screenshot|artwork|statue|sculpture|flag|document|manuscript)", re.I)
 
