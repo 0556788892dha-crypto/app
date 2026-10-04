@@ -7,6 +7,8 @@ import android.graphics.Typeface;
 import android.view.*;
 import android.widget.*;
 import java.util.*;
+import android.content.*;
+import android.view.Gravity;
 
 public class MainActivity extends Activity {
     static class Phone {
@@ -19,9 +21,9 @@ public class MainActivity extends Activity {
     }
 
     final ArrayList<Phone> phones=new ArrayList<>(), selected=new ArrayList<>();
-    LinearLayout list; EditText search; Spinner brandSpinner;
+    LinearLayout list; EditText search; Spinner brandSpinner, sortSpinner;
 
-    @Override public void onCreate(Bundle b){ super.onCreate(b); seed(); build(); }
+    @Override public void onCreate(Bundle b){ super.onCreate(b); getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL); seed(); build(); }
 
     void seed(){
         // Only benchmark figures explicitly sourced from the public GSMArena test data are shown.
@@ -59,19 +61,33 @@ public class MainActivity extends Activity {
         search=new EditText(this); search.setHint("חיפוש דגם, מותג, מעבד..."); root.addView(search);
         brandSpinner=new Spinner(this); ArrayList<String> brands=new ArrayList<>(); brands.add("כל המותגים"); for(Phone p:phones) if(!brands.contains(p.brand)) brands.add(p.brand);
         brandSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,brands)); root.addView(brandSpinner);
+        sortSpinner=new Spinner(this); ArrayList<String> sorts=new ArrayList<>(Arrays.asList("מיון: מותג ודגם","מיון: דירוג אישי","מיון: גודל מסך — קטן לגדול","מיון: משקל — קל לכבד","מיון: Geekbench — גבוה לנמוך")); sortSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,sorts)); root.addView(sortSpinner);
         Button compare=new Button(this); compare.setText("השווה נבחרים ("+selected.size()+")"); root.addView(compare); compare.setOnClickListener(v->showCompare());
         TextView info=new TextView(this); info.setText("✓ מאומת = נתוני מפרט ממקור מזוהה. נתוני Geekbench מוצגים רק כשיש מקור/בדיקה מזוהה. דירוג אישי הוא ציון הערכה אישי ולא ציון יצרן."); info.setTextSize(12); info.setPadding(0,8,0,8); root.addView(info);
         ScrollView sv=new ScrollView(this); list=new LinearLayout(this); list.setOrientation(LinearLayout.VERTICAL); sv.addView(list); root.addView(sv,new LinearLayout.LayoutParams(-1,0,1));
         search.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int c,int a){} public void onTextChanged(CharSequence s,int st,int b,int c){render();} public void afterTextChanged(android.text.Editable e){}});
         brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,View v,int pos,long id){render();}});
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,View v,int pos,long id){render();}});
         setContentView(root); render();
     }
 
     void render(){
         list.removeAllViews(); String q=search.getText().toString().toLowerCase(Locale.ROOT); String brand=(String)brandSpinner.getSelectedItem();
+        ArrayList<Phone> shown=new ArrayList<>();
         for(Phone p:phones){
             if(!brand.equals("כל המותגים")&&!p.brand.equals(brand)) continue;
             if(!q.isEmpty() && !(p.name+" "+p.brand+" "+p.chip).toLowerCase(Locale.ROOT).contains(q)) continue;
+            shown.add(p);
+        }
+        int sort=sortSpinner.getSelectedItemPosition();
+        Collections.sort(shown,(a,b)->{
+            if(sort==1) return Double.compare(b.score,a.score);
+            if(sort==2) return Double.compare(screen(a),screen(b));
+            if(sort==3) return Double.compare(weight(a),weight(b));
+            if(sort==4) return Integer.compare(b.geek==null?-1:b.geek,a.geek==null?-1:a.geek);
+            int x=a.brand.compareToIgnoreCase(b.brand); return x!=0?x:a.name.compareToIgnoreCase(b.name);
+        });
+        for(Phone p:shown){
             LinearLayout card=new LinearLayout(this); card.setOrientation(LinearLayout.VERTICAL); card.setPadding(14,14,14,14);
             TextView t=new TextView(this); t.setText(p.brand+" "+p.name); t.setTextSize(20); t.setTypeface(Typeface.DEFAULT,Typeface.BOLD); card.addView(t);
             TextView s=new TextView(this); s.setText(p.display+" • "+p.dimensions+"\n"+p.chip+" • "+p.ram+" RAM • "+p.storage+"\nGeekbench 6: "+(p.geek==null?"לא הוזן":p.geek)+" • שלי: "+p.score+"/100\n"+p.quality); card.addView(s);
@@ -82,6 +98,9 @@ public class MainActivity extends Activity {
             card.addView(buttons); list.addView(card);
         }
     }
+
+    double screen(Phone p){ try { String s=p.display.replace(",","."); int i=s.indexOf("""); return Double.parseDouble(s.substring(0,i)); } catch(Exception e){ return 999; } }
+    double weight(Phone p){ try { return Double.parseDouble(p.weight.replace(" g","").replace("—","9999")); } catch(Exception e){ return 9999; } }
 
     void showDetails(Phone p){
         String src=p.source.isEmpty()?"לא קיים קישור מקור":p.source;
