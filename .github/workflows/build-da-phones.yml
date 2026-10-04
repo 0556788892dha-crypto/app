@@ -38,6 +38,27 @@ jobs:
           gradle-version: '8.9'
       - name: Build APK
         run: gradle :phonecatalog:assembleRelease --stacktrace
+      - name: Validate APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=$(find phonecatalog/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | head -n 1)
+          test -n "$APK"
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep -q "package: name='com.da.phones'"
+          sha256sum "$APK" | tee DA-PHONES-SHA256.txt
+
+      - name: Publish direct APK release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=$(find phonecatalog/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | head -n 1)
+          gh release create da-phones-v1.3 "$APK" DA-PHONES-SHA256.txt \
+            --title "DA PHONES v1.3" \
+            --notes "Verified offline DA PHONES APK. Built by GitHub Actions from the repository source."
+
       - uses: actions/upload-artifact@v4
         with:
           name: DA-PHONES-offline-release
