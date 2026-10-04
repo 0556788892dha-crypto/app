@@ -1,5 +1,8 @@
 name: Build DA PHONES APK
 # v1.2 catalog/image pipeline
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
   push:
@@ -45,7 +48,8 @@ jobs:
           APK=$(find phonecatalog/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | head -n 1)
           test -n "$APK"
           test -s "$APK"
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep -q "package: name='com.da.phones'"
+          AAPT=$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)
+          "$AAPT" dump badging "$APK" | grep -q "package: name='com.da.phones'"
           sha256sum "$APK" | tee DA-PHONES-SHA256.txt
 
       - name: Publish direct APK release
