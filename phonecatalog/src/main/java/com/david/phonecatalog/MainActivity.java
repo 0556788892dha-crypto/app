@@ -201,7 +201,7 @@ public class MainActivity extends Activity {
     }
 
     double screen(Phone p){
-        try{String x=p.summary==null?"":p.summary.replace(",","."); int i=x.indexOf("""); int j=x.lastIndexOf(" ",Math.max(0,i)); return Double.parseDouble(x.substring(Math.max(0,j),i));}catch(Exception e){return 99;}
+        try{String x=p.summary==null?"":p.summary.replace(",","."); int i=x.indexOf("\""); int j=x.lastIndexOf(" ",Math.max(0,i)); return Double.parseDouble(x.substring(Math.max(0,j),i));}catch(Exception e){return 99;}
     }
     double estimateScore(String s,String n){
         String x=(s+" "+n).toLowerCase(Locale.ROOT); double v=70;
