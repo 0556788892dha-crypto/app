@@ -26,7 +26,7 @@ jobs:
           import csv, html, json, re
           from pathlib import Path
           root=Path("build/site")
-          rows=list(csv.DictReader(open("build/phones.csv",encoding="utf-8-sig")))
+          rows=list(csv.DictReader(open("build/phones.csv",encoding="latin-1")))
           def esc(v): return html.escape(str(v or "").strip())
           def slug(s): return re.sub(r"[^a-zA-Z0-9]+","-",s.lower()).strip("-") or "phone"
           phones=[]; seen=set(); used={}
