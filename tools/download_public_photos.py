@@ -2,6 +2,8 @@
 import io, json, os, re, time
 from pathlib import Path
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from PIL import Image, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +30,10 @@ API = "https://commons.wikimedia.org/w/api.php"
 BAD = re.compile(r"(painting|portrait|drawing|illustration|map|diagram|scan|poster|logo|medal|coin|screenshot|artwork|statue|sculpture|flag|document|manuscript)", re.I)
 
 session = requests.Session()
+retry = Retry(total=6, connect=3, read=3, status=6, backoff_factor=2,
+              status_forcelist=(429, 500, 502, 503, 504),
+              allowed_methods=frozenset(["GET"]))
+session.mount("https://", HTTPAdapter(max_retries=retry))
 session.headers["User-Agent"] = "SANON-wallpaper-app/1.0 (photo build)"
 
 def candidates(query):
