@@ -537,32 +537,62 @@ public class MainActivity extends Activity {
     }
 
     class Holder{
-        LinearLayout card,box,actions; ImageView pic;TextView title,desc;Button details,compareBtn;
+        LinearLayout card,box,actions; ImageView pic;TextView title,desc,details,compareBtn;
         Holder(){
-            card=new LinearLayout(MainActivity.this);card.setOrientation(LinearLayout.HORIZONTAL);
-            card.setPadding(dp(12),dp(11),dp(12),dp(11));card.setGravity(Gravity.CENTER_VERTICAL);
+            card=new LinearLayout(MainActivity.this);
+            card.setOrientation(LinearLayout.HORIZONTAL);
+            card.setPadding(dp(12),dp(11),dp(12),dp(11));
+            card.setGravity(Gravity.CENTER_VERTICAL);
             card.setBackground(roundBg(Color.WHITE,dp(16),Color.rgb(216,226,235)));
-            pic=new ImageView(MainActivity.this);pic.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+            pic=new ImageView(MainActivity.this);
+            pic.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             card.addView(pic,new LinearLayout.LayoutParams(dp(74),dp(92)));
-            box=new LinearLayout(MainActivity.this);box.setOrientation(LinearLayout.VERTICAL);
+
+            box=new LinearLayout(MainActivity.this);
+            box.setOrientation(LinearLayout.VERTICAL);
             box.setPadding(dp(8),dp(2),dp(4),dp(2));
-            title=txt("",16,true);title.setTextColor(Color.rgb(16,50,78));box.addView(title);
-            desc=txt("",13,false);desc.setTextColor(Color.rgb(76,89,104));box.addView(desc);
+
+            title=txt("",16,true);
+            title.setTextColor(Color.rgb(16,50,78));
+            box.addView(title);
+
+            desc=txt("",13,false);
+            desc.setTextColor(Color.rgb(76,89,104));
+            box.addView(desc);
+
             actions=new LinearLayout(MainActivity.this);
             actions.setOrientation(LinearLayout.HORIZONTAL);
             actions.setGravity(Gravity.CENTER_VERTICAL);
-            actions.setPadding(dp(2),0,dp(2),0);
-            details=actionButton("פרטים");
-            compareBtn=actionButton("השווה");
-            LinearLayout.LayoutParams dp1=new LinearLayout.LayoutParams(0,dp(42),1);
-            dp1.setMargins(0,dp(9),dp(7),0);
-            LinearLayout.LayoutParams dp2=new LinearLayout.LayoutParams(0,dp(42),1);
-            dp2.setMargins(dp(7),dp(9),0,0);
-            actions.addView(details,dp1);
-            actions.addView(compareBtn,dp2);
+            actions.setPadding(0,dp(1),0,0);
+
+            details=cardAction("פרטים");
+            compareBtn=cardAction("השווה");
+
+            LinearLayout.LayoutParams left=new LinearLayout.LayoutParams(0,dp(40),1);
+            LinearLayout.LayoutParams right=new LinearLayout.LayoutParams(0,dp(40),1);
+            left.setMargins(0,dp(9),dp(5),0);
+            right.setMargins(dp(5),dp(9),0,0);
+
+            actions.addView(details,left);
+            actions.addView(compareBtn,right);
             box.addView(actions);
+
             card.addView(box,new LinearLayout.LayoutParams(0,-2,1));
         }
+    }
+
+    TextView cardAction(String s){
+        TextView v=txt(s,13,true);
+        v.setGravity(Gravity.CENTER);
+        v.setSingleLine(true);
+        v.setIncludeFontPadding(false);
+        v.setTextColor(Color.rgb(12,58,92));
+        v.setPadding(dp(3),0,dp(3),0);
+        v.setBackground(roundBg(Color.rgb(248,251,253),dp(11),Color.rgb(194,209,222)));
+        v.setClickable(true);
+        v.setFocusable(true);
+        return v;
     }
 
     class Adapter extends BaseAdapter{
