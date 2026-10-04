@@ -1,42 +1,83 @@
-import json, os, time
-from urllib.request import Request, urlopen
+import json, os, time, re, hashlib, urllib.request
+from pathlib import Path
 
-SOURCE = "https://raw.githubusercontent.com/rinehartwang1979/phone-specs-api/master/data/phones.json"
-NICHE = ".github/scripts/niche_devices.json"
-OUT = "phonecatalog/src/main/assets/catalog.json"
+SOURCE_DIR = Path(".cache/device_specs_gsmarena")
+NICHE = Path(".github/scripts/niche_devices.json")
+OUT = Path("phonecatalog/src/main/assets/catalog.json")
+IMAGE_DIR = Path("phonecatalog/src/main/assets/images")
 
-def get_json(url):
-    req = Request(url, headers={"User-Agent":"DA-PHONES-catalog-builder/2.0","Accept":"application/json"})
-    with urlopen(req, timeout=60) as r:
-        return json.loads(r.read().decode("utf-8"))
+def clean(s):
+    return re.sub(r"<[^>]+>", "", str(s or "")).replace("&amp;", "&").strip()
 
-def normalize(x):
-    brand = str(x.get("brand", x.get("maker", ""))).strip()
-    name = str(x.get("model_name", x.get("model", x.get("name", "")))).strip()
-    image = x.get("image") or x.get("image_url") or x.get("photo") or ""
-    summary = " • ".join(str(x[k]) for k in ("screen_size","display","chipset","ram","storage","battery_capacity","os") if x.get(k))
-    return {"brand":brand,"name":name,"slug":str(x.get("id",x.get("slug",""))),"image":str(image),"summary":summary,"detail":x}
+def detail_to_phone(x, fallback_brand=""):
+    data=x.get("data",x)
+    specs=data.get("specifications",{}) if isinstance(data,dict) else {}
+    body=specs.get("Body",{}) or {}
+    display=specs.get("Display",{}) or {}
+    platform=specs.get("Platform",{}) or {}
+    memory=specs.get("Memory",{}) or {}
+    battery=specs.get("Battery",{}) or {}
+    network=specs.get("Network",{}) or {}
+    brand=clean(data.get("brand") or fallback_brand)
+    name=clean(data.get("model") or data.get("name"))
+    img=data.get("imageUrl") or ""
+    if not brand or not name: return None
+    ident=hashlib.sha1((brand+"|"+name).encode()).hexdigest()[:16]
+    image_path=""
+    if img:
+        image_path="images/"+ident+".jpg"
+    summary=[]
+    for value in (display.get("Size"),platform.get("Chipset"),memory.get("Internal"),battery.get("Type"),data.get("os"),network.get("Technology")):
+        v=clean(value)
+        if v: summary.append(v)
+    return {"brand":brand,"name":name,"slug":clean(data.get("review_url","")),"image_url":img,
+            "image":image_path,"summary":" • ".join(summary[:7]),"detail":data}
+
+def load_niche():
+    if not NICHE.exists(): return []
+    try:
+        raw=json.loads(NICHE.read_text(encoding="utf-8"))
+        return [detail_to_phone(x) for x in raw if isinstance(x,dict)]
+    except Exception: return []
+
+def download_images(phones):
+    IMAGE_DIR.mkdir(parents=True,exist_ok=True)
+    done=0
+    for p in phones:
+        url=p.get("image_url",""); path=p.get("image","")
+        if not url or not path: continue
+        out=Path("phonecatalog/src/main/assets")/path
+        if out.exists() and out.stat().st_size>0: done+=1; continue
+        try:
+            req=urllib.request.Request(url,headers={"User-Agent":"DA-PHONES/1.2"})
+            with urllib.request.urlopen(req,timeout=20) as r: out.write_bytes(r.read())
+            done+=1
+        except Exception:
+            p["image"]=""
+    return done
 
 def main():
-    os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    raw = get_json(SOURCE)
-    if not isinstance(raw, list): raw = raw.get("phones", raw.get("data", []))
+    OUT.parent.mkdir(parents=True,exist_ok=True)
     phones=[]; seen=set()
-    for x in raw:
-        p=normalize(x); key=(p["brand"].lower(),p["name"].lower())
-        if p["brand"] and p["name"] and key not in seen: seen.add(key); phones.append(p)
-
-    niche=[]
-    if os.path.exists(NICHE):
-        with open(NICHE,"r",encoding="utf-8") as f: niche=json.load(f)
-    for x in niche:
-        p=normalize(x); key=(p["brand"].lower(),p["name"].lower())
-        if p["brand"] and p["name"] and key not in seen: seen.add(key); phones.append(p)
-
-    payload={"version":3,"generated_at":time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),
-             "sources":["phone-specs-api baseline","DA PHONES curated niche catalog"],
+    files=list(SOURCE_DIR.rglob("details.json")) if SOURCE_DIR.exists() else []
+    for fp in files:
+        try:
+            x=json.loads(fp.read_text(encoding="utf-8"))
+            brand_slug=fp.parts[-3] if len(fp.parts)>=3 else ""
+            p=detail_to_phone(x, brand_slug.rsplit("-phones-",1)[0].title())
+            if not p: continue
+            key=(p["brand"].lower(),p["name"].lower())
+            if key not in seen: seen.add(key); phones.append(p)
+        except Exception: pass
+    for p in load_niche():
+        if not p: continue
+        key=(p["brand"].lower(),p["name"].lower())
+        if key not in seen: seen.add(key); phones.append(p)
+    img=download_images(phones)
+    payload={"version":4,"generated_at":time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),
+             "sources":["bytecharts/device_specs_gsmarena","DA PHONES curated niche catalog"],
              "phones":phones}
-    with open(OUT,"w",encoding="utf-8") as f: json.dump(payload,f,ensure_ascii=False,separators=(",",":"))
-    print(f"Embedded {len(phones)} unique phones into {OUT} ({os.path.getsize(OUT)/1024:.0f} KB)")
+    OUT.write_text(json.dumps(payload,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
+    print(f"Embedded {len(phones)} unique devices; local images downloaded={img}")
 
 if __name__=="__main__": main()
