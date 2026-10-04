@@ -44,10 +44,12 @@ EXTRA_TARGETS = {
     "מסיבות טבע": 30,
     "מסיבות והופעות": 25,
     "זוגות": 25,
-}
-# Extra weight for the categories requested for SANON\nEXTRA_TARGETS = {\n    "נשים": 30,\n    "נשים בטבע": 25,\n    "מסיבות טבע": 30,\n    "מסיבות והופעות": 25,\n    "זוגות": 25,\n    "חוף ים": 20,\n    "חוף ים 2026": 20,
+    "חוף ים": 20,
+    "חוף ים 2026": 20,
     "נשים בחוף": 30,
-    "נשים בחוף 2026": 20,\n    "שקיעות בחוף": 15,\n}
+    "נשים בחוף 2026": 20,
+    "שקיעות בחוף": 15,
+}
 API = "https://commons.wikimedia.org/w/api.php"
 BAD = re.compile(r"(painting|portrait|drawing|illustration|map|diagram|scan|poster|logo|medal|coin|screenshot|artwork|statue|sculpture|flag|document|manuscript)", re.I)
 
