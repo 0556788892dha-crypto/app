@@ -254,7 +254,7 @@ public class MainActivity extends Activity {
             public void onStartTrackingTouch(SeekBar b){} public void onStopTrackingTouch(SeekBar b){}
         });
         Button save=actionButton("שמור והחל גודל גופן");save.setOnClickListener(v->{prefs.edit().putFloat("font",scale).apply();ui();});root.addView(save);
-        Button about=actionButton("אודות DA PHONES");about.setOnClickListener(v->about());root.addView(about);
+        Button about=actionButton("אודות DA DIGITAL");about.setOnClickListener(v->about());root.addView(about);
         Button reset=actionButton("איפוס גופן");reset.setOnClickListener(v->{scale=1;bar.setProgress(25);});root.addView(reset);
     }
 
@@ -437,7 +437,7 @@ public class MainActivity extends Activity {
         if(compare.size()<2){Toast.makeText(this,"בחר לפחות שני מכשירים",Toast.LENGTH_SHORT).show();return;}
         StringBuilder s=new StringBuilder();String[] fields={"מסך","רזולוציה","ערכת שבבים","RAM","אחסון","מצלמה","סוללה","טעינה","5G","NFC","משקל","מידות","מערכת הפעלה"};
         for(String f:fields){s.append("\\n").append(f).append("\\n");for(Phone p:compare)s.append("• ").append(p.brand+" "+p.name).append(": ").append(find(p,f)).append("\\n");}
-        new AlertDialog.Builder(this).setTitle("DA PHONES — השוואה").setMessage(s.toString()).setPositiveButton("סגור",null).setNeutralButton("נקה",(d,w)->{compare.clear();activeTab=1;ui();}).show();
+        new AlertDialog.Builder(this).setTitle("DA DIGITAL — השוואה").setMessage(s.toString()).setPositiveButton("סגור",null).setNeutralButton("נקה",(d,w)->{compare.clear();activeTab=1;ui();}).show();
     }
 
     String find(Phone p,String f){
@@ -547,7 +547,7 @@ public class MainActivity extends Activity {
     String stripHtml(String x){return x.replaceAll("<[^>]*>","").replace("&amp;","&").trim();}
 
     void settings(){activeTab=3;ui();}
-    void about(){new AlertDialog.Builder(this).setTitle("אודות DA PHONES").setMessage("DA PHONES\\n\\nמאגר מידע והשוואת מכשירים: טלפונים, טאבלטים, שעונים חכמים ודגמי נישה.\\n\\nמטרה: מאגר מדויק, שקוף ואופליין.").setPositiveButton("סגור",null).show();}
+    void about(){new AlertDialog.Builder(this).setTitle("אודות DA DIGITAL").setMessage("DA DIGITAL\\n\\nמאגר מידע והשוואת מכשירים: טלפונים, טאבלטים, שעונים חכמים ודגמי נישה.\\n\\nמטרה: מאגר מדויק, שקוף ואופליין.").setPositiveButton("סגור",null).show();}
 
     @Override protected void onDestroy(){
         super.onDestroy();
