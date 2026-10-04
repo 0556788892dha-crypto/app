@@ -1,7 +1,9 @@
-# David Notes
+# David Android Apps
 
-Android notes app with folders, PIN lock, encrypted local storage, and DAVID watermark.
+## Phone Atlas
+אפליקציית מידע והשוואת סמארטפונים: חיפוש לפי מותג/דגם/מעבד, מפרטים, מידות, גודל מסך, Geekbench, דירוג אישי והשוואה של עד 4 מכשירים.
 
-## Build
+הארכיטקטורה מיועדת להתרחב לקטלוג גדול מאוד של מכשירים, כולל דגמים קטנים ולא מוכרים. נתוני Geekbench צריכים להישמר עם מקור, גרסה ותאריך, ולא להיות מומצאים כאשר אין תוצאה אמינה.
 
-Pushes to `main` trigger GitHub Actions and produce an APK artifact.
+## David Notes
+אפליקציית התזכירים המקורית נשארת במודול `app`.
