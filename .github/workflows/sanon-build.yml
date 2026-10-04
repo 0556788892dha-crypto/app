@@ -1,0 +1,43 @@
+name: SANON Android build
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Download real public-domain photos
+        run: |
+          python3 -m pip install --disable-pip-version-check --quiet requests pillow
+          python3 tools/download_public_photos.py
+
+      - name: Build SANON APK
+        run: gradle :sanon:assembleRelease --no-daemon
+
+      - name: Check APK size
+        run: |
+          ls -lh sanon/build/outputs/apk/release/*.apk
+          test $(stat -c%s sanon/build/outputs/apk/release/*.apk) -lt 52428800
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: SANON-release
+          path: sanon/build/outputs/apk/release/*.apk
