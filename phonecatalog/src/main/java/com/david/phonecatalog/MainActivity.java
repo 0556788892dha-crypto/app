@@ -16,7 +16,7 @@ import org.json.*;
 public class MainActivity extends Activity {
     static final String API="https://phone-specs-api.vercel.app";
     static class Phone {
-        String brand,name,image,detail,summary,chip,display,ram,storage,os;
+        String brand,name,image,detail,summary,chip,display,ram,storage,os,slug;
         Integer geek, benchmark;
         double score;
         boolean remote;
@@ -133,7 +133,7 @@ public class MainActivity extends Activity {
                         JSONObject x=a.getJSONObject(i);
                         String n=x.optString("phone_name",x.optString("name"));
                         if(n.isEmpty())continue;
-                        got.add(new Phone(b[0],n,x.optString("image"),x.optString("detail"),x.optString("description",x.optString("summary")),true));
+                        Phone np=new Phone(b[0],n,x.optString("image"),x.optString("detail"),x.optString("description",x.optString("summary")),true); np.slug=x.optString("slug"); got.add(np);
                     }
                     page++;
                 }while(page<=last && page<=50);
@@ -215,13 +215,115 @@ public class MainActivity extends Activity {
     String fmt(double x){return String.format(Locale.US,"%.0f",x);}
 
     void showDetails(Phone p){
-        String m=""+p.brand+" "+p.name+"\n\n"+(p.summary==null?"אין תקציר זמין.":p.summary)+
-                "\n\nדירוג DA PHONES: "+fmt(p.score)+"/100"+
-                "\nGeekbench: "+(p.geek==null?"לא קיים נתון מאומת במאגר":p.geek)+
-                "\nBenchmark: "+(p.benchmark==null?"לא קיים נתון מאומת במאגר":p.benchmark)+
-                "\n\nתמונה: "+(p.image.isEmpty()?"אין":p.image)+
-                "\n\nמקור נתוני המכשיר: GSMArena/API כאשר המכשיר נטען מהקטלוג.";
-        new AlertDialog.Builder(this).setTitle(p.brand+" "+p.name).setMessage(m).setPositiveButton("סגור",null).show();
+        if(!p.remote || (p.detail==null || p.detail.isEmpty()) && (p.slug==null || p.slug.isEmpty())){
+            showDetailsText(p,(p.summary==null?"אין תקציר זמין.":p.summary)+
+                    "\n\nדירוג DA PHONES: "+fmt(p.score)+"/100"+
+                    "\nGeekbench: "+(p.geek==null?"אין נתון מאומת":p.geek)+
+                    "\nBenchmark: "+(p.benchmark==null?"אין נתון מאומת":p.benchmark)+
+                    "\n\nמקור: נתון מקומי ב-DA PHONES.");
+            return;
+        }
+        Toast.makeText(this,"טוען מפרט מלא של "+p.name+"...",Toast.LENGTH_SHORT).show();
+        new Thread(()->{
+            try{
+                String u=(p.detail!=null&&!p.detail.isEmpty())?p.detail:(API+"/"+p.slug);
+                u=u.replace("http://","https://");
+                JSONObject o=getJson(u);
+                final String details=formatDetailJson(o);
+                runOnUiThread(()->showDetailsText(p,details));
+            }catch(Exception e){
+                runOnUiThread(()->showDetailsText(p,
+                        (p.summary==null?"אין תקציר זמין.":p.summary)+
+                        "\n\nלא הצלחנו להביא כרגע את המפרט המלא. נסה שוב מאוחר יותר.\n\nמקור רשומה: "+(p.detail==null?"":p.detail)));
+            }
+        }).start();
+    }
+
+    void showDetailsText(Phone p,String body){
+        ScrollView sc=new ScrollView(this);
+        TextView tv=new TextView(this);
+        tv.setText(p.brand+" "+p.name+"\n\n"+body);
+        tv.setTextSize(15);
+        tv.setPadding(22,18,22,18);
+        sc.addView(tv);
+        new AlertDialog.Builder(this)
+                .setTitle(p.brand+" "+p.name)
+                .setView(sc)
+                .setPositiveButton("סגור",null).show();
+    }
+
+    String formatDetailJson(JSONObject root){
+        JSONObject data=root.optJSONObject("data");
+        if(data==null)data=root;
+        StringBuilder out=new StringBuilder();
+        appendJson("",data,out,0);
+        return out.length()==0?"לא נמצאו שדות מפורטים בתשובה.":out.toString();
+    }
+
+    void appendJson(String prefix,JSONObject o,StringBuilder out,int depth){
+        if(depth>6)return;
+        Iterator<String> it=o.keys();
+        while(it.hasNext()){
+            String k=it.next();
+            Object v=o.opt(k);
+            appendValue(labelFor(k),v,out,depth);
+        }
+    }
+
+    void appendValue(String key,Object v,StringBuilder out,int depth){
+        if(v==null || v==JSONObject.NULL)return;
+        if(v instanceof JSONObject){
+            if(depth>5)return;
+            out.append("\n").append(key).append(":\n");
+            appendJson(key,(JSONObject)v,out,depth+1);
+        }else if(v instanceof JSONArray){
+            JSONArray a=(JSONArray)v;
+            if(a.length()==0)return;
+            if(a.length()>50){out.append(key).append(": ").append(a.length()).append(" פריטים\n");return;}
+            for(int i=0;i<a.length();i++){
+                Object item=a.opt(i);
+                if(item instanceof JSONObject){
+                    out.append("\n").append(key).append(" #").append(i+1).append(":\n");
+                    appendJson(key,(JSONObject)item,out,depth+1);
+                }else if(item!=JSONObject.NULL){
+                    out.append(key).append(": ").append(String.valueOf(item)).append("\n");
+                }
+            }
+        }else{
+            String x=String.valueOf(v).trim();
+            if(x.isEmpty() || x.equalsIgnoreCase("null"))return;
+            out.append(key).append(": ").append(x).append("\n");
+        }
+    }
+
+    String labelFor(String k){
+        String x=k.replace("_"," ").trim();
+        String low=x.toLowerCase(Locale.ROOT);
+        if(low.equals("name")||low.equals("phone name")||low.equals("model")||low.equals("model name"))return "דגם";
+        if(low.contains("launch")||low.contains("release"))return "השקה";
+        if(low.contains("display")||low.contains("screen"))return "מסך";
+        if(low.contains("resolution"))return "רזולוציה";
+        if(low.contains("refresh"))return "קצב רענון";
+        if(low.contains("chip")||low.contains("processor")||low.contains("soc"))return "ערכת שבבים";
+        if(low.equals("cpu")||low.contains("cpu "))return "CPU";
+        if(low.equals("gpu")||low.contains("graphics"))return "GPU";
+        if(low.contains("ram"))return "RAM";
+        if(low.contains("storage")||low.contains("memory"))return "אחסון";
+        if(low.contains("rear camera")||low.contains("main camera"))return "מצלמה אחורית";
+        if(low.contains("front camera")||low.contains("selfie"))return "מצלמה קדמית";
+        if(low.contains("battery"))return "סוללה";
+        if(low.contains("charging"))return "טעינה";
+        if(low.contains("network")||low.contains("5g")||low.contains("4g"))return "רשת";
+        if(low.contains("sim"))return "SIM";
+        if(low.equals("nfc"))return "NFC";
+        if(low.contains("water")||low.startsWith("ip"))return "עמידות";
+        if(low.contains("weight"))return "משקל";
+        if(low.contains("dimension"))return "מידות";
+        if(low.contains("fingerprint")||low.contains("face unlock"))return "אבטחה";
+        if(low.contains("os")||low.contains("android")||low.contains("software"))return "מערכת הפעלה";
+        if(low.contains("price"))return "מחיר";
+        if(low.contains("source"))return "מקור";
+        return x;
     }
 
     void showRatings(){
