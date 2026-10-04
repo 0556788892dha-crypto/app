@@ -115,16 +115,71 @@ String spec(Phone p,String group,String key,String topKey){
  try{
   JSONObject d=p.detail;
   if(d!=null){
-   if(!group.isEmpty()){JSONObject specs=d.optJSONObject("specifications");if(specs!=null){JSONObject g=specs.optJSONObject(group);if(g!=null){String groupValue=g.optString(key,"").trim();if(!groupValue.isEmpty()){if(topKey.equals("ram")){String m=extract(groupValue,"(\\d+)\\s*GB\\s*RAM");if(!m.isEmpty())return m+" GB";}if(topKey.equals("storage")){String m=extract(groupValue,"([0-9]+(?:\\.[0-9]+)?)\\s*(TB|GB)");if(!m.isEmpty())return m+" "+groupValue.substring(Math.max(0,groupValue.indexOf(m)+m.length())).trim().split(" ")[0];}return stripHtml(groupValue);}}}}
-   String v=d.optString(topKey,"").trim();if(!v.isEmpty())return stripHtml(v); String csvKey=""; if(topKey.equals("screen_size"))csvKey="Display_Size_inch";else if(topKey.equals("resolution"))csvKey="Resolution";else if(topKey.equals("chipset"))csvKey="Chipset";else if(topKey.equals("ram"))csvKey="RAM_GB";else if(topKey.equals("storage"))csvKey="Storage_GB";else if(topKey.equals("main_camera_mp"))csvKey="Main_Camera_MP";else if(topKey.equals("battery_capacity"))csvKey="Battery_mAh";else if(topKey.equals("charging_w"))csvKey="Wired_Charging_W";else if(topKey.equals("5g_support"))csvKey="5G_Support";else if(topKey.equals("nfc"))csvKey="NFC";else if(topKey.equals("weight_g"))csvKey="Weight_g";else if(topKey.equals("dimensions"))csvKey="Dimensions";else if(topKey.equals("os"))csvKey="OS"; if(!csvKey.isEmpty()){v=d.optString(csvKey,"").trim();if(!v.isEmpty())return stripHtml(v);}
-   if(topKey.equals("5g_support")&&!topKey.isEmpty()){JSONObject n=d.optJSONObject("Network");if(n!=null&&n.optString("Technology","").contains("5G"))return "כן";}
-   if(topKey.equals("nfc")){JSONObject cc=d.optJSONObject("Comms");if(cc!=null){String nfcValue=cc.optString("NFC","").trim();if(!nfcValue.isEmpty())return stripHtml(nfcValue);}}
+   if(!group.isEmpty()){
+    JSONObject specs=d.optJSONObject("specifications");
+    JSONObject g=specs!=null?specs.optJSONObject(group):null;
+    if(g==null)g=d.optJSONObject(group);
+    if(g!=null){
+     String groupValue=g.optString(key,"").trim();
+     if(!groupValue.isEmpty()){
+      if(topKey.equals("ram")){
+       java.util.regex.Matcher m=java.util.regex.Pattern.compile("(\\\\d+)\\\\s*GB\\\\s*RAM",java.util.regex.Pattern.CASE_INSENSITIVE).matcher(groupValue);
+       if(m.find())return m.group(1)+" GB";
+      }
+      if(topKey.equals("storage")){
+       java.util.regex.Matcher m=java.util.regex.Pattern.compile("([0-9]+(?:\\\\.[0-9]+)?)\\\\s*(TB|GB)",java.util.regex.Pattern.CASE_INSENSITIVE).matcher(groupValue);
+       if(m.find())return m.group(1)+" "+m.group(2).toUpperCase(Locale.ROOT);
+      }
+      return stripHtml(groupValue);
+     }
+    }
+   }
+   String v=d.optString(topKey,"").trim();
+   if(!v.isEmpty())return stripHtml(v);
+   String csvKey="";
+   if(topKey.equals("screen_size"))csvKey="Display_Size_inch";
+   else if(topKey.equals("resolution"))csvKey="Resolution";
+   else if(topKey.equals("chipset"))csvKey="Chipset";
+   else if(topKey.equals("ram"))csvKey="RAM_GB";
+   else if(topKey.equals("storage"))csvKey="Storage_GB";
+   else if(topKey.equals("main_camera_mp"))csvKey="Main_Camera_MP";
+   else if(topKey.equals("battery_capacity"))csvKey="Battery_mAh";
+   else if(topKey.equals("charging_w"))csvKey="Wired_Charging_W";
+   else if(topKey.equals("5g_support"))csvKey="5G_Support";
+   else if(topKey.equals("nfc"))csvKey="NFC";
+   else if(topKey.equals("weight_g"))csvKey="Weight_g";
+   else if(topKey.equals("dimensions"))csvKey="Dimensions";
+   else if(topKey.equals("os"))csvKey="OS";
+   if(!csvKey.isEmpty()){
+    v=d.optString(csvKey,"").trim();
+    if(!v.isEmpty())return stripHtml(v);
+   }
+   if(topKey.equals("5g_support")){
+    JSONObject n=d.optJSONObject("Network");
+    if(n!=null){
+     String tech=n.optString("Technology","");
+     if(tech.toUpperCase(Locale.ROOT).contains("5G"))return "כן";
+    }
+   }
+   if(topKey.equals("nfc")){
+    JSONObject cc=d.optJSONObject("Comms");
+    if(cc!=null){
+     String nfcValue=cc.optString("NFC","").trim();
+     if(!nfcValue.isEmpty())return stripHtml(nfcValue);
+    }
+   }
   }
  }catch(Exception ignored){}
  return "לא צוין";
 }
-String extract(String text,String regex){try{java.util.regex.Matcher m=java.util.regex.Pattern.compile(regex,java.util.regex.Pattern.CASE_INSENSITIVE).matcher(text==null?"":text);return m.find()?m.group(1):"";}catch(Exception e){return "";}}\nString stripHtml(String x){return x.replaceAll("<[^>]*>","").replace("&amp;","&").trim();}
- void settings(){LinearLayout b=new LinearLayout(this);b.setOrientation(LinearLayout.VERTICAL);TextView label=txt("גודל גופן: "+Math.round(scale*100)+"%",16,false);b.addView(label);SeekBar bar=new SeekBar(this);bar.setMax(50);bar.setProgress(Math.round((scale-.75f)*100));b.addView(bar);bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(SeekBar b,int p,boolean f){scale=.75f+p/100f;label.setText("גודל גופן: "+Math.round(scale*100)+"%");}public void onStartTrackingTouch(SeekBar b){}public void onStopTrackingTouch(SeekBar b){}});Button about=btn("אודות DA PHONES");about.setOnClickListener(v->about());b.addView(about);Button reset=btn("איפוס");reset.setOnClickListener(v->{scale=1;bar.setProgress(25);});b.addView(reset);new AlertDialog.Builder(this).setTitle("הגדרות").setView(b).setPositiveButton("שמירה",(d,w)->{prefs.edit().putFloat("font",scale).apply();recreate();}).setNegativeButton("ביטול",null).show();}
+String extract(String text,String regex){
+ try{
+  java.util.regex.Matcher m=java.util.regex.Pattern.compile(regex,java.util.regex.Pattern.CASE_INSENSITIVE).matcher(text==null?"":text);
+  return m.find()?m.group(1):"";
+ }catch(Exception e){return "";}
+}
+String stripHtml(String x){return x.replaceAll("<[^>]*>","").replace("&amp;","&").trim();}
+void settings(){LinearLayout b=new LinearLayout(this);b.setOrientation(LinearLayout.VERTICAL);TextView label=txt("גודל גופן: "+Math.round(scale*100)+"%",16,false);b.addView(label);SeekBar bar=new SeekBar(this);bar.setMax(50);bar.setProgress(Math.round((scale-.75f)*100));b.addView(bar);bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(SeekBar b,int p,boolean f){scale=.75f+p/100f;label.setText("גודל גופן: "+Math.round(scale*100)+"%");}public void onStartTrackingTouch(SeekBar b){}public void onStopTrackingTouch(SeekBar b){}});Button about=btn("אודות DA PHONES");about.setOnClickListener(v->about());b.addView(about);Button reset=btn("איפוס");reset.setOnClickListener(v->{scale=1;bar.setProgress(25);});b.addView(reset);new AlertDialog.Builder(this).setTitle("הגדרות").setView(b).setPositiveButton("שמירה",(d,w)->{prefs.edit().putFloat("font",scale).apply();recreate();}).setNegativeButton("ביטול",null).show();}
  void about(){new AlertDialog.Builder(this).setTitle("אודות DA PHONES").setMessage("DA PHONES\n\nמאגר מידע והשוואת מכשירים, כולל דגמי נישה וטלפונים קומפקטיים.\n\nמפתח: GPT בשיתוף Dudi Anael\n\nהמטרה: מאגר מדויק, שקוף ואופליין. נתון שלא אומת לא יוצג כעובדה.").setPositiveButton("סגור",null).show();}
  void ratings(){ArrayList<Phone>x=new ArrayList<>(phones);Collections.sort(x,(a,b)->Double.compare(b.score,a.score));StringBuilder s=new StringBuilder();for(int i=0;i<Math.min(100,x.size());i++)s.append(i+1).append(". ").append(x.get(i).brand+" "+x.get(i).name).append(" — ").append(Math.round(x.get(i).score)).append("/100\n");new AlertDialog.Builder(this).setTitle("דירוגים").setMessage(s).setPositiveButton("סגור",null).show();}
  double screen(Phone p){String x=spec(p,"Display","Size","screen_size");if(x.equals("לא צוין"))x=p.summary;String m=extract(x,"([2-8](?:\\.[0-9]+)?)");if(!m.isEmpty())try{return Double.parseDouble(m);}catch(Exception ignored){}return 99;}
