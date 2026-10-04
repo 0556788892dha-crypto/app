@@ -1,5 +1,6 @@
 package com.david.phonecatalog;
-import android.app.*;import android.os.*;import android.content.*;\nimport android.graphics.drawable.BitmapDrawable;import android.graphics.*;import android.graphics.drawable.GradientDrawable;import android.view.*;import android.widget.*;import android.text.*;import java.io.*;import java.util.*;import org.json.*;
+import android.app.*;import android.os.*;import android.content.*;
+import android.graphics.drawable.BitmapDrawable;import android.graphics.*;import android.graphics.drawable.GradientDrawable;import android.view.*;import android.widget.*;import android.text.*;import java.io.*;import java.util.*;import org.json.*;
 
 public class MainActivity extends Activity{
  static class Phone{String brand="",name="",image="",summary="",source="";JSONObject detail;double score;}
