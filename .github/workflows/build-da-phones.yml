@@ -17,16 +17,24 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+      - name: Get GSMArena scraped dataset
+        run: git clone --depth 1 https://github.com/bytecharts/device_specs_gsmarena.git .cache/device_specs_gsmarena
       - uses: actions/setup-python@v5
-        with: {python-version: '3.x'}
+        with:
+          python-version: '3.x'
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check pillow
       - name: Build offline catalog
         run: python .github/scripts/build_catalog.py
       - name: Audit catalog
         run: python .github/scripts/audit_catalog.py
       - uses: actions/setup-java@v4
-        with: {distribution: temurin, java-version: '17'}
+        with:
+          distribution: temurin
+          java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
-        with: {gradle-version: '8.9'}
+        with:
+          gradle-version: '8.9'
       - name: Build APK
         run: gradle :phonecatalog:assembleRelease --stacktrace
       - uses: actions/upload-artifact@v4
