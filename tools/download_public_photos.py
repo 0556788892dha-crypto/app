@@ -22,6 +22,9 @@ CATEGORIES = [
     ("לילה", "night"),
     ("צבעוני", "colorful OR flowers"),
     ("אנשים", "people OR person OR human"),
+    ("נשים", "women OR woman OR female portrait"),
+    ("גברים", "men OR man OR male portrait"),
+    ("ילדים", "children OR child OR kids"),
     ("רחוב ואנשים", "street photography OR people in streets"),
     ("פעילות ואנשים", "people OR crowd OR group"),
 ]
