@@ -126,7 +126,7 @@ public class MainActivity extends Activity {
                 }
                 new AlertDialog.Builder(this)
                     .setTitle("מחיקת תיקייה")
-                    .setMessage("למחוק את "" + f.name + ""? הפתקים שבתוכה יועברו ל"כללי".")
+                    .setMessage("למחוק את \""+f.name+"\"? הפתקים שבתוכה יועברו ל\"כללי\".")
                     .setNegativeButton("ביטול", null)
                     .setPositiveButton("מחק", (q,w) -> { s.deleteFolder(f.id); folder = 1; folders(); })
                     .show();
