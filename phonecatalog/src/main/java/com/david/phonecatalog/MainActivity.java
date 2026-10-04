@@ -123,11 +123,11 @@ String spec(Phone p,String group,String key,String topKey){
      String groupValue=g.optString(key,"").trim();
      if(!groupValue.isEmpty()){
       if(topKey.equals("ram")){
-       java.util.regex.Matcher m=java.util.regex.Pattern.compile("(\\\\d+)\\\\s*GB\\\\s*RAM",java.util.regex.Pattern.CASE_INSENSITIVE).matcher(groupValue);
+       java.util.regex.Matcher m=java.util.regex.Pattern.compile("(\\d+)\\s*GB\\s*RAM",java.util.regex.Pattern.CASE_INSENSITIVE).matcher(groupValue);
        if(m.find())return m.group(1)+" GB";
       }
       if(topKey.equals("storage")){
-       java.util.regex.Matcher m=java.util.regex.Pattern.compile("([0-9]+(?:\\\\.[0-9]+)?)\\\\s*(TB|GB)",java.util.regex.Pattern.CASE_INSENSITIVE).matcher(groupValue);
+       java.util.regex.Matcher m=java.util.regex.Pattern.compile("([0-9]+(?:\\.[0-9]+)?)\\s*(TB|GB)",java.util.regex.Pattern.CASE_INSENSITIVE).matcher(groupValue);
        if(m.find())return m.group(1)+" "+m.group(2).toUpperCase(Locale.ROOT);
       }
       return stripHtml(groupValue);
