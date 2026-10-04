@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
         glossary.setOnClickListener(v->showGlossary());
         search.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int a,int c,int d){} public void onTextChanged(CharSequence s,int a,int b,int c){render();} public void afterTextChanged(Editable e){}});
         brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,View v,int pos,long id){if(pos>0) loadBrand(brands.get(pos-1)); render();}});
-        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,int pos,long id){render();}});
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,View v,int pos,long id){render();}});
         setContentView(root);
         render();
     }
@@ -203,7 +203,7 @@ public class MainActivity extends Activity {
     double screen(Phone p){
         try{String x=p.summary==null?"":p.summary.replace(",","."); int i=x.indexOf("\""); int j=x.lastIndexOf(" ",Math.max(0,i)); return Double.parseDouble(x.substring(Math.max(0,j),i));}catch(Exception e){return 99;}
     }
-    double estimateScore(String s,String n){
+    static double estimateScore(String s,String n){
         String x=(s+" "+n).toLowerCase(Locale.ROOT); double v=70;
         if(x.contains("8 elite")||x.contains("a19")||x.contains("dimensity 9500")||x.contains("snapdragon 8 gen 5"))v=97;
         else if(x.contains("8 gen 3")||x.contains("8 gen 2")||x.contains("tensor g5")||x.contains("dimensity 9300"))v=92;
