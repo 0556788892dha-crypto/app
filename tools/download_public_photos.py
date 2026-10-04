@@ -33,6 +33,7 @@ CATEGORIES = [
     ("פעילות ואנשים", "people OR crowd OR group"),
 ]
 TARGET_PER_CATEGORY = 10
+# Extra weight for the categories requested for SANON\nEXTRA_TARGETS = {\n    "נשים": 30,\n    "נשים בטבע": 25,\n    "מסיבות טבע": 30,\n    "מסיבות והופעות": 25,\n    "זוגות": 25,\n}
 API = "https://commons.wikimedia.org/w/api.php"
 BAD = re.compile(r"(painting|portrait|drawing|illustration|map|diagram|scan|poster|logo|medal|coin|screenshot|artwork|statue|sculpture|flag|document|manuscript)", re.I)
 
@@ -86,7 +87,7 @@ idx = 1
 for category, query in CATEGORIES:
     got = 0
     seen = set()
-    for title, url in candidates(query):
+    target = EXTRA_TARGETS.get(category, TARGET_PER_CATEGORY)\n    for title, url in candidates(query):
         if title in seen:
             continue
         seen.add(title)
@@ -95,7 +96,7 @@ for category, query in CATEGORIES:
             entries.append((f"photo_{idx:03d}", category))
             got += 1
             idx += 1
-            if got >= TARGET_PER_CATEGORY:
+            if got >= target:
                 break
         except Exception as e:
             print("skip", title, e)
