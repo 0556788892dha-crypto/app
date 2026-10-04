@@ -101,8 +101,8 @@ public class MainActivity extends Activity {
                 final ArrayList<String[]> out=new ArrayList<>();
                 if(a!=null) for(int i=0;i<a.length();i++){
                     JSONObject x=a.getJSONObject(i);
-                    String name=x.optString("name").trim();
-                    String slug=x.optString("slug",x.optString("id"));
+                    String name=x.optString("brand_name",x.optString("name")).trim();
+                    String slug=x.optString("brand_slug",x.optString("slug",x.optString("id")));
                     if(!name.isEmpty()&&!slug.isEmpty()) out.add(new String[]{name,slug});
                 }
                 runOnUiThread(()->{
@@ -229,6 +229,7 @@ public class MainActivity extends Activity {
                 String u=(p.detail!=null&&!p.detail.isEmpty())?p.detail:(API+"/"+p.slug);
                 u=u.replace("http://","https://");
                 JSONObject o=getJson(u);
+                updateMetricsFromDetails(p,o);
                 final String details=formatDetailJson(o);
                 runOnUiThread(()->showDetailsText(p,details));
             }catch(Exception e){
@@ -250,6 +251,52 @@ public class MainActivity extends Activity {
                 .setTitle(p.brand+" "+p.name)
                 .setView(sc)
                 .setPositiveButton("סגור",null).show();
+    }
+
+    void updateMetricsFromDetails(Phone p,JSONObject root){
+        StringBuilder all=new StringBuilder();
+        collectText(root,all,0);
+        String x=all.toString();
+        p.geek=findScore(x,"geekbench");
+        Integer antutu=findScore(x,"antutu");
+        p.benchmark=antutu;
+        p.score=estimateScore(x,p.name);
+    }
+
+    void collectText(JSONObject o,StringBuilder out,int depth){
+        if(depth>7)return;
+        Iterator<String> it=o.keys();
+        while(it.hasNext()){
+            String k=it.next();
+            Object v=o.opt(k);
+            if(v==null||v==JSONObject.NULL)continue;
+            out.append(" ").append(k).append(" ");
+            if(v instanceof JSONObject) collectText((JSONObject)v,out,depth+1);
+            else if(v instanceof JSONArray){
+                JSONArray a=(JSONArray)v;
+                for(int i=0;i<a.length() && i<100;i++){
+                    Object q=a.opt(i);
+                    if(q instanceof JSONObject)collectText((JSONObject)q,out,depth+1);
+                    else if(q!=JSONObject.NULL)out.append(" ").append(String.valueOf(q));
+                }
+            }else out.append(" ").append(String.valueOf(v));
+        }
+    }
+
+    Integer findScore(String text,String keyword){
+        String low=text.toLowerCase(Locale.ROOT);
+        int at=low.indexOf(keyword.toLowerCase(Locale.ROOT));
+        if(at<0)return null;
+        String tail=text.substring(at,Math.min(text.length(),at+500));
+        java.util.regex.Matcher m=java.util.regex.Pattern.compile("(\\d{2,7})(?:\\s*(?:points|pts|score))?",java.util.regex.Pattern.CASE_INSENSITIVE).matcher(tail);
+        Integer best=null;
+        while(m.find()){
+            try{
+                int n=Integer.parseInt(m.group(1));
+                if(n>=100 && n<=100000)best=n;
+            }catch(Exception ignored){}
+        }
+        return best;
     }
 
     String formatDetailJson(JSONObject root){
