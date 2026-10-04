@@ -59,11 +59,16 @@ public class MainActivity extends Activity {
         box.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,
                 new int[]{Color.rgb(5,24,42),Color.rgb(16,67,104),Color.rgb(5,24,42)}));
 
-        TextView da=txt("DA",52,true);
+        ImageView logo=new ImageView(this);
+        logo.setImageResource(R.drawable.ic_logo);
+        logo.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        box.addView(logo,new LinearLayout.LayoutParams(-1,dp(86)));
+
+        TextView da=txt("DA DIGITAL",26,true);
         da.setGravity(Gravity.CENTER);
         da.setTextColor(Color.WHITE);
-        da.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD_ITALIC));
-        box.addView(da,new LinearLayout.LayoutParams(-1,dp(70)));
+        da.setTypeface(Typeface.create("sans-serif",Typeface.BOLD));
+        box.addView(da,new LinearLayout.LayoutParams(-1,dp(42)));
 
         ImageView devices=new ImageView(this);
         devices.setImageResource(R.drawable.ic_splash_devices);
@@ -73,7 +78,7 @@ public class MainActivity extends Activity {
         TextView sub=txt("Phone specifications and comparisons",17,false);
         sub.setGravity(Gravity.CENTER);
         sub.setTextColor(Color.rgb(215,236,249));
-        sub.setTypeface(Typeface.create(Typeface.SERIF,Typeface.ITALIC));
+        sub.setTypeface(Typeface.create("sans-serif",Typeface.NORMAL));
         LinearLayout.LayoutParams sp=new LinearLayout.LayoutParams(-1,dp(54));
         sp.topMargin=dp(4);
         box.addView(sub,sp);
@@ -84,12 +89,12 @@ public class MainActivity extends Activity {
         pp.topMargin=dp(8);
         box.addView(p,pp);
 
-        da.setAlpha(0f); devices.setAlpha(0f); sub.setAlpha(0f); p.setAlpha(0f);
-        da.setScaleX(.94f); da.setScaleY(.94f);
-        devices.setScaleX(.96f); devices.setScaleY(.96f);
+        logo.setAlpha(0f); da.setAlpha(0f); devices.setAlpha(0f); sub.setAlpha(0f); p.setAlpha(0f);
+        logo.setScaleX(.90f); logo.setScaleY(.90f); devices.setScaleX(.96f); devices.setScaleY(.96f);
 
-        da.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(420).start();
-        devices.animate().alpha(1f).scaleX(1f).scaleY(1f).setStartDelay(120).setDuration(520).start();
+        logo.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(420).start();
+        da.animate().alpha(1f).setStartDelay(100).setDuration(420).start();
+        devices.animate().alpha(1f).scaleX(1f).scaleY(1f).setStartDelay(180).setDuration(560).start();
         sub.animate().alpha(1f).setStartDelay(320).setDuration(500).start();
         p.animate().alpha(1f).setStartDelay(450).setDuration(350).start();
 
@@ -246,16 +251,44 @@ public class MainActivity extends Activity {
     }
 
     void buildSettingsPage(){
-        root.addView(txt("העדפות תצוגה",18,true));
-        TextView label=txt("גודל גופן: "+Math.round(scale*100)+"%",15,false);root.addView(label);
-        SeekBar bar=new SeekBar(this);bar.setMax(50);bar.setProgress(Math.round((scale-.75f)*100));root.addView(bar);
+        ScrollView sv=new ScrollView(this);
+        LinearLayout box=new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setPadding(dp(2),dp(4),dp(2),dp(10));
+
+        box.addView(txt("העדפות תצוגה",18,true));
+        TextView label=txt("גודל גופן: "+Math.round(scale*100)+"%",15,false);
+        label.setPadding(0,dp(8),0,dp(4));
+        box.addView(label);
+
+        SeekBar bar=new SeekBar(this);
+        bar.setMax(50);
+        int progress=Math.max(0,Math.min(50,Math.round((scale-.75f)*100)));
+        bar.setProgress(progress);
+        box.addView(bar,new LinearLayout.LayoutParams(-1,dp(48)));
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
-            public void onProgressChanged(SeekBar b,int p,boolean f){scale=.75f+p/100f;label.setText("גודל גופן: "+Math.round(scale*100)+"%");}
-            public void onStartTrackingTouch(SeekBar b){} public void onStopTrackingTouch(SeekBar b){}
+            public void onProgressChanged(SeekBar b,int p,boolean f){
+                scale=.75f+p/100f;
+                label.setText("גודל גופן: "+Math.round(scale*100)+"%");
+            }
+            public void onStartTrackingTouch(SeekBar b){}
+            public void onStopTrackingTouch(SeekBar b){}
         });
-        Button save=actionButton("שמור והחל גודל גופן");save.setOnClickListener(v->{prefs.edit().putFloat("font",scale).apply();ui();});root.addView(save);
-        Button about=actionButton("אודות DA DIGITAL");about.setOnClickListener(v->about());root.addView(about);
-        Button reset=actionButton("איפוס גופן");reset.setOnClickListener(v->{scale=1;bar.setProgress(25);});root.addView(reset);
+
+        Button save=actionButton("שמור והחל גודל גופן");
+        save.setOnClickListener(v->{prefs.edit().putFloat("font",scale).apply();ui();});
+        box.addView(save);
+
+        Button about=actionButton("אודות DA DIGITAL");
+        about.setOnClickListener(v->about());
+        box.addView(about);
+
+        Button reset=actionButton("איפוס גופן");
+        reset.setOnClickListener(v->{scale=1f;label.setText("גודל גופן: 100%");bar.setProgress(25);});
+        box.addView(reset);
+
+        sv.addView(box,new ScrollView.LayoutParams(-1,-2));
+        root.addView(sv,new LinearLayout.LayoutParams(-1,0,1));
     }
 
     LinearLayout buildTabs(){
