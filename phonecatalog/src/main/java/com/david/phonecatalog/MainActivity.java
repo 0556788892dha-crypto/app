@@ -124,7 +124,7 @@ public class MainActivity extends Activity {
 
     void add(ArrayList<Phone> dst,String b,String n,String s){
         Phone p=new Phone();p.category="phone";p.brand=b;p.name=n;p.summary=s;p.score=score(s);
-        p.screenSize=screenValue(p,s);p.searchText=(b+" "+n+" "+s).toLowerCase(Locale.ROOT);dst.add(p);
+        p.screenSize=screenFromObject(null,s);p.searchText=(b+" "+n+" "+s).toLowerCase(Locale.ROOT);dst.add(p);
     }
 
     void ui(){
