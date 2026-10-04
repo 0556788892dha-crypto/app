@@ -33,6 +33,13 @@ CATEGORIES = [
     ("פעילות ואנשים", "people OR crowd OR group"),
 ]
 TARGET_PER_CATEGORY = 10
+EXTRA_TARGETS = {
+    "נשים": 30,
+    "נשים בטבע": 25,
+    "מסיבות טבע": 30,
+    "מסיבות והופעות": 25,
+    "זוגות": 25,
+}
 # Extra weight for the categories requested for SANON\nEXTRA_TARGETS = {\n    "נשים": 30,\n    "נשים בטבע": 25,\n    "מסיבות טבע": 30,\n    "מסיבות והופעות": 25,\n    "זוגות": 25,\n}
 API = "https://commons.wikimedia.org/w/api.php"
 BAD = re.compile(r"(painting|portrait|drawing|illustration|map|diagram|scan|poster|logo|medal|coin|screenshot|artwork|statue|sculpture|flag|document|manuscript)", re.I)
