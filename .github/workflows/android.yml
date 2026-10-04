@@ -32,5 +32,5 @@ jobs:
           path: app/build/outputs/apk/release/app-release.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: Phone-Atlas-release
+          name: DA-PHONES-release
           path: phonecatalog/build/outputs/apk/release/phonecatalog-release.apk
