@@ -153,15 +153,41 @@ public class MainActivity extends Activity {
     }
 
     void seedInto(ArrayList<Phone> dst){
-        add(dst,"Unihertz","Jelly Star","3.0\" IPS • Helio G99 • 8GB/256GB • 2000mAh");
-        add(dst,"Unihertz","Jelly 2E","3.0\" IPS • Helio P60 • 6GB/128GB • 2000mAh");
-        add(dst,"Unihertz","Jelly Max","5.05\" IPS 120Hz • Dimensity 7300 • 12GB/256GB • 4000mAh");
-        add(dst,"Unihertz","Titan 2","3.1\" AMOLED • 12GB/512GB • 5050mAh");
-        add(dst,"Qin","F21 Pro","2.8\" IPS • Helio A22 • 3GB/32GB • 2120mAh");
-        add(dst,"Qin","F22 Pro","3.54\" IPS • Helio G85 • 4GB/64GB • 2150mAh");
-        add(dst,"DOOV","R17 Pro","3.5\" • Helio A22 • 4GB/64GB • 2500mAh");
-        add(dst,"BlueFox","NX1","4.0\" IPS • Helio G81 • 4GB/64GB • 3000mAh");
-        add(dst,"KingKong","Mini 4","4.0\" IPS • 8GB/256GB • 3000mAh");
+        // Unihertz — official product families and models
+        add(dst,"Unihertz","Jelly Pro","4G • 2.45\" • 2GB/16GB");
+        add(dst,"Unihertz","Jelly 2","3.0\" • 4G • 6GB/128GB");
+        add(dst,"Unihertz","Jelly 2E","3.0\" • 4G • 4GB/64GB");
+        add(dst,"Unihertz","Jelly Star","3.0\" IPS • 8GB/256GB • 2000mAh");
+        add(dst,"Unihertz","Jelly Max","5.05\" • 5G • Dimensity 7300 • 12GB/256GB • 4000mAh");
+        add(dst,"Unihertz","Atom","2.45\" • rugged • IP68 • 4G");
+        add(dst,"Unihertz","Atom L","4.0\" • rugged • IP68 • 4G");
+        add(dst,"Unihertz","Atom XL","4.0\" • rugged • IP68 • 4G");
+        add(dst,"Unihertz","Titan","4.6\" • QWERTY • rugged");
+        add(dst,"Unihertz","Titan Pocket","3.1\" • QWERTY • Android");
+        add(dst,"Unihertz","Titan Slim","4.0\" • QWERTY • Android");
+        add(dst,"Unihertz","Titan 2","3.1\" • QWERTY • 5G");
+        add(dst,"Unihertz","TickTock","6.5\" + " • dual display • 5G");
+        add(dst,"Unihertz","TickTock-E","6.5\" + " • dual display");
+        add(dst,"Unihertz","TickTock-S","6.5\" + " • dual display • 5G");
+        add(dst,"Unihertz","Tank","6.81\" • rugged • huge battery");
+        add(dst,"Unihertz","Tank 2","6.79\" • rugged • huge battery");
+        add(dst,"Unihertz","Tank 3 Pro","6.79\" • rugged • 5G");
+        add(dst,"Unihertz","Tank Mini","4.3\" • mini rugged smartphone");
+        add(dst,"Unihertz","Golden Eye","rugged • 5G • camping light");
+        add(dst,"Unihertz","Luna","4G • transparent back • LED lighting");
+
+        // BLUEFOX — official site currently lists GT8 Pro and NX1
+        add(dst,"BlueFox","GT8 Pro","4.0\" small-screen smartphone");
+        add(dst,"BlueFox","NX1","4.0\" • 100.6×49.3×12.5mm • 106g");
+
+        // Qin — official store currently lists these four models
+        add(dst,"Qin","F21 Pro","2.8\" • Android 11 • 3GB/32GB • 2120mAh");
+        add(dst,"Qin","F22","2.8\" • Android 11 • 16/32GB • 1700mAh");
+        add(dst,"Qin","F22 Pro","3.5\" • Android 12 • Helio G85 • 4GB/64GB • 2150mAh");
+        add(dst,"Qin","F25","3.54\" • Android 14 • 6GB/128GB • 2700mAh");
+
+        add(dst,"DOOV","R17 Pro","3.5\" • 4GB/64GB • 2500mAh");
+        add(dst,"KingKong","Mini 4","4.0\" • 8GB/256GB • 3000mAh");
     }
 
     void add(ArrayList<Phone> dst,String b,String n,String s){
@@ -405,8 +431,33 @@ public class MainActivity extends Activity {
         }
     }
 
+    void showImageZoom(Phone p){
+        ImageView iv=new ImageView(this);
+        iv.setBackgroundColor(Color.BLACK);
+        iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        iv.setAdjustViewBounds(true);
+        iv.setPadding(dp(8),dp(8),dp(8),dp(8));
+        iv.setImageResource(R.drawable.ic_logo);
+        String path=p.image==null?"":p.image.trim().replaceFirst("^assets/","");
+        if(!path.isEmpty()){
+            Bitmap cached=imageCache.get(path);
+            if(cached!=null)iv.setImageBitmap(cached);
+            else ioPool.execute(()->{
+                Bitmap bm=decodeThumbnail(path);
+                if(bm!=null){ imageCache.put(path,bm); mainHandler.post(()->iv.setImageBitmap(bm)); }
+            });
+        }
+        ScrollView sv=new ScrollView(this);
+        sv.setFillViewport(true);
+        sv.addView(iv,new ScrollView.LayoutParams(-1,-1));
+        AlertDialog d=new AlertDialog.Builder(this).setTitle(p.brand+" "+p.name).setView(sv).setPositiveButton("סגור",null).create();
+        d.show();
+        iv.setOnClickListener(v->d.dismiss());
+    }
+
     void loadPhoneImage(ImageView v,Phone p){
         v.setImageResource(R.drawable.ic_logo);
+        v.setOnClickListener(x->showImageZoom(p));
         String path=p.image==null?"":p.image.trim();
         if(path.isEmpty())return;
         final String clean=path.replaceFirst("^assets/","");
