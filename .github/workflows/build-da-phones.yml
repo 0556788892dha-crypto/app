@@ -1,5 +1,5 @@
 name: Build DA PHONES APK
-# v1.2 catalog/image pipeline
+# v1.3 catalog/image pipeline — final main-only release sync
 permissions:
   contents: write
 
