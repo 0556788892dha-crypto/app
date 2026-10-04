@@ -153,38 +153,51 @@ public class MainActivity extends Activity {
     }
 
     void seedInto(ArrayList<Phone> dst){
-        // Unihertz — official product families and models
-        add(dst,"Unihertz","Jelly Pro","4G • 2.45\" • 2GB/16GB");
-        add(dst,"Unihertz","Jelly 2","3.0\" • 4G • 6GB/128GB");
-        add(dst,"Unihertz","Jelly 2E","3.0\" • 4G • 4GB/64GB");
-        add(dst,"Unihertz","Jelly Star","3.0\" IPS • 8GB/256GB • 2000mAh");
+        // Unihertz — expanded official product family
+        add(dst,"Unihertz","Jelly Pro","2.45\" • 4G • 2GB/16GB • 950mAh");
+        add(dst,"Unihertz","Jelly 2","3.0\" • 4G • Helio P60 • 6GB/128GB • 2000mAh");
+        add(dst,"Unihertz","Jelly 2E","3.0\" • 4G • Helio P60 • 4GB/64GB • 2000mAh");
+        add(dst,"Unihertz","Jelly Star","3.0\" IPS • Helio G99 • 8GB/256GB • 2000mAh");
         add(dst,"Unihertz","Jelly Max","5.05\" • 5G • Dimensity 7300 • 12GB/256GB • 4000mAh");
-        add(dst,"Unihertz","Atom","2.45\" • rugged • IP68 • 4G");
-        add(dst,"Unihertz","Atom L","4.0\" • rugged • IP68 • 4G");
-        add(dst,"Unihertz","Atom XL","4.0\" • rugged • IP68 • 4G");
-        add(dst,"Unihertz","Titan","4.6\" • QWERTY • rugged");
-        add(dst,"Unihertz","Titan Pocket","3.1\" • QWERTY • Android");
-        add(dst,"Unihertz","Titan Slim","4.0\" • QWERTY • Android");
-        add(dst,"Unihertz","Titan 2","3.1\" • QWERTY • 5G");
-        add(dst,"Unihertz","TickTock","6.5\" + " • dual display • 5G");
-        add(dst,"Unihertz","TickTock-E","6.5\" + " • dual display");
-        add(dst,"Unihertz","TickTock-S","6.5\" + " • dual display • 5G");
-        add(dst,"Unihertz","Tank","6.81\" • rugged • huge battery");
-        add(dst,"Unihertz","Tank 2","6.79\" • rugged • huge battery");
-        add(dst,"Unihertz","Tank 3 Pro","6.79\" • rugged • 5G");
-        add(dst,"Unihertz","Tank Mini","4.3\" • mini rugged smartphone");
-        add(dst,"Unihertz","Golden Eye","rugged • 5G • camping light");
-        add(dst,"Unihertz","Luna","4G • transparent back • LED lighting");
+        add(dst,"Unihertz","Atom","2.45\" • rugged • IP68 • 4G • 4300mAh");
+        add(dst,"Unihertz","Atom L","4.0\" • rugged • Helio P60 • 6GB/64GB • 4300mAh");
+        add(dst,"Unihertz","Atom XL","4.0\" • rugged • Helio P60 • 6GB/128GB • 4300mAh");
+        add(dst,"Unihertz","Titan","4.6\" • QWERTY • rugged • 6000mAh");
+        add(dst,"Unihertz","Titan Pocket","3.1\" • QWERTY • 4GB/64GB • 4000mAh");
+        add(dst,"Unihertz","Titan Slim","4.0\" • QWERTY • Helio P70 • 6GB/256GB • 4100mAh");
+        add(dst,"Unihertz","Titan 2","3.1\" • QWERTY • 5G • 12GB/512GB");
+        add(dst,"Unihertz","TickTock","6.5\" front + rear display • 5G • 6000mAh");
+        add(dst,"Unihertz","TickTock-E","6.5\" front + rear display • 4G • 6000mAh");
+        add(dst,"Unihertz","TickTock-S","6.5\" front + rear display • 5G • 6300mAh");
+        add(dst,"Unihertz","Tank","6.81\" • rugged • 4G • 22000mAh");
+        add(dst,"Unihertz","Tank 2","6.79\" • rugged • 5G • 15500mAh");
+        add(dst,"Unihertz","Tank 3 Pro","6.79\" • rugged • 5G • 23800mAh");
+        add(dst,"Unihertz","Tank Mini","4.3\" • rugged • 4G • 5800mAh");
+        add(dst,"Unihertz","Golden Eye","rugged • 5G • large camping light");
+        add(dst,"Unihertz","Luna","6.81\" • 4G • transparent LED back");
 
-        // BLUEFOX — official site currently lists GT8 Pro and NX1
+        // BLUEFOX — NX1 + Aura A1 + GT8 Pro
+        add(dst,"BlueFox","NX1","4.0\" • 960×544 • Android 14 • 4GB/64GB • 2000mAh • 106g • 100.6×49.3×12.5mm");
+        add(dst,"BlueFox","Aura A1","4.7\" LCD • 1600×720 • 90Hz • Helio G100 • 8/12GB • 128/256GB • microSD up to 2TB • 3500mAh • 18W • 64MP OV64B40 + 16MP • NFC • IR • side fingerprint • Android 16");
         add(dst,"BlueFox","GT8 Pro","4.0\" small-screen smartphone");
-        add(dst,"BlueFox","NX1","4.0\" • 100.6×49.3×12.5mm • 106g");
 
-        // Qin — official store currently lists these four models
-        add(dst,"Qin","F21 Pro","2.8\" • Android 11 • 3GB/32GB • 2120mAh");
-        add(dst,"Qin","F22","2.8\" • Android 11 • 16/32GB • 1700mAh");
-        add(dst,"Qin","F22 Pro","3.5\" • Android 12 • Helio G85 • 4GB/64GB • 2150mAh");
-        add(dst,"Qin","F25","3.54\" • Android 14 • 6GB/128GB • 2700mAh");
+        // QIN / Xiaomi Qin — niche models requested by user
+        add(dst,"Qin","Qin 1","2.8\" keypad • 4G • feature phone");
+        add(dst,"Qin","Qin 2","5.05\" • Android • SC9863A • 2GB/32GB • 2100mAh");
+        add(dst,"Qin","Qin 3 Ultra","5.01\" IPS • 1520×720 • Helio G99 • 8GB/256GB • 2500mAh • 5MP front/8MP rear");
+        add(dst,"Qin","F21S","2.4\" IPS • 320×240 • SC9820E • 1GB/8GB • 1150mAh");
+        add(dst,"Qin","F21 Pro","2.8\" IPS • 640×480 • Helio A22 • 3/4GB • 32/64GB • 2120mAh • 5MP rear/2MP front • Android 11");
+        add(dst,"Qin","F22","2.8\" IPS • 640×480 • MT6739 • 2GB/16GB • 1700mAh • Android 11");
+        add(dst,"Qin","F22 Pro","3.54\" IPS • 960×640 • Helio G85 • 4GB/64GB • 2150mAh • 8MP rear/2MP front • Android 12");
+        add(dst,"Qin","K25","2.8\" keypad • 4G • niche Qin model");
+        add(dst,"Qin","J36","2.8\" keypad • 4G • dual SIM • niche Qin model");
+        add(dst,"Qin","F25","3.54\" • Android 14 • 6GB/128GB • 2700mAh • dual SIM");
+
+        // SERVO / SOYES — compact and niche Android/feature phones
+        add(dst,"SERVO","Tank 500","rugged mini Android phone • 5G/4G variant • large battery • compact body");
+        add(dst,"SOYES","XS16","3.0\" IPS • 480×854 • MTK6737 • 2/3GB + 16/64GB • dual SIM • microSD • 5MP rear/2MP front • 2000mAh");
+        add(dst,"SOYES","S10","mini Android smartphone • 4G • dual SIM");
+        add(dst,"SOYES","S20","mini Android smartphone • 4G • dual SIM");
 
         add(dst,"DOOV","R17 Pro","3.5\" • 4GB/64GB • 2500mAh");
         add(dst,"KingKong","Mini 4","4.0\" • 8GB/256GB • 3000mAh");
@@ -668,7 +681,7 @@ public class MainActivity extends Activity {
         version.setTextColor(Color.rgb(70,88,105));
         box.addView(version);
 
-        TextView rights=txt("© 2026 DA DIGITAL — כל הזכויות שמורות",13,false);
+        TextView rights=txt("© 2026 DA DIGITAL — כל הזכויות שמורות\\nתאריך הוצאה: 04/10/2026",13,false);
         rights.setGravity(Gravity.CENTER);
         rights.setPadding(0,dp(4),0,dp(12));
         box.addView(rights);
