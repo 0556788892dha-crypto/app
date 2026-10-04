@@ -1,162 +1,2108 @@
 [
   {
+    "category": "phone",
     "brand": "Unihertz",
-    "model": "Jelly",
-    "screen_size": "2.45 inch",
-    "chipset": "MediaTek MT6737",
-    "ram": "1GB",
-    "storage": "8GB",
-    "battery_capacity": "950mAh",
-    "os": "Android"
+    "name": "Jelly",
+    "image_url": "",
+    "image": "",
+    "summary": "2.45 inch • MediaTek MT6737 • 1GB • 8GB • 950mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "2.45 inch"
+        },
+        "Platform": {
+          "Chipset": "MediaTek MT6737",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "8GB 1GB RAM"
+        },
+        "Battery": {
+          "Type": "950mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Unihertz",
-    "model": "Jelly Pro",
-    "screen_size": "2.45 inch",
-    "chipset": "MediaTek MT6737T",
-    "ram": "2GB",
-    "storage": "16GB",
-    "battery_capacity": "950mAh",
-    "os": "Android"
+    "name": "Jelly Pro",
+    "image_url": "",
+    "image": "",
+    "summary": "2.45 inch • MediaTek MT6737T • 2GB • 16GB • 950mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "2.45 inch"
+        },
+        "Platform": {
+          "Chipset": "MediaTek MT6737T",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "16GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "950mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Unihertz",
-    "model": "Jelly 2",
-    "screen_size": "3.0 inch",
-    "chipset": "Helio P60",
-    "ram": "6GB",
-    "storage": "128GB",
-    "battery_capacity": "2000mAh",
-    "os": "Android"
+    "name": "Jelly 2",
+    "image_url": "",
+    "image": "",
+    "summary": "3.0 inch • Helio P60 • 6GB • 128GB • 2000mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "3.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Helio P60",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "128GB 6GB RAM"
+        },
+        "Battery": {
+          "Type": "2000mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Unihertz",
-    "model": "Atom",
-    "screen_size": "2.45 inch",
-    "chipset": "Helio P23",
-    "ram": "4GB",
-    "storage": "64GB",
-    "battery_capacity": "2000mAh",
-    "os": "Android"
+    "name": "Atom",
+    "image_url": "",
+    "image": "",
+    "summary": "2.45 inch • Helio P23 • 4GB • 64GB • 2000mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "2.45 inch"
+        },
+        "Platform": {
+          "Chipset": "Helio P23",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "64GB 4GB RAM"
+        },
+        "Battery": {
+          "Type": "2000mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Unihertz",
-    "model": "Titan Pocket",
-    "screen_size": "3.1 inch",
-    "chipset": "MediaTek Helio P70",
-    "ram": "6GB",
-    "storage": "128GB",
-    "battery_capacity": "4000mAh",
-    "os": "Android"
+    "name": "Titan Pocket",
+    "image_url": "",
+    "image": "",
+    "summary": "3.1 inch • Helio P70 • 6GB • 128GB • 4000mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "3.1 inch"
+        },
+        "Platform": {
+          "Chipset": "Helio P70",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "128GB 6GB RAM"
+        },
+        "Battery": {
+          "Type": "4000mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Unihertz",
-    "model": "Titan Slim",
-    "screen_size": "4.0 inch",
-    "chipset": "MediaTek Helio P70",
-    "ram": "6GB",
-    "storage": "256GB",
-    "battery_capacity": "4100mAh",
-    "os": "Android"
+    "name": "Titan Slim",
+    "image_url": "",
+    "image": "",
+    "summary": "4.0 inch • Helio P70 • 6GB • 256GB • 4100mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "4.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Helio P70",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "256GB 6GB RAM"
+        },
+        "Battery": {
+          "Type": "4100mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Unihertz",
-    "model": "TickTock",
-    "screen_size": "6.5 inch",
-    "chipset": "Dimensity 700",
-    "ram": "8GB",
-    "storage": "256GB",
-    "battery_capacity": "6000mAh",
-    "os": "Android"
+    "name": "TickTock",
+    "image_url": "",
+    "image": "",
+    "summary": "6.5 inch • Dimensity 700 • 8GB • 256GB • 6000mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "6.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Dimensity 700",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "256GB 8GB RAM"
+        },
+        "Battery": {
+          "Type": "6000mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Unihertz",
-    "model": "TickTock-E",
-    "screen_size": "6.5 inch",
-    "chipset": "Helio P22",
-    "ram": "4GB",
-    "storage": "64GB",
-    "battery_capacity": "6000mAh",
-    "os": "Android"
+    "name": "TickTock-E",
+    "image_url": "",
+    "image": "",
+    "summary": "6.5 inch • Helio P22 • 4GB • 64GB • 6000mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "6.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Helio P22",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "64GB 4GB RAM"
+        },
+        "Battery": {
+          "Type": "6000mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Qin",
-    "model": "F21 Pro",
-    "screen_size": "2.8 inch",
-    "chipset": "Unisoc T610",
-    "ram": "3GB",
-    "storage": "32GB",
-    "battery_capacity": "1700mAh",
-    "os": "Android"
+    "name": "F21 Pro",
+    "image_url": "",
+    "image": "",
+    "summary": "2.8 inch • Unisoc T610 • 3GB • 32GB • 1700mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "2.8 inch"
+        },
+        "Platform": {
+          "Chipset": "Unisoc T610",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "32GB 3GB RAM"
+        },
+        "Battery": {
+          "Type": "1700mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Qin",
-    "model": "F22 Pro",
-    "screen_size": "3.54 inch",
-    "chipset": "Unisoc T610",
-    "ram": "4GB",
-    "storage": "64GB",
-    "battery_capacity": "2150mAh",
-    "os": "Android"
+    "name": "F22 Pro",
+    "image_url": "",
+    "image": "",
+    "summary": "3.54 inch • Unisoc T610 • 4GB • 64GB • 2150mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "3.54 inch"
+        },
+        "Platform": {
+          "Chipset": "Unisoc T610",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "64GB 4GB RAM"
+        },
+        "Battery": {
+          "Type": "2150mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Qin",
-    "model": "F30",
-    "screen_size": "3.0 inch",
-    "chipset": "Unisoc",
-    "ram": "4GB",
-    "storage": "64GB",
-    "battery_capacity": "2120mAh",
-    "os": "Android"
+    "name": "F30",
+    "image_url": "",
+    "image": "",
+    "summary": "3.0 inch • Unisoc • 4GB • 64GB • 2120mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "3.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Unisoc",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "64GB 4GB RAM"
+        },
+        "Battery": {
+          "Type": "2120mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "DOOV",
-    "model": "S30",
-    "screen_size": "4.0 inch",
-    "os": "Android"
+    "name": "S30",
+    "image_url": "",
+    "image": "",
+    "summary": "4.0 inch • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "4.0 inch"
+        },
+        "Platform": {
+          "Chipset": "",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": ""
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "DOOV",
-    "model": "D18",
-    "screen_size": "4.0 inch",
-    "os": "Android"
+    "name": "D18",
+    "image_url": "",
+    "image": "",
+    "summary": "4.0 inch • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "4.0 inch"
+        },
+        "Platform": {
+          "Chipset": "",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": ""
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Blackview",
-    "model": "N6000",
-    "screen_size": "4.3 inch",
-    "chipset": "Helio G99",
-    "ram": "8GB",
-    "storage": "256GB",
-    "battery_capacity": "3880mAh",
-    "os": "Android"
+    "name": "N6000",
+    "image_url": "",
+    "image": "",
+    "summary": "4.3 inch • Helio G99 • 8GB • 256GB • 3880mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "4.3 inch"
+        },
+        "Platform": {
+          "Chipset": "Helio G99",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "256GB 8GB RAM"
+        },
+        "Battery": {
+          "Type": "3880mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Cubot",
-    "model": "Pocket 3",
-    "screen_size": "4.5 inch",
-    "chipset": "MediaTek",
-    "ram": "4GB",
-    "storage": "64GB",
-    "battery_capacity": "3000mAh",
-    "os": "Android"
+    "name": "Pocket 3",
+    "image_url": "",
+    "image": "",
+    "summary": "4.5 inch • MediaTek • 4GB • 64GB • 3000mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "4.5 inch"
+        },
+        "Platform": {
+          "Chipset": "MediaTek",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "64GB 4GB RAM"
+        },
+        "Battery": {
+          "Type": "3000mAh"
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Ulefone",
-    "model": "Armor Mini 20",
-    "screen_size": "4.7 inch",
-    "os": "Android"
+    "name": "Armor Mini 20",
+    "image_url": "",
+    "image": "",
+    "summary": "4.7 inch • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "4.7 inch"
+        },
+        "Platform": {
+          "Chipset": "",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": ""
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Phonemax",
-    "model": "R4GT",
-    "screen_size": "4.0 inch",
-    "os": "Android"
+    "name": "R4GT",
+    "image_url": "",
+    "image": "",
+    "summary": "4.0 inch • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "4.0 inch"
+        },
+        "Platform": {
+          "Chipset": "",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": ""
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   },
   {
+    "category": "phone",
     "brand": "Minimal Phone",
-    "model": "Minimal Phone",
-    "screen_size": "4.3 inch",
-    "os": "Android"
+    "name": "Minimal Phone",
+    "image_url": "",
+    "image": "",
+    "summary": "4.3 inch • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "4.3 inch"
+        },
+        "Platform": {
+          "Chipset": "",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": ""
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "phone"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Apple",
+    "name": "iPad Air 11 (2026)",
+    "image_url": "",
+    "image": "",
+    "summary": "11.0 inch • Apple M4 • 7606mAh • iPadOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "11.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple M4",
+          "OS": "iPadOS"
+        },
+        "Memory": {
+          "Internal": ""
+        },
+        "Battery": {
+          "Type": "7606mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Apple",
+    "name": "iPad Air 13 (2026)",
+    "image_url": "",
+    "image": "",
+    "summary": "13.0 inch • Apple M4 • 9705mAh • iPadOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "13.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple M4",
+          "OS": "iPadOS"
+        },
+        "Memory": {
+          "Internal": ""
+        },
+        "Battery": {
+          "Type": "9705mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Apple",
+    "name": "iPad Pro 11 (2025)",
+    "image_url": "",
+    "image": "",
+    "summary": "11.0 inch • Apple M4 • 256GB-2TB • iPadOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "11.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple M4",
+          "OS": "iPadOS"
+        },
+        "Memory": {
+          "Internal": "256GB-2TB"
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Apple",
+    "name": "iPad Pro 13 (2025)",
+    "image_url": "",
+    "image": "",
+    "summary": "13.0 inch • Apple M4 • 256GB-2TB • iPadOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "13.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple M4",
+          "OS": "iPadOS"
+        },
+        "Memory": {
+          "Internal": "256GB-2TB"
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Apple",
+    "name": "iPad (2025)",
+    "image_url": "",
+    "image": "",
+    "summary": "11.0 inch • Apple A16 • 4GB • 128/256GB • iPadOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "11.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple A16",
+          "OS": "iPadOS"
+        },
+        "Memory": {
+          "Internal": "128/256GB 4GB RAM"
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Apple",
+    "name": "iPad Air 11 (2025)",
+    "image_url": "",
+    "image": "",
+    "summary": "11.0 inch • Apple M3 • 8GB • 128GB-1TB • iPadOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "11.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple M3",
+          "OS": "iPadOS"
+        },
+        "Memory": {
+          "Internal": "128GB-1TB 8GB RAM"
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Apple",
+    "name": "iPad Air 13 (2025)",
+    "image_url": "",
+    "image": "",
+    "summary": "13.0 inch • Apple M3 • 8GB • 128GB-1TB • iPadOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "13.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple M3",
+          "OS": "iPadOS"
+        },
+        "Memory": {
+          "Internal": "128GB-1TB 8GB RAM"
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Samsung",
+    "name": "Galaxy Tab S11",
+    "image_url": "",
+    "image": "",
+    "summary": "11.0 inch • Dimensity 9400+ • 12GB • 128/256/512GB • 8400mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "11.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Dimensity 9400+",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "128/256/512GB 12GB RAM"
+        },
+        "Battery": {
+          "Type": "8400mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Samsung",
+    "name": "Galaxy Tab S11 Ultra",
+    "image_url": "",
+    "image": "",
+    "summary": "14.6 inch • Dimensity 9400+ • 12/16GB • 256GB-1TB • 11600mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "14.6 inch"
+        },
+        "Platform": {
+          "Chipset": "Dimensity 9400+",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "256GB-1TB 12/16GB RAM"
+        },
+        "Battery": {
+          "Type": "11600mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Samsung",
+    "name": "Galaxy Tab S10 Lite",
+    "image_url": "",
+    "image": "",
+    "summary": "10.9 inch • Exynos 1380 • 6/8GB • 128/256GB • 8000mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "10.9 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos 1380",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "128/256GB 6/8GB RAM"
+        },
+        "Battery": {
+          "Type": "8000mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Samsung",
+    "name": "Galaxy Tab S9 FE",
+    "image_url": "",
+    "image": "",
+    "summary": "10.9 inch • Exynos 1380 • 6/8GB • 128/256GB • 8000mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "10.9 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos 1380",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "128/256GB 6/8GB RAM"
+        },
+        "Battery": {
+          "Type": "8000mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Samsung",
+    "name": "Galaxy Tab S9 FE+",
+    "image_url": "",
+    "image": "",
+    "summary": "12.4 inch • Exynos 1380 • 8/12GB • 128/256GB • 10090mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "12.4 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos 1380",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "128/256GB 8/12GB RAM"
+        },
+        "Battery": {
+          "Type": "10090mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Samsung",
+    "name": "Galaxy Tab S9",
+    "image_url": "",
+    "image": "",
+    "summary": "11.0 inch • Snapdragon 8 Gen 2 • 8/12GB • 128/256GB • 8400mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "11.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 8 Gen 2",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "128/256GB 8/12GB RAM"
+        },
+        "Battery": {
+          "Type": "8400mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Samsung",
+    "name": "Galaxy Tab S9+",
+    "image_url": "",
+    "image": "",
+    "summary": "12.4 inch • Snapdragon 8 Gen 2 • 12GB • 256/512GB • 10090mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "12.4 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 8 Gen 2",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "256/512GB 12GB RAM"
+        },
+        "Battery": {
+          "Type": "10090mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Samsung",
+    "name": "Galaxy Tab S9 Ultra",
+    "image_url": "",
+    "image": "",
+    "summary": "14.6 inch • Snapdragon 8 Gen 2 • 12/16GB • 256GB-1TB • 11200mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "14.6 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 8 Gen 2",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "256GB-1TB 12/16GB RAM"
+        },
+        "Battery": {
+          "Type": "11200mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Samsung",
+    "name": "Galaxy Tab A9",
+    "image_url": "",
+    "image": "",
+    "summary": "8.7 inch • Helio G99 • 4/8GB • 64/128GB • 5100mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "8.7 inch"
+        },
+        "Platform": {
+          "Chipset": "Helio G99",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "64/128GB 4/8GB RAM"
+        },
+        "Battery": {
+          "Type": "5100mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Samsung",
+    "name": "Galaxy Tab A9+",
+    "image_url": "",
+    "image": "",
+    "summary": "11.0 inch • Snapdragon 695 • 4/8GB • 64/128/256GB • 7040mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "11.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 695",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "64/128/256GB 4/8GB RAM"
+        },
+        "Battery": {
+          "Type": "7040mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Xiaomi",
+    "name": "Pad 7 Ultra",
+    "image_url": "",
+    "image": "",
+    "summary": "14.0 inch • Xring O1 • 12/16GB • 512GB-1TB • 12000mAh • HyperOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "14.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Xring O1",
+          "OS": "HyperOS"
+        },
+        "Memory": {
+          "Internal": "512GB-1TB 12/16GB RAM"
+        },
+        "Battery": {
+          "Type": "12000mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Xiaomi",
+    "name": "Pad 7",
+    "image_url": "",
+    "image": "",
+    "summary": "11.2 inch • Snapdragon 7+ Gen 3 • 8/12GB • 128/256GB • 8850mAh • HyperOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "11.2 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 7+ Gen 3",
+          "OS": "HyperOS"
+        },
+        "Memory": {
+          "Internal": "128/256GB 8/12GB RAM"
+        },
+        "Battery": {
+          "Type": "8850mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Xiaomi",
+    "name": "Pad 7 Pro",
+    "image_url": "",
+    "image": "",
+    "summary": "11.2 inch • Snapdragon 8s Gen 3 • 8/12GB • 128/256/512GB • 8850mAh • HyperOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "11.2 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 8s Gen 3",
+          "OS": "HyperOS"
+        },
+        "Memory": {
+          "Internal": "128/256/512GB 8/12GB RAM"
+        },
+        "Battery": {
+          "Type": "8850mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Xiaomi",
+    "name": "Pad 6",
+    "image_url": "",
+    "image": "",
+    "summary": "11.0 inch • Snapdragon 870 • 6/8GB • 128/256GB • 8840mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "11.0 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 870",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "128/256GB 6/8GB RAM"
+        },
+        "Battery": {
+          "Type": "8840mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Lenovo",
+    "name": "Idea Tab Pro",
+    "image_url": "",
+    "image": "",
+    "summary": "12.7 inch • Dimensity 8300 • 8/12GB • 128/256/512GB • 10200mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "12.7 inch"
+        },
+        "Platform": {
+          "Chipset": "Dimensity 8300",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "128/256/512GB 8/12GB RAM"
+        },
+        "Battery": {
+          "Type": "10200mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Lenovo",
+    "name": "Tab P12",
+    "image_url": "",
+    "image": "",
+    "summary": "12.7 inch • Dimensity 7050 • 4/8GB • 128/256GB • 10200mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "12.7 inch"
+        },
+        "Platform": {
+          "Chipset": "Dimensity 7050",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "128/256GB 4/8GB RAM"
+        },
+        "Battery": {
+          "Type": "10200mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "OnePlus",
+    "name": "Pad 2 Pro",
+    "image_url": "",
+    "image": "",
+    "summary": "13.2 inch • Snapdragon 8 Elite • 8-16GB • 256/512GB • 12140mAh • OxygenOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "13.2 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 8 Elite",
+          "OS": "OxygenOS"
+        },
+        "Memory": {
+          "Internal": "256/512GB 8-16GB RAM"
+        },
+        "Battery": {
+          "Type": "12140mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "OnePlus",
+    "name": "Pad 2",
+    "image_url": "",
+    "image": "",
+    "summary": "12.1 inch • Snapdragon 8 Gen 3 • 8/12GB • 128/256GB • 9510mAh • OxygenOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "12.1 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 8 Gen 3",
+          "OS": "OxygenOS"
+        },
+        "Memory": {
+          "Internal": "128/256GB 8/12GB RAM"
+        },
+        "Battery": {
+          "Type": "9510mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Honor",
+    "name": "Pad X9a",
+    "image_url": "",
+    "image": "",
+    "summary": "11.5 inch • Snapdragon 685 • 8GB • 128GB • 8300mAh • MagicOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "11.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 685",
+          "OS": "MagicOS"
+        },
+        "Memory": {
+          "Internal": "128GB 8GB RAM"
+        },
+        "Battery": {
+          "Type": "8300mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Honor",
+    "name": "MagicPad 2",
+    "image_url": "",
+    "image": "",
+    "summary": "12.3 inch • Snapdragon 8s Gen 3 • 8/12/16GB • 256/512GB/1TB • 10050mAh • MagicOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "12.3 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 8s Gen 3",
+          "OS": "MagicOS"
+        },
+        "Memory": {
+          "Internal": "256/512GB/1TB 8/12/16GB RAM"
+        },
+        "Battery": {
+          "Type": "10050mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "ZTE",
+    "name": "nubia RedMagic Tablet 3 Pro",
+    "image_url": "",
+    "image": "",
+    "summary": "9.06 inch • Snapdragon 8 Elite • 12/16/24GB • 256GB-1TB • 8200mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "9.06 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon 8 Elite",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "256GB-1TB 12/16/24GB RAM"
+        },
+        "Battery": {
+          "Type": "8200mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Huawei",
+    "name": "MatePad Pro 13.2",
+    "image_url": "",
+    "image": "",
+    "summary": "13.2 inch • Kirin • 12/16GB • 256GB-1TB • 10100mAh • HarmonyOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "13.2 inch"
+        },
+        "Platform": {
+          "Chipset": "Kirin",
+          "OS": "HarmonyOS"
+        },
+        "Memory": {
+          "Internal": "256GB-1TB 12/16GB RAM"
+        },
+        "Battery": {
+          "Type": "10100mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "tablet",
+    "brand": "Acer",
+    "name": "Iconia A16",
+    "image_url": "",
+    "image": "",
+    "summary": "16.0 inch • 8GB • 128/256GB • 8000mAh • Android",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "16.0 inch"
+        },
+        "Platform": {
+          "Chipset": "",
+          "OS": "Android"
+        },
+        "Memory": {
+          "Internal": "128/256GB 8GB RAM"
+        },
+        "Battery": {
+          "Type": "8000mAh"
+        }
+      },
+      "category": "tablet"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch9",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Snapdragon W5 Elite • 2GB • 32GB • 390mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5 Elite",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "390mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch9 44mm",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Snapdragon W5 Elite • 2GB • 32GB • 445mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5 Elite",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "445mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch Ultra2",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Snapdragon W5 Elite • 2GB • 64GB • 590mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5 Elite",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "64GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "590mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch8",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Exynos W1000 • 2GB • 32GB • 435mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos W1000",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "435mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch8 Classic",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Exynos W1000 • 2GB • 64GB • 445mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos W1000",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "64GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "445mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch7",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Exynos W1000 • 2GB • 32GB • 425mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos W1000",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "425mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch6 Classic",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Exynos W930 • 2GB • 16GB • 425mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos W930",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "16GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "425mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch6",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Exynos W930 • 2GB • 16GB • 425mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos W930",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "16GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "425mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch5 Pro",
+    "image_url": "",
+    "image": "",
+    "summary": "1.4 inch • Exynos W920 • 1.5GB • 16GB • 590mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.4 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos W920",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "16GB 1.5GB RAM"
+        },
+        "Battery": {
+          "Type": "590mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch5",
+    "image_url": "",
+    "image": "",
+    "summary": "1.4 inch • Exynos W920 • 1.5GB • 16GB • 410mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.4 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos W920",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "16GB 1.5GB RAM"
+        },
+        "Battery": {
+          "Type": "410mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch4 Classic",
+    "image_url": "",
+    "image": "",
+    "summary": "1.4 inch • Exynos W920 • 1.5GB • 16GB • 361mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.4 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos W920",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "16GB 1.5GB RAM"
+        },
+        "Battery": {
+          "Type": "361mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Samsung",
+    "name": "Galaxy Watch4",
+    "image_url": "",
+    "image": "",
+    "summary": "1.4 inch • Exynos W920 • 1.5GB • 16GB • 361mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.4 inch"
+        },
+        "Platform": {
+          "Chipset": "Exynos W920",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "16GB 1.5GB RAM"
+        },
+        "Battery": {
+          "Type": "361mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Apple",
+    "name": "Watch Series 11",
+    "image_url": "",
+    "image": "",
+    "summary": "1.9 inch • Apple S10 • 2GB • 64GB • watchOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.9 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple S10",
+          "OS": "watchOS"
+        },
+        "Memory": {
+          "Internal": "64GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Apple",
+    "name": "Watch SE 3",
+    "image_url": "",
+    "image": "",
+    "summary": "1.8 inch • Apple S10 • 308mAh • watchOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.8 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple S10",
+          "OS": "watchOS"
+        },
+        "Memory": {
+          "Internal": ""
+        },
+        "Battery": {
+          "Type": "308mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Apple",
+    "name": "Watch Ultra 3",
+    "image_url": "",
+    "image": "",
+    "summary": "1.9 inch • Apple S10 • 128GB • 542mAh • watchOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.9 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple S10",
+          "OS": "watchOS"
+        },
+        "Memory": {
+          "Internal": "128GB"
+        },
+        "Battery": {
+          "Type": "542mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Apple",
+    "name": "Watch Series 10",
+    "image_url": "",
+    "image": "",
+    "summary": "1.8 inch • Apple S10 • 2GB • 64GB • 327mAh • watchOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.8 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple S10",
+          "OS": "watchOS"
+        },
+        "Memory": {
+          "Internal": "64GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "327mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Apple",
+    "name": "Watch Ultra 2",
+    "image_url": "",
+    "image": "",
+    "summary": "1.9 inch • Apple S9 • 2GB • 64GB • 564mAh • watchOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.9 inch"
+        },
+        "Platform": {
+          "Chipset": "Apple S9",
+          "OS": "watchOS"
+        },
+        "Memory": {
+          "Internal": "64GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "564mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Google",
+    "name": "Pixel Watch 4",
+    "image_url": "",
+    "image": "",
+    "summary": "1.3 inch • Snapdragon W5+ Gen 1 • 2GB • 32GB • 455mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.3 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5+ Gen 1",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "455mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Google",
+    "name": "Pixel Watch 3",
+    "image_url": "",
+    "image": "",
+    "summary": "1.2 inch • Snapdragon W5+ Gen 1 • 2GB • 32GB • 306mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.2 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5+ Gen 1",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "306mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "OnePlus",
+    "name": "Watch 4",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Snapdragon W5 • 2GB • 32GB • 631mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "631mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "OnePlus",
+    "name": "Watch 2",
+    "image_url": "",
+    "image": "",
+    "summary": "1.43 inch • Snapdragon W5+ Gen 1 • 2GB • 32GB • 500mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.43 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5+ Gen 1",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "500mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Xiaomi",
+    "name": "Watch 5",
+    "image_url": "",
+    "image": "",
+    "summary": "1.54 inch • Snapdragon W5+ Gen 1 • 64GB • 550mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.54 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5+ Gen 1",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "64GB"
+        },
+        "Battery": {
+          "Type": "550mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Xiaomi",
+    "name": "Watch 2 Pro",
+    "image_url": "",
+    "image": "",
+    "summary": "1.43 inch • Snapdragon W5+ Gen 1 • 2GB • 32GB • 495mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.43 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5+ Gen 1",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "495mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Xiaomi",
+    "name": "Watch S4",
+    "image_url": "",
+    "image": "",
+    "summary": "1.43 inch • 2GB • 32GB • 486mAh • HyperOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.43 inch"
+        },
+        "Platform": {
+          "Chipset": "",
+          "OS": "HyperOS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "486mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Huawei",
+    "name": "Watch 5",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Kirin A1 • 2GB • 32GB • 867mAh • HarmonyOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Kirin A1",
+          "OS": "HarmonyOS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "867mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Huawei",
+    "name": "Watch 4 Pro",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Snapdragon W5+ Gen 1 • 2GB • 32GB • 780mAh • HarmonyOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5+ Gen 1",
+          "OS": "HarmonyOS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "780mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Huawei",
+    "name": "Watch GT 5 Pro",
+    "image_url": "",
+    "image": "",
+    "summary": "1.43 inch • 2GB • 32GB • 524mAh • HarmonyOS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.43 inch"
+        },
+        "Platform": {
+          "Chipset": "",
+          "OS": "HarmonyOS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "524mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Oppo",
+    "name": "Watch X3",
+    "image_url": "",
+    "image": "",
+    "summary": "1.5 inch • Snapdragon W5+ Gen 1 • 2GB • 32GB • 631mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.5 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5+ Gen 1",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "631mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Mobvoi",
+    "name": "TicWatch Pro 5",
+    "image_url": "",
+    "image": "",
+    "summary": "1.43 inch • Snapdragon W5+ Gen 1 • 2GB • 32GB • 628mAh • Wear OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.43 inch"
+        },
+        "Platform": {
+          "Chipset": "Snapdragon W5+ Gen 1",
+          "OS": "Wear OS"
+        },
+        "Memory": {
+          "Internal": "32GB 2GB RAM"
+        },
+        "Battery": {
+          "Type": "628mAh"
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
+  },
+  {
+    "category": "watch",
+    "brand": "Garmin",
+    "name": "Venu 4",
+    "image_url": "",
+    "image": "",
+    "summary": "1.4 inch • Garmin OS",
+    "detail": {
+      "specifications": {
+        "Display": {
+          "Size": "1.4 inch"
+        },
+        "Platform": {
+          "Chipset": "",
+          "OS": "Garmin OS"
+        },
+        "Memory": {
+          "Internal": ""
+        },
+        "Battery": {
+          "Type": ""
+        }
+      },
+      "category": "watch"
+    },
+    "source": "DA PHONES curated multi-device catalog"
   }
 ]
