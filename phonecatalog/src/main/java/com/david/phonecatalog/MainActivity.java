@@ -11,6 +11,7 @@ import android.content.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.*;
 import org.json.*;
 
 public class MainActivity extends Activity {
@@ -28,11 +29,14 @@ public class MainActivity extends Activity {
 
     final ArrayList<Phone> phones=new ArrayList<>(), selected=new ArrayList<>();
     final ArrayList<String[]> brands=new ArrayList<>();
-    LinearLayout list,root;
+    LinearLayout root;
+    ListView listView;
+    PhoneAdapter adapter;
     EditText search;
     Spinner brandSpinner,sortSpinner;
     TextView status;
-    boolean loading=false;
+    boolean loading=false, fullLoading=false;
+    String lastRemoteQuery="";
 
     @Override public void onCreate(Bundle b){
         super.onCreate(b);
@@ -79,13 +83,17 @@ public class MainActivity extends Activity {
                 new String[]{"מיון: מותג ודגם","מיון: הדירוג שלי","מיון: Geekbench","מיון: Benchmark","מיון: גודל מסך"}));
         root.addView(sortSpinner);
 
+        Button fullCatalog=new Button(this); fullCatalog.setText("🌐 טען את כל הקטלוג"); root.addView(fullCatalog);
         status=new TextView(this); status.setText("טוען רשימת מותגים..."); status.setTextSize(12); status.setPadding(0,6,0,6); root.addView(status);
-        ScrollView sv=new ScrollView(this); list=new LinearLayout(this); list.setOrientation(LinearLayout.VERTICAL); sv.addView(list); root.addView(sv,new LinearLayout.LayoutParams(-1,0,1));
+        listView=new ListView(this); listView.setDivider(null); listView.setPadding(0,4,0,4);
+        adapter=new PhoneAdapter(); listView.setAdapter(adapter);
+        root.addView(listView,new LinearLayout.LayoutParams(-1,0,1));
 
         catalog.setOnClickListener(v->{render();});
+        fullCatalog.setOnClickListener(v->{loadAllPhones();});
         ratings.setOnClickListener(v->showRatings());
         glossary.setOnClickListener(v->showGlossary());
-        search.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int a,int c,int d){} public void onTextChanged(CharSequence s,int a,int b,int c){render();} public void afterTextChanged(Editable e){}});
+        search.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int a,int c,int d){} public void onTextChanged(CharSequence s,int a,int b,int c){render(); searchRemote(s.toString());} public void afterTextChanged(Editable e){}});
         brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,View v,int pos,long id){if(pos>0) loadBrand(brands.get(pos-1)); render();}});
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){public void onNothingSelected(AdapterView<?> p){} public void onItemSelected(AdapterView<?> p,View v,int pos,long id){render();}});
         setContentView(root);
@@ -110,8 +118,9 @@ public class MainActivity extends Activity {
                     ArrayList<String> names=new ArrayList<>(); names.add("כל המותגים");
                     for(String[] b:brands) names.add(b[0]);
                     brandSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,names));
-                    status.setText("קטלוג GSMArena זמין לפי מותג • "+brands.size()+" מותגים • "+phones.size()+" מכשירים מקומיים/נוספים");
+                    status.setText("קטלוג זמין • "+brands.size()+" מותגים • טוען אוטומטית דגמים מכל היצרנים...");
                     render();
+                    loadAllBrandIndex(new ArrayList<>(out));
                 });
             }catch(Exception e){runOnUiThread(()->status.setText("לא ניתן לטעון כרגע את קטלוג GSMArena; המכשירים המקומיים עדיין זמינים."));}
         }).start();
@@ -156,14 +165,17 @@ public class MainActivity extends Activity {
     }
 
     void render(){
-        if(list==null)return; list.removeAllViews();
-        String q=search==null?"":search.getText().toString().toLowerCase(Locale.ROOT);
+        if(adapter==null)return;
+        String q=search==null?"":search.getText().toString().trim().toLowerCase(Locale.ROOT);
         String brand=brandSpinner==null||brandSpinner.getSelectedItem()==null?"כל המותגים":brandSpinner.getSelectedItem().toString();
         ArrayList<Phone> shown=new ArrayList<>();
-        for(Phone p:phones){
-            if(!brand.equals("כל המותגים")&&!p.brand.equals(brand))continue;
-            if(!q.isEmpty()&&!(p.brand+" "+p.name+" "+p.summary).toLowerCase(Locale.ROOT).contains(q))continue;
-            shown.add(p);
+        synchronized(phones){
+            for(Phone p:phones){
+                if(!brand.equals("כל המותגים")&&!p.brand.equals(brand))continue;
+                String hay=(p.brand+" "+p.name+" "+(p.summary==null?"":p.summary)).toLowerCase(Locale.ROOT);
+                if(!q.isEmpty()&&!hay.contains(q))continue;
+                shown.add(p);
+            }
         }
         int s=sortSpinner==null?0:sortSpinner.getSelectedItemPosition();
         Collections.sort(shown,(a,b)->{
@@ -173,24 +185,149 @@ public class MainActivity extends Activity {
             if(s==4)return Double.compare(screen(a),screen(b));
             int x=a.brand.compareToIgnoreCase(b.brand); return x!=0?x:a.name.compareToIgnoreCase(b.name);
         });
-        if(shown.isEmpty()){
-            TextView empty=new TextView(this); empty.setText("בחר מותג כדי לטעון את הדגמים שלו. הקטלוג המלא נטען לפי דרישה כדי שהאפליקציה לא תהיה כבדה."); empty.setTextSize(16); empty.setPadding(12,30,12,30); list.addView(empty); return;
-        }
-        for(Phone p:shown) addCard(p);
+        visible.clear();
+        visible.addAll(shown);
+        adapter.notifyDataSetChanged();
+        if(status!=null && !loading && !fullLoading)
+            status.setText("מוצגים "+visible.size()+" מתוך "+phones.size()+" דגמים שטעונים כרגע • "+brands.size()+" מותגים");
     }
 
-    void addCard(Phone p){
-        LinearLayout card=new LinearLayout(this); card.setOrientation(LinearLayout.HORIZONTAL); card.setPadding(10,10,10,10);
-        GradientDrawable gd=new GradientDrawable(); gd.setColor(Color.WHITE); gd.setCornerRadius(22); gd.setStroke(1,Color.rgb(220,228,238)); card.setBackground(gd);
-        ImageView im=new ImageView(this); im.setScaleType(ImageView.ScaleType.CENTER_INSIDE); card.addView(im,new LinearLayout.LayoutParams(105,125));
-        if(!p.image.isEmpty())loadImage(p.image,im);
-        LinearLayout info=new LinearLayout(this); info.setOrientation(LinearLayout.VERTICAL); info.setPadding(10,0,0,0);
-        TextView t=new TextView(this); t.setText(p.brand+" "+p.name); t.setTextSize(18); t.setTypeface(Typeface.DEFAULT,Typeface.BOLD); info.addView(t);
-        TextView sm=new TextView(this); sm.setText((p.summary==null?"":p.summary)+"\nDA: "+fmt(p.score)+"/100 • Geekbench: "+(p.geek==null?"—":p.geek)+" • Benchmark: "+(p.benchmark==null?"—":p.benchmark)); info.addView(sm);
-        Button d=new Button(this); d.setText("פרטים"); d.setOnClickListener(v->showDetails(p)); info.addView(d);
-        card.addView(info,new LinearLayout.LayoutParams(0,-2,1)); list.addView(card);
-        Space sp=new Space(this); list.addView(sp,new LinearLayout.LayoutParams(1,8));
+    void mergePhones(Collection<Phone> incoming){
+        synchronized(phones){
+            HashSet<String> keys=new HashSet<>();
+            for(Phone p:phones)keys.add(keyOf(p));
+            for(Phone p:incoming){
+                String key=keyOf(p);
+                if(!keys.contains(key)){phones.add(p);keys.add(key);}
+            }
+        }
     }
+
+    String keyOf(Phone p){
+        return (p.brand+"|"+p.name).toLowerCase(Locale.ROOT);
+    }
+
+    void loadAllBrandIndex(ArrayList<String[]> allBrands){
+        if(allBrands.isEmpty())return;
+        ExecutorService ex=Executors.newFixedThreadPool(6);
+        AtomicCounter counter=new AtomicCounter();
+        for(String[] b:allBrands){
+            ex.submit(()->{
+                try{
+                    JSONObject o=getJson(API+"/brands/"+b[1]+"?page=1");
+                    JSONObject data=o.optJSONObject("data");
+                    if(data!=null){
+                        ArrayList<Phone> got=parsePhones(b,data.optJSONArray("phones"));
+                        mergePhones(got);
+                        loadedBrands.add(b[0]);
+                        counter.value++;
+                        runOnUiThread(()->{
+                            render();
+                            status.setText("טוען את הקטלוג… "+counter.value+"/"+allBrands.size()+" מותגים • "+phones.size()+" דגמים זמינים");
+                        });
+                    }
+                }catch(Exception ignored){}
+            });
+        }
+        new Thread(()->{
+            try{ex.shutdown(); ex.awaitTermination(120,TimeUnit.SECONDS);}catch(Exception ignored){}
+            runOnUiThread(()->{
+                status.setText("קטלוג ראשוני נטען: "+phones.size()+" דגמים מכל "+brands.size()+" המותגים. לחץ על 'טען את כל הקטלוג' לעוד דגמים.");
+                render();
+            });
+        }).start();
+    }
+
+    void loadAllPhones(){
+        if(fullLoading||brands.isEmpty())return;
+        fullLoading=true;
+        status.setText("טוען את כל הדגמים מכל המותגים…");
+        ExecutorService ex=Executors.newFixedThreadPool(4);
+        AtomicCounter done=new AtomicCounter();
+        ArrayList<String[]> allBrands=new ArrayList<>(brands);
+        for(String[] b:allBrands){
+            ex.submit(()->{
+                int page=1,last=1;
+                try{
+                    do{
+                        JSONObject o=getJson(API+"/brands/"+b[1]+"?page="+page);
+                        JSONObject data=o.optJSONObject("data");
+                        if(data==null)break;
+                        last=Math.max(page,data.optInt("last_page",page));
+                        ArrayList<Phone> got=parsePhones(b,data.optJSONArray("phones"));
+                        mergePhones(got);
+                        final int current=phones.size();
+                        runOnUiThread(()->{
+                            render();
+                            status.setText("קטלוג מלא בבנייה… "+current+" דגמים כבר נטענו");
+                        });
+                        page++;
+                    }while(page<=last && page<=100);
+                }catch(Exception ignored){}
+                done.value++;
+                runOnUiThread(()->status.setText("קטלוג מלא בבנייה… "+phones.size()+" דגמים • "+done.value+"/"+allBrands.size()+" מותגים הושלמו"));
+            });
+        }
+        new Thread(()->{
+            ex.shutdown();
+            try{ex.awaitTermination(15,TimeUnit.MINUTES);}catch(Exception ignored){}
+            runOnUiThread(()->{
+                fullLoading=false;
+                status.setText("הקטלוג נטען: "+phones.size()+" דגמים • "+brands.size()+" מותגים. פרטים מלאים נטענים לפי בחירת המכשיר.");
+                render();
+            });
+        }).start();
+    }
+
+    ArrayList<Phone> parsePhones(String[] b, JSONArray a){
+        ArrayList<Phone> got=new ArrayList<>();
+        if(a==null)return got;
+        for(int i=0;i<a.length();i++){
+            JSONObject x=a.optJSONObject(i);
+            if(x==null)continue;
+            String n=x.optString("phone_name",x.optString("name")).trim();
+            if(n.isEmpty())continue;
+            Phone np=new Phone(b[0],n,x.optString("image",x.optString("img")),x.optString("detail",x.optString("detail_url")),
+                    x.optString("description",x.optString("summary",x.optString("quick_spec"))),true);
+            np.slug=x.optString("slug",x.optString("id"));
+            got.add(np);
+        }
+        return got;
+    }
+
+    void searchRemote(String query){
+        final String q=query.trim();
+        if(q.length()<2 || q.equals(lastRemoteQuery))return;
+        lastRemoteQuery=q;
+        new Thread(()->{
+            try{
+                Thread.sleep(450);
+                if(!q.equals(search.getText().toString().trim()))return;
+                String u=API+"/search?query="+URLEncoder.encode(q,"UTF-8");
+                JSONObject o=getJson(u);
+                JSONArray a=o.optJSONArray("data");
+                if(a==null && o.optJSONObject("data")!=null)a=o.getJSONObject("data").optJSONArray("phones");
+                ArrayList<Phone> got=new ArrayList<>();
+                if(a!=null)for(int i=0;i<a.length();i++){
+                    JSONObject x=a.optJSONObject(i);
+                    if(x==null)continue;
+                    String name=x.optString("phone_name",x.optString("name"));
+                    String brand=x.optString("brand_name",x.optString("brand"));
+                    if(name.isEmpty()||brand.isEmpty())continue;
+                    Phone p=new Phone(brand,name,x.optString("image",x.optString("img")),x.optString("detail"),x.optString("description",x.optString("summary")),true);
+                    p.slug=x.optString("slug",x.optString("id"));
+                    got.add(p);
+                }
+                mergePhones(got);
+                runOnUiThread(()->{
+                    status.setText("חיפוש מקוון: נמצאו/נוספו "+got.size()+" תוצאות עבור ""+q+""");
+                    render();
+                });
+            }catch(Exception ignored){}
+        }).start();
+    }
+
+    static class AtomicCounter{ volatile int value=0; }
 
     void loadImage(String url,ImageView view){
         new Thread(()->{try{
@@ -213,6 +350,41 @@ public class MainActivity extends Activity {
         return v;
     }
     String fmt(double x){return String.format(Locale.US,"%.0f",x);}
+
+    class PhoneAdapter extends BaseAdapter{
+        @Override public int getCount(){return visible.size();}
+        @Override public Phone getItem(int position){return visible.get(position);}
+        @Override public long getItemId(int position){return position;}
+        @Override public View getView(int position,View convertView,ViewGroup parent){
+            Phone p=getItem(position);
+            LinearLayout card=new LinearLayout(MainActivity.this);
+            card.setOrientation(LinearLayout.HORIZONTAL);
+            card.setPadding(10,10,10,10);
+            GradientDrawable gd=new GradientDrawable();
+            gd.setColor(Color.WHITE); gd.setCornerRadius(22); gd.setStroke(1,Color.rgb(220,228,238));
+            card.setBackground(gd);
+            ImageView im=new ImageView(MainActivity.this);
+            im.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            im.setTag(p.image);
+            card.addView(im,new LinearLayout.LayoutParams(92,112));
+            if(!p.image.isEmpty())loadImage(p.image,im);
+            LinearLayout info=new LinearLayout(MainActivity.this);
+            info.setOrientation(LinearLayout.VERTICAL);
+            info.setPadding(10,0,0,0);
+            TextView t=new TextView(MainActivity.this);
+            t.setText(p.brand+" "+p.name);
+            t.setTextSize(17); t.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
+            info.addView(t);
+            TextView sm=new TextView(MainActivity.this);
+            String summary=(p.summary==null?"":p.summary).trim();
+            if(summary.length()>180)summary=summary.substring(0,180)+"…";
+            sm.setText(summary+"\nDA: "+fmt(p.score)+"/100 • GB: "+(p.geek==null?"—":p.geek)+" • Benchmark: "+(p.benchmark==null?"—":p.benchmark));
+            sm.setTextSize(13); info.addView(sm);
+            Button d=new Button(MainActivity.this); d.setText("פרטים מלאים"); d.setOnClickListener(v->showDetails(p)); info.addView(d);
+            card.addView(info,new LinearLayout.LayoutParams(0,-2,1));
+            return card;
+        }
+    }
 
     void showDetails(Phone p){
         if(!p.remote || (p.detail==null || p.detail.isEmpty()) && (p.slug==null || p.slug.isEmpty())){
