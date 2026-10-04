@@ -1,4 +1,5 @@
 package com.david.phonecatalog;
+import com.da.phones.R;
 import android.app.*;import android.os.*;import android.content.*;
 import android.graphics.drawable.BitmapDrawable;import android.graphics.*;import android.graphics.drawable.GradientDrawable;import android.view.*;import android.widget.*;import android.text.*;import java.io.*;import java.util.*;import org.json.*;
 
