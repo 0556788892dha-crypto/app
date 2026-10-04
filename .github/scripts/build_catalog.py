@@ -253,6 +253,11 @@ def main():
         key = (phone["brand"].lower(), phone["name"].lower())
         curated = niche_by_key.pop(key, None)
         if curated:
+            # Keep a verified image from the broad dataset when the curated
+            # record intentionally omits an image URL; the final APK remains offline.
+            if not curated.get("image_url") and phone.get("image_url"):
+                curated["image_url"] = phone.get("image_url")
+                curated["image"] = image_path(curated["brand"], curated["name"], curated["image_url"])
             phones[i] = curated
             replaced += 1
 
