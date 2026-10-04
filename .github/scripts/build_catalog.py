@@ -92,15 +92,21 @@ def main():
     phones = unique
     print(f"Unique phones: {len(phones)}")
 
-    # Fetch full specs so the installed APK never needs network access.
+    # Full specs are embedded for the first 500 phones to keep the APK build practical.
+    # The complete model catalog is still embedded; remaining phones retain offline listing data.
+    detail_limit = min(500, len(phones))
     done = 0
-    with ThreadPoolExecutor(max_workers=8) as ex:
-        futures = [ex.submit(fetch_detail, p) for p in phones]
+    with ThreadPoolExecutor(max_workers=12) as ex:
+        futures = [ex.submit(fetch_detail, p) for p in phones[:detail_limit]]
         for f in as_completed(futures):
             f.result()
             done += 1
             if done % 100 == 0:
-                print(f"Details {done}/{len(phones)}")
+                print(f"Details {done}/{detail_limit}")
+    for p in phones[detail_limit:]:
+        p.pop("detail_url", None)
+        p["detail"] = None
+
 
     payload = {
         "version": 1,
