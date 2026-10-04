@@ -1,3 +1,4 @@
+import csv
 import hashlib
 import json
 import os
@@ -8,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 SOURCE_DIR = Path(".cache/device_specs_gsmarena")
+CSV_URL = "https://raw.githubusercontent.com/AayushChhuka7/mobile-recommendation-system/fe193eeca58e7e342a3b93c22c7e36d8f7e8ac7d/.ipynb_checkpoints/GSMArena_all_Dataset-checkpoint.csv"
 NICHE = Path(".github/scripts/niche_devices.json")
 OUT = Path("phonecatalog/src/main/assets/catalog.json")
 IMAGE_DIR = Path("phonecatalog/src/main/assets/images")
@@ -119,7 +121,7 @@ def download_one(phone):
         image = Image.open(BytesIO(raw)).convert("RGB")
         image.thumbnail((260, 420), Image.Resampling.LANCZOS)
         output.parent.mkdir(parents=True, exist_ok=True)
-        image.save(output, "JPEG", quality=78, optimize=True)
+        image.save(output, "WEBP", quality=62, method=6)
         return True
     except Exception:
         phone["image"] = ""
@@ -145,7 +147,7 @@ def main():
     phones = []
     seen = set()
 
-    source_files = list(SOURCE_DIR.rglob("details.json")) if SOURCE_DIR.exists() else []
+    snapshot = load_csv_snapshot()\n    for phone in snapshot:\n        if not phone:\n            continue\n        key=(phone["brand"].lower(),phone["name"].lower())\n        if key not in seen:\n            seen.add(key); phones.append(phone)\n\n    source_files = list(SOURCE_DIR.rglob("details.json")) if SOURCE_DIR.exists() else []
     for file_path in source_files:
         try:
             item = json.loads(file_path.read_text(encoding="utf-8"))
