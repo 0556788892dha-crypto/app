@@ -1,5 +1,5 @@
 name: Build DA PHONES APK
-# v1.3 catalog/image pipeline — final main-only release sync
+# v1.4 multi-device catalog pipeline
 permissions:
   contents: write
 
@@ -59,16 +59,16 @@ jobs:
         run: |
           set -euo pipefail
           APK=$(find phonecatalog/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | head -n 1)
-          if gh release view da-phones-v1.3 >/dev/null 2>&1; then
-            gh release upload da-phones-v1.3 "$APK" DA-PHONES-SHA256.txt --clobber
+          if gh release view da-phones-v1.4 >/dev/null 2>&1; then
+            gh release upload da-phones-v1.4 "$APK" DA-PHONES-SHA256.txt --clobber
           else
-            gh release create da-phones-v1.3 "$APK" DA-PHONES-SHA256.txt \
-              --title "DA PHONES v1.3" \
+            gh release create da-phones-v1.4 "$APK" DA-PHONES-SHA256.txt \
+              --title "DA PHONES v1.4" \
               --notes "Verified offline DA PHONES APK. Built by GitHub Actions from the repository source."
           fi
 
       - uses: actions/upload-artifact@v4
         with:
-          name: DA-PHONES-offline-release
+          name: DA-PHONES-offline-release-v1.4
           path: phonecatalog/build/outputs/apk/release/*.apk
           if-no-files-found: error
