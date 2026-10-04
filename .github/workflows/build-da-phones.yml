@@ -1,5 +1,4 @@
 name: Build DA PHONES APK
-
 on:
   workflow_dispatch:
   push:
@@ -10,7 +9,8 @@ on:
       - 'gradle.properties'
       - '.github/workflows/build-da-phones.yml'
       - '.github/scripts/build_catalog.py'
-
+      - '.github/scripts/audit_catalog.py'
+      - '.github/scripts/niche_devices.json'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,17 +18,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
+        with: {python-version: '3.x'}
       - name: Build offline catalog
         run: python .github/scripts/build_catalog.py
+      - name: Audit catalog
+        run: python .github/scripts/audit_catalog.py
       - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+        with: {distribution: temurin, java-version: '17'}
       - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
+        with: {gradle-version: '8.9'}
       - name: Build APK
         run: gradle :phonecatalog:assembleRelease --stacktrace
       - uses: actions/upload-artifact@v4
