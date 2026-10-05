@@ -301,7 +301,8 @@ public class MainActivity extends Activity {
             if (checkedId == -1) return;
             RadioButton chosen = group.findViewById(checkedId);
             int v = Integer.parseInt(chosen.getText().toString().substring(0,1));
-            target.put(key, (target.getOrDefault(key,0) == 0 ? (reverse ? 6-v : v) : target.get(key)));\n            answers.put(questionIndex, reverse ? 6-v : v);
+            target.put(key, (target.getOrDefault(key,0) == 0 ? (reverse ? 6-v : v) : target.get(key)));
+            answers.put(questionIndex, reverse ? 6-v : v);
         });
         c.addView(rg);
     }
