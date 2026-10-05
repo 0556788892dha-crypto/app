@@ -87,11 +87,22 @@ jobs:
           ZIPALIGN=$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -n 1)
           APKSIGNER=$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)
 
-          "$AAPT" dump badging "$APK" | tee apk-badging.txt
-          grep -q "package: name='com.da.phones'"
-          grep -q "versionName='2.2'"
-          grep -q "sdkVersion:'23'"
-          grep -q "targetSdkVersion:'35'"
+          "$AAPT" dump badging "$APK" > apk-badging.txt
+          python - <<'PY'
+          from pathlib import Path
+          s = Path("apk-badging.txt").read_text(errors="replace")
+          required = [
+              "package: name='com.da.phones'",
+              "versionName='2.2'",
+              "sdkVersion:'23'",
+              "targetSdkVersion:'35'",
+              "application-label:'DA DIGITAL'",
+          ]
+          missing = [x for x in required if x not in s]
+          if missing:
+              raise SystemExit("APK metadata validation failed: " + ", ".join(missing))
+          print("APK metadata validation: OK")
+          PY
 
           # Check alignment without mutating the signed release artifact.
           # Keep the alignment check non-destructive; signature verification is the release gate.
