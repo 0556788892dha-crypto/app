@@ -1206,7 +1206,7 @@ public class MainActivity extends Activity {
         rights.setPadding(0,dp(4),0,dp(12));
         box.addView(rights);
 
-        TextView intro=txt("מאגר מידע והשוואת מכשירים אופליין: טלפונים, טאבלטים, שעונים חכמים ודגמי נישה.",13,false);
+        TextView intro=txt("מאגר מידע והשוואת מכשירים אופליין: טלפונים, טאבלטים, שעונים חכמים, מחשבים ניידים ודגמי נישה.",13,false);
         intro.setGravity(Gravity.CENTER);
         box.addView(intro);
 
