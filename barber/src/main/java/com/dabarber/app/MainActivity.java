@@ -452,8 +452,6 @@ public class MainActivity extends Activity {
                     boolean wasCompleted=editing && o.optBoolean("completed",false);
                     o.put("completed",done.isChecked());
 
-                    if(editing) replace("appointments",editIndex,o); else push("appointments",o);
-
                     if(done.isChecked() && !wasCompleted && !o.optBoolean("autoHaircutLogged",false)){
                         JSONObject h=new JSONObject();
                         h.put("client",client);
@@ -463,8 +461,8 @@ public class MainActivity extends Activity {
                         h.put("sourceAppointmentIndex",editIndex==null?-1:editIndex);
                         push("haircuts",h);
                         o.put("autoHaircutLogged",true);
-                        if(editing) replace("appointments",editIndex,o);
                     }
+                    if(editing) replace("appointments",editIndex,o); else push("appointments",o);
                     dialog.dismiss();
                     showAppointments();
                 }catch(Exception ex){
@@ -581,7 +579,7 @@ public class MainActivity extends Activity {
 
     private String hebrewMonthName(HebrewCalendar cal){
         int month=cal.get(HebrewCalendar.MONTH);
-        boolean leap=cal.getMaximum(HebrewCalendar.MONTH)>=12;
+        boolean leap=cal.getActualMaximum(HebrewCalendar.MONTH)>=12;
         String[] common={"תשרי","חשוון","כסלו","טבת","שבט","אדר","ניסן","אייר","סיוון","תמוז","אב","אלול"};
         String[] leapNames={"תשרי","חשוון","כסלו","טבת","שבט","אדר א׳","אדר ב׳","ניסן","אייר","סיוון","תמוז","אב","אלול"};
         if(leap) return leapNames[Math.min(month,leapNames.length-1)];
