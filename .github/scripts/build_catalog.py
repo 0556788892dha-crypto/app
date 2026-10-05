@@ -309,7 +309,7 @@ def main():
     print(
         f"Embedded {len(phones)} unique devices; "
         f"local images={image_count}; "
-        f"categories={{c: sum(1 for p in phones if p.get('category','phone') == c) for c in ('phone','tablet','watch')}}; "
+        f"categories={{c: sum(1 for p in phones if p.get('category','phone') == c) for c in ('phone','tablet','watch','laptop')}}; "
         f"catalog_bytes={OUT.stat().st_size}"
     )
 
