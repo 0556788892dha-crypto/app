@@ -743,7 +743,7 @@ public class MainActivity extends Activity {
         addReportScores("🎯 RIASEC", riasecAnswers, riasecNames, 6, 2, false);
 
         LinearLayout reflective=card("🧭 כלים רפלקטיביים","בחירות שנועדו להתבוננות ולא למדידה מדעית.",ROSE);
-        reflective.addView(tv("בחירות חזותיות: "+(imageChoices.isEmpty()?"לא נבחרו עדיין":String.join(" • ",imageChoices)),15,BROWN));
+        reflective.addView(tv("בחירות חזותיות: "+(imageChoices.isEmpty()?"לא נבחרו עדיין":android.text.TextUtils.join(" • ",imageChoices)),15,BROWN));
         reflective.addView(tv("מצבים שנענו: "+situationAnswers.size()+" מתוך 8",15,BROWN));
         if (!mbti.isEmpty()) {
             String type=""; String[] left={"E","S","T","J"}, right={"I","N","F","P"};
