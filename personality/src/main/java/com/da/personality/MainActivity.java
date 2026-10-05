@@ -533,6 +533,17 @@ public class MainActivity extends Activity {
     private void showFace() {
         base("ניתוח פנים • מקומי");
         root.addView(tv("הצילום/הבחירה מהגלריה עוברים עיבוד על המכשיר. אנחנו מודדים מידע חזותי כמו מסגרת פנים, הבעה ונקודות ציון. קריאת פנים מסורתית מוצגת בנפרד ואינה מוצגת כדרך מדעית להסיק אישיות.",15,MUTED));
+        if (faceBitmap.bitmap != null) {
+            ImageView preview = new ImageView(this);
+            preview.setImageBitmap(faceBitmap.bitmap);
+            preview.setAdjustViewBounds(true);
+            preview.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            preview.setBackground(bg(SOFT, 28));
+            LinearLayout.LayoutParams pp = new LinearLayout.LayoutParams(-1, 280);
+            pp.setMargins(0, 8, 0, 10);
+            preview.setLayoutParams(pp);
+            root.addView(preview);
+        }
         if (faceSummary.isEmpty()) {
             root.addView(action("📷 צילום סלפי", v -> takePhoto(), true));
             root.addView(action("🖼️ בחר תמונה מהגלריה", v -> pickPhoto(), false));
@@ -545,6 +556,15 @@ public class MainActivity extends Activity {
         }
         root.addView(action("← חזרה", v -> showTests(), false));
         bottomNav();
+    }
+
+    @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQ_CAMERA && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            takePhoto();
+        } else if (requestCode == REQ_CAMERA) {
+            Toast.makeText(this, "נדרשת הרשאת מצלמה כדי לצלם סלפי.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void takePhoto() {
