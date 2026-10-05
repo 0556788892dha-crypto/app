@@ -333,7 +333,7 @@ public class MainActivity extends Activity {
 
         ArrayList<String> fields=new ArrayList<>();
         Collections.addAll(fields,
-            "קטגוריה","דירוג DA","Notebookcheck","מסך","רזולוציה","מעבד / SoC","GPU","RAM","אחסון",
+            "קטגוריה","דירוג","מסך","רזולוציה","מעבד / SoC","GPU","RAM","אחסון",
             "קצב רענון","מצלמה אחורית","מצלמה קדמית","סוללה","טעינה","5G","NFC",
             "Wi‑Fi","Bluetooth","GPS","משקל","מידות","מערכת הפעלה","יציאות");
 
@@ -385,8 +385,7 @@ public class MainActivity extends Activity {
 
     String findCompare(Phone p,String field){
         if(field.equals("קטגוריה"))return catLabel(p.category);
-        if(field.equals("דירוג DA"))return Math.round(p.score)+"/100";
-        if(field.equals("Notebookcheck"))return extractNotebookcheck(p);
+        if(field.equals("דירוג"))return ratingText(p);
         if(field.equals("מסך"))return spec(p,"Display","Size","screen_size");
         if(field.equals("רזולוציה"))return spec(p,"Display","Resolution","resolution");
         if(field.equals("ערכת שבבים"))return spec(p,"Platform","Chipset","chipset");
@@ -455,6 +454,17 @@ public class MainActivity extends Activity {
         String v=d.optString("Notebookcheck Score","").trim(); return v.isEmpty()?"—":v;
     }
 
+    String extractNotebookcheck(Phone p){
+        JSONObject d=parseDetail(p); if(d==null)return "—";
+        String v=d.optString("Notebookcheck Score","").trim(); return v.isEmpty()?"—":v;
+    }
+
+    String ratingText(Phone p){
+        if(p==null)return "דירוג: —";
+        if("laptop".equals(p.category))return "Notebookcheck: "+extractNotebookcheck(p);
+        return "DA: "+Math.round(p.score)+"/100";
+    }
+
     String firstSpec(Phone p,String group,String key1,String key2){
         String v=spec(p,group,key1,key2);
         return v==null||v.trim().isEmpty()||v.equals("לא צוין") ? "לא צוין" : v;
@@ -491,7 +501,7 @@ public class MainActivity extends Activity {
     double metric(Phone p,String field){
         String v=findCompare(p,field);
         if(v==null||v.isEmpty()||v.equals("לא צוין")||v.equals("לא"))return -1;
-        if(field.equals("דירוג DA"))return p.score;
+        if(field.equals("דירוג"))return p.score;
         if(field.equals("מסך"))return numeric(v);
         if(field.equals("רזולוציה")){
             java.util.regex.Matcher m=java.util.regex.Pattern.compile("(\\d+)\\s*[x×]\\s*(\\d+)").matcher(v);
@@ -938,7 +948,7 @@ public class MainActivity extends Activity {
             else h=(Holder)convert.getTag();
             Phone p=visible.get(i);
             h.title.setText(catLabel(p.category)+" • "+p.brand+" "+p.name);
-            h.desc.setText(p.summary+"\\nDA: "+Math.round(p.score)+"/100");
+            h.desc.setText(p.summary+"\\n"+ratingText(p));
             h.compareBtn.setText(compare.contains(p)?"✓ בהשוואה":"⚖ השווה");
             h.details.setOnClickListener(v->details(p));
             final TextView compareButton=h.compareBtn;
@@ -1213,7 +1223,7 @@ public class MainActivity extends Activity {
             "• לשוניות ניווט עם סמלים ברורים\n"+
             "• לשונית תוספות עם דירוגים ומילון מושגים מורחב\n"+
             "• שיפור טעינת תמונות מכשירים מקומיות ועבודה מלאה אופליין\n"+
-            "• תיקון מיזוג נתוני הנישה כך שמפרט מלא גובר על נתון גיבוי\n• השוואה עם גלילה אנכית ואופקית וכל שורות המפרט\n• עיצוב כהה ומודרני חדש\n• קטגוריית מחשבים ניידים המבוססת על Notebookcheck\n• השוואה עם גלילה אנכית ואופקית וכל שורות המפרט\n• עיצוב כהה ומודרני חדש\n• קטגוריית מחשבים ניידים המבוססת על Notebookcheck\n\n"+
+            "• תיקון מיזוג נתוני הנישה כך שמפרט מלא גובר על נתון גיבוי\n• השוואה עם גלילה אנכית ואופקית וכל שורות המפרט\n• עיצוב כהה ומודרני חדש\n• קטגוריית מחשבים ניידים המבוססת על Notebookcheck\n• השוואה עם גלילה אנכית ואופקית וכל שורות המפרט\n• עיצוב כהה ומודרני חדש\n• קטגוריית מחשבים ניידים המבוססת על Notebookcheck\n• השוואה עם גלילה אנכית ואופקית וכל שורות המפרט\n• עיצוב כהה ומודרני חדש\n• קטגוריית מחשבים ניידים המבוססת על Notebookcheck\n\n"+
             "גרסה 1.42\n"+
             "• מאגר מכשירים אופליין\n"+
             "• חיפוש וסינון לפי קטגוריה ומותג\n"+
