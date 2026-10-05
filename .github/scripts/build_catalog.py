@@ -21,6 +21,8 @@ NON_PHONE_TERMS = (
     "surface pro", "chromebook", "laptop", "macbook"
 )
 
+VALID_CATEGORIES = ("phone", "tablet", "watch", "laptop")
+
 
 def clean(value):
     return re.sub(r"<[^>]+>", "", str(value or "")).replace("&amp;", "&").strip()
@@ -40,7 +42,7 @@ def image_path(brand, name, image_url):
 
 def normalize_niche(item):
     category = clean(item.get("category", "phone")).lower() or "phone"
-    if category not in ("phone", "tablet", "watch"):
+    if category not in VALID_CATEGORIES:
         category = "phone"
     brand = clean(item.get("brand"))
     name = clean(item.get("model", item.get("name")))
