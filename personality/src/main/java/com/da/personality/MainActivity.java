@@ -5,14 +5,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
@@ -26,7 +26,6 @@ import java.util.*;
 public class MainActivity extends Activity {
     private static final int REQ_CAMERA = 1101;
     private LinearLayout root;
-    private int page = 0;
     private BitmapHolder faceBitmap = new BitmapHolder();
     private final Map<String, Integer> ocean = new LinkedHashMap<>();
     private final Map<String, Integer> hexaco = new LinkedHashMap<>();
@@ -36,9 +35,11 @@ public class MainActivity extends Activity {
     private final Map<String, Integer> riasec = new LinkedHashMap<>();
     private final Map<Integer, Integer> mbti = new HashMap<>();
     private final Set<String> imageChoices = new LinkedHashSet<>();
-    private final Set<String> situations = new LinkedHashSet<>();
+    private final Map<Integer, Integer> situationAnswers = new HashMap<>();
     private String zodiac = "";
+    private String lifeNumber = "";
     private String faceSummary = "";
+    private boolean splashShown = false;
     private String faceFolklore = "";
 
     private final int BG = Color.rgb(255, 248, 245);
@@ -106,7 +107,51 @@ public class MainActivity extends Activity {
         super.onCreate(b);
         getWindow().setStatusBarColor(BROWN);
         getWindow().setNavigationBarColor(BROWN);
-        showHome();
+        showSplash();
+    }
+
+    private void showSplash() {
+        if (splashShown) { showHome(); return; }
+        splashShown = true;
+        LinearLayout splash = new LinearLayout(this);
+        splash.setOrientation(LinearLayout.VERTICAL);
+        splash.setGravity(Gravity.CENTER);
+        splash.setBackgroundColor(BG);
+        splash.setPadding(30, 30, 30, 30);
+
+        ImageView logo = new ImageView(this);
+        logo.setImageResource(com.da.personality.R.drawable.ic_da_personality);
+        logo.setAdjustViewBounds(true);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(150, 150);
+        logo.setLayoutParams(lp);
+        splash.addView(logo);
+
+        TextView name = tv("DA Personality", 31, BROWN);
+        name.setGravity(Gravity.CENTER);
+        name.setTypeface(null, android.graphics.Typeface.BOLD);
+        name.setLetterSpacing(0.08f);
+        splash.addView(name);
+
+        TextView sub = tv("PERSONALITY LAB", 12, TERRACOTTA);
+        sub.setGravity(Gravity.CENTER);
+        sub.setLetterSpacing(0.18f);
+        splash.addView(sub);
+        setContentView(splash);
+
+        android.view.animation.AnimationSet set = new android.view.animation.AnimationSet(true);
+        android.view.animation.ScaleAnimation scale = new android.view.animation.ScaleAnimation(
+            0.88f, 1f, 0.88f, 1f,
+            android.view.animation.Animation.RELATIVE_TO_SELF, 0.5f,
+            android.view.animation.Animation.RELATIVE_TO_SELF, 0.5f);
+        scale.setDuration(650);
+        android.view.animation.AlphaAnimation alpha = new android.view.animation.AlphaAnimation(0f, 1f);
+        alpha.setDuration(650);
+        set.addAnimation(scale);
+        set.addAnimation(alpha);
+        logo.startAnimation(set);
+        name.startAnimation(alpha);
+        sub.startAnimation(alpha);
+        new Handler().postDelayed(this::showHome, 1450);
     }
 
     private GradientDrawable bg(int color, float radius) {
@@ -123,7 +168,7 @@ public class MainActivity extends Activity {
         t.setTextColor(color);
         t.setGravity(Gravity.RIGHT);
         t.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        t.setPadding(18, 10, 18, 10);
+        t.setPadding(18, 9, 18, 9);
         return t;
     }
 
@@ -159,7 +204,7 @@ public class MainActivity extends Activity {
         b.setAllCaps(false);
         b.setGravity(Gravity.CENTER);
         b.setMinHeight(54);
-        b.setPadding(12, 8, 12, 8);
+        b.setPadding(12, 7, 12, 7);
         b.setBackground(bg(primary ? TERRACOTTA : SOFT, 34));
         b.setOnClickListener(listener);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
@@ -449,7 +494,7 @@ public class MainActivity extends Activity {
 
     private void showSituations() {
         base("מצבים והתלבטויות");
-        root.addView(tv("בחר/י את התגובה שהכי דומה לך. הבחירות נשמרות כדי לזהות דפוסים בדוח.", 15, MUTED));
+        root.addView(tv("בחר/י תגובה אחת בכל מצב. הבחירות נשמרות ויופיעו בדוח.", 15, MUTED));
         final String[][] qs = {
             {"חבר מאחר ב־30 דקות","מחכה בסבלנות","שולח הודעה","ממשיך הלאה"},
             {"משימה חדשה לא ברורה","מתחיל ומתקן תוך כדי","שואל שאלות","מתכנן לפני התחלה"},
@@ -462,9 +507,25 @@ public class MainActivity extends Activity {
         };
         for (int qi=0;qi<qs.length;qi++) {
             LinearLayout c = questionCard((qi+1)+". "+qs[qi][0]);
+            final int qIndex=qi;
+            Button[] buttons = new Button[3];
             for (int j=1;j<qs[qi].length;j++) {
-                final int idx=j;
-                c.addView(action(qs[qi][j], v -> situations.add(qs[qi][0]+" → "+qs[qi][idx]), false));
+                final int option=j-1;
+                Button b=action(qs[qi][j], v -> {
+                    situationAnswers.put(qIndex, option);
+                    for(int k=0;k<buttons.length;k++) {
+                        if(buttons[k]!=null) {
+                            buttons[k].setText((k==option?"✓ ":"")+qs[qIndex][k+1]);
+                            buttons[k].setBackground(bg(k==option?PEACH:SOFT, 34));
+                        }
+                    }
+                }, false);
+                buttons[option]=b;
+                if (situationAnswers.getOrDefault(qIndex,-1)==option) {
+                    b.setText("✓ "+qs[qi][j]);
+                    b.setBackground(bg(PEACH,34));
+                }
+                c.addView(b);
             }
         }
         root.addView(action("← חזרה", v -> showTests(), false));
@@ -483,15 +544,20 @@ public class MainActivity extends Activity {
         for (int i=0;i<pairs.length;i++) {
             LinearLayout c = questionCard(pairs[i][2]);
             final int ix=i;
-            Button a=action(pairs[i][0]+" • "+pairs[i][4], v->mbti.put(ix,0), false);
-            Button b=action(pairs[i][1]+" • "+pairs[i][5], v->mbti.put(ix,1), false);
+            Button a=action(pairs[i][0]+" • "+pairs[i][3], v->{mbti.put(ix,0); showMbti();}, false);
+            Button b=action(pairs[i][1]+" • "+pairs[i][4], v->{mbti.put(ix,1); showMbti();}, false);
+            if (mbti.containsKey(ix)) {
+                Button selected = mbti.get(ix)==0 ? a : b;
+                selected.setText("✓ " + selected.getText());
+                selected.setBackground(bg(PEACH, 34));
+            }
             c.addView(a); c.addView(b);
         }
         root.addView(action("הצג נטייה", v -> {
             String type = "";
             String[] left={"E","S","T","J"}, right={"I","N","F","P"};
             for(int i=0;i<4;i++) type += mbti.getOrDefault(i,0)==1?right[i]:left[i];
-            showTextResult("MBTI-style", "הנטייה שסומנה: "+type+"\n\nזו תווית רפלקטיבית בלבד, לא אבחון.", false);
+            showTextResult("MBTI-style", "הנטייה שסומנה: "+type+"\\n\\nזו תווית רפלקטיבית בלבד, לא אבחון.", false);
         }, true));
         root.addView(action("← חזרה", v -> showTests(), false));
         bottomNav();
@@ -502,6 +568,7 @@ public class MainActivity extends Activity {
         root.addView(tv("הזן/י תאריך לידה. החישוב הוא מסורתי/בידורי ואינו מדידה מדעית.", 15, MUTED));
         EditText e = new EditText(this);
         e.setHint("DD/MM/YYYY");
+        e.setInputType(InputType.TYPE_CLASS_DATETIME);
         e.setTextSize(18);
         e.setSingleLine(true);
         e.setBackground(bg(Color.WHITE, 24));
@@ -513,6 +580,7 @@ public class MainActivity extends Activity {
             if(s.length()!=8){out.setText("נא להזין 8 ספרות, למשל 05051998.");return;}
             int sum=0; for(char ch:s.toCharArray()) sum += ch-'0';
             while(sum>9 && sum!=11 && sum!=22 && sum!=33){int x=0;while(sum>0){x+=sum%10;sum/=10;}sum=x;}
+            lifeNumber=String.valueOf(sum);
             out.setText("מספר חיים: "+sum+"\n\nפרשנות מסורתית: התוצאה תוצג בדוח המשולב, בנפרד מהמדדים המחקריים.");
         }, true));
         root.addView(action("← חזרה", v -> showTests(), false));
@@ -548,12 +616,17 @@ public class MainActivity extends Activity {
         if (faceSummary.isEmpty()) {
             root.addView(action("📷 צילום סלפי", v -> takePhoto(), true));
             root.addView(action("🖼️ בחר תמונה מהגלריה", v -> pickPhoto(), false));
-        } else {
-            root.addView(badge("✓ נמצא פנים", TERRACOTTA));
+        } else if (faceSummary.startsWith("מעבד/ת")) {
+            root.addView(badge("⏳ מנתח/ת…", TERRACOTTA));
             root.addView(tv(faceSummary,17,BROWN));
-            root.addView(badge("שכבה מסורתית / בידורית",ROSE));
-            root.addView(tv(faceFolklore,16,BROWN));
-            root.addView(action("נתח תמונה אחרת", v->{faceSummary="";faceFolklore="";showFace();}, false));
+        } else {
+            root.addView(badge("✓ זוהה פנים", TERRACOTTA));
+            root.addView(tv(faceSummary,17,BROWN));
+            if (!faceFolklore.isEmpty()) {
+                root.addView(badge("שכבה מסורתית / בידורית",ROSE));
+                root.addView(tv(faceFolklore,16,BROWN));
+            }
+            root.addView(action("נתח תמונה אחרת", v->{faceSummary="";faceFolklore="";faceBitmap.bitmap=null;showFace();}, false));
         }
         root.addView(action("← חזרה", v -> showTests(), false));
         bottomNav();
@@ -637,8 +710,14 @@ public class MainActivity extends Activity {
                     faceSummary=s.toString();
                     faceFolklore=folklore(shape, smile==null?0:smile, front);
                 }
+                detector.close();
                 showFace();
-            }).addOnFailureListener(e -> {faceSummary="אירעה שגיאה בניתוח התמונה.";faceFolklore="";showFace();});
+            }).addOnFailureListener(e -> {
+                detector.close();
+                faceSummary="אירעה שגיאה בניתוח התמונה.";
+                faceFolklore="";
+                showFace();
+            });
         } catch(Exception e){faceSummary="לא ניתן לעבד את התמונה.";faceFolklore="";showFace();}
     }
 
@@ -656,24 +735,56 @@ public class MainActivity extends Activity {
 
     private void showReport() {
         base("הדוח המשולב");
-        LinearLayout hero=card("DA Personality • התמונה הכוללת","הדוח משלב מקורות שונים, אבל לא הופך ביניהם ל'אבחנה'. כל שיטה נשארת עם המשמעות שלה.",TERRACOTTA);
+        LinearLayout hero=card("DA Personality • התמונה הכוללת","הדוח מציג את הנתונים שנאספו לפי מקורם. אין כאן 'ציון אישיות' אחד ואין שילוב מדעי בין השיטות.",TERRACOTTA);
         root.addView(hero);
-        root.addView(badge("מחקרי",TERRACOTTA));
-        root.addView(tv("Big Five / HEXACO / RIASEC: מיועדים להפקת אינדיקציות מתוך תשובות עצמיות.",16,BROWN));
-        root.addView(badge("רפלקטיבי",ROSE));
-        root.addView(tv("בחירות חזותיות, מצבים ו-MBTI-style: כלים להתבוננות ולהעדפות.",16,BROWN));
-        root.addView(badge("בידורי / מסורתי",Color.rgb(171,117,68)));
-        root.addView(tv("נומרולוגיה, מזלות וקריאת פנים מסורתית מוצגים בנפרד ואינם מקבלים משקל מדעי.",16,BROWN));
-        if(!faceSummary.isEmpty()){
-            LinearLayout fc=card("📷 שכבת פנים","ניתוח חזותי מקומי",ROSE);
+
+        addReportScores("🧠 Big Five / OCEAN", oceanAnswers, oceanNames, 5, 6, true);
+        addReportScores("🧩 HEXACO", hexacoAnswers, hexacoNames, 6, 2, false);
+        addReportScores("🎯 RIASEC", riasecAnswers, riasecNames, 6, 2, false);
+
+        LinearLayout reflective=card("🧭 כלים רפלקטיביים","בחירות שנועדו להתבוננות ולא למדידה מדעית.",ROSE);
+        reflective.addView(tv("בחירות חזותיות: "+(imageChoices.isEmpty()?"לא נבחרו עדיין":String.join(" • ",imageChoices)),15,BROWN));
+        reflective.addView(tv("מצבים שנענו: "+situationAnswers.size()+" מתוך 8",15,BROWN));
+        if (!mbti.isEmpty()) {
+            String type=""; String[] left={"E","S","T","J"}, right={"I","N","F","P"};
+            for(int i=0;i<4;i++) type += mbti.getOrDefault(i,0)==1?right[i]:left[i];
+            reflective.addView(tv("MBTI-style: "+type+" • "+mbti.size()+" מתוך 4 צירים",15,BROWN));
+        } else reflective.addView(tv("MBTI-style: עדיין לא מולא.",15,BROWN));
+        root.addView(reflective);
+
+        LinearLayout traditional=card("🔢 שכבות מסורתיות / בידוריות","מוצגות בנפרד מהמדדים המחקריים.",Color.rgb(171,117,68));
+        traditional.addView(tv("נומרולוגיה: "+(lifeNumber.isEmpty()?"לא חושב עדיין":"מספר חיים "+lifeNumber),15,BROWN));
+        traditional.addView(tv("מזל: "+(zodiac.isEmpty()?"לא נבחר":""+zodiac),15,BROWN));
+        root.addView(traditional);
+
+        if(!faceSummary.isEmpty() && !faceSummary.startsWith("מעבד/ת")){
+            LinearLayout fc=card("📷 שכבת פנים","מדידות חזותיות מקומיות בלבד",ROSE);
             fc.addView(tv(faceSummary,15,BROWN));
-            if(!faceFolklore.isEmpty()) fc.addView(tv("\nפרשנות מסורתית:\n"+faceFolklore,15,MUTED));
+            if(!faceFolklore.isEmpty()) fc.addView(tv("\\nפרשנות מסורתית:\\n"+faceFolklore,15,MUTED));
             root.addView(fc);
-        } else root.addView(tv("עדיין לא נותח צילום פנים.",15,MUTED));
-        LinearLayout pc=card("🧭 צעד הבא","ככל שתמלא/י יותר שיטות, הדוח יוכל להציג תמונה רחבה ועקבית יותר — בלי להעמיד פנים שמדובר באבחון.",TERRACOTTA);
+        } else root.addView(tv(faceSummary.startsWith("מעבד/ת")?"ניתוח פנים עדיין מתבצע…":"עדיין לא נותח צילום פנים.",15,MUTED));
+
+        LinearLayout pc=card("🧩 השלמה חכמה","מילוי עוד שיטות יגדיל את התמונה שתוכל/י לראות בדוח, בלי ליצור 'אבחנה' מלאכותית.",TERRACOTTA);
         pc.addView(action("להמשיך למבחנים",v->showTests(),false));
         root.addView(pc);
         bottomNav();
+    }
+
+    private void addReportScores(String title, Map<Integer,Integer> answers, String[] names, int factorCount, int questionsPerFactor, boolean oceanStyle) {
+        LinearLayout c=card(title,"ציונים מחושבים רק מתוך פריטים שנענו.",TERRACOTTA);
+        for(int i=0;i<factorCount;i++) {
+            int sum=0,count=0;
+            for(int q=0;q<questionsPerFactor;q++) {
+                Integer v=answers.get(i*questionsPerFactor+q);
+                if(v!=null){sum+=v;count++;}
+            }
+            if(count==0){ c.addView(tv(names[i]+" • אין מספיק תשובות",14,MUTED)); continue; }
+            int value=Math.round((sum/(float)(count*5))*100f);
+            progressBar(c,names[i],value);
+            c.addView(tv((count<questionsPerFactor?"נענו "+count+" מתוך "+questionsPerFactor+" • ":"")+"רמה: "+level(value),14,MUTED));
+        }
+        c.addView(tv(oceanStyle?"הערה: 30 הפריטים כאן הם שאלון פנימי/השראתי; אין להציגם כמדד פסיכולוגי מאומת.":"הערה: אלה שאלוני קיצור פנימיים ולא גרסאות מלאות של הכלים המקוריים.",13,MUTED));
+        root.addView(c);
     }
 
     private void showTextResult(String title,String text,boolean backHome) {
