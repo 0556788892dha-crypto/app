@@ -189,9 +189,9 @@ def download_one(phone):
             raw = response.read()
 
         image = Image.open(BytesIO(raw)).convert("RGB")
-        image.thumbnail((180, 300), Image.Resampling.LANCZOS)
+        image.thumbnail((480, 720), Image.Resampling.LANCZOS)
         output.parent.mkdir(parents=True, exist_ok=True)
-        image.save(output, "WEBP", quality=62, method=6)
+        image.save(output, "WEBP", quality=82, method=6)
         return True
     except Exception:
         phone["image"] = ""
@@ -290,22 +290,24 @@ def main():
 
     print(f"Curated overrides applied={replaced}; curated additions={len(niche_by_key)}")
 
-    # Keep the complete specification catalog, but embed only a small thumbnail set.
-    # Curated/niche records are preferred for images; remaining images are capped.
-    selected = set()
+    # Embed every available device image locally so normal browsing is fully offline.
+    # There is intentionally no small-image cap; MAX_EMBEDDED_IMAGES is only a safety ceiling.
+    image_candidates = 0
     for phone in phones:
-        if phone.get("image_url") and "DA PHONES" in str(phone.get("source","")):
-            selected.add(phone["brand"].lower() + "|" + phone["name"].lower())
-    for phone in phones:
-        if len(selected) >= MAX_EMBEDDED_IMAGES:
-            break
-        if phone.get("image_url"):
-            selected.add(phone["brand"].lower() + "|" + phone["name"].lower())
-    for phone in phones:
-        key = phone["brand"].lower() + "|" + phone["name"].lower()
-        if key not in selected:
-            phone["image"] = ""
+        if phone.get("image_url") and phone.get("image"):
+            image_candidates += 1
+        elif phone.get("image_url"):
+            phone["image"] = image_path(phone["brand"], phone["name"], phone["image_url"])
+            image_candidates += 1
+
+    if image_candidates > MAX_EMBEDDED_IMAGES:
+        raise RuntimeError(f"Image candidate count {image_candidates} exceeds safety ceiling {MAX_EMBEDDED_IMAGES}")
+
     image_count = download_images(phones)
+    missing_images = sum(1 for phone in phones if phone.get("image_url") and not phone.get("image"))
+    print(f"Image candidates={image_candidates}; local images={image_count}; missing={missing_images}")
+    if missing_images > max(50, len(phones) // 100):
+        raise RuntimeError(f"Too many missing device images: {missing_images}/{len(phones)}")
 
     payload = {
         "version": 5,
