@@ -3,5 +3,5 @@ dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_P
 rootProject.name='DavidNotes'
 include ':app'
 include ':phonecatalog'
-
 include ':sanon'
+include ':personality'
