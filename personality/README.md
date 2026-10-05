@@ -27,3 +27,5 @@ Facial measurements are presented as visual measurements only. Traditional face-
 Final signed APK CI validation.
 
 Clean-install compatibility validation 1.5.
+
+Clean install validation 1.7.
