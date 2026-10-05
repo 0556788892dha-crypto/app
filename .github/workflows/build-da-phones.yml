@@ -1,5 +1,5 @@
 name: Build DA DIGITAL APK
-# v1.43 final main verification pipeline
+# v2.0 verification pipeline
 permissions:
   contents: write
 
@@ -63,16 +63,16 @@ jobs:
         run: |
           set -euo pipefail
           APK=$(find phonecatalog/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | head -n 1)
-          if gh release view da-digital-v1.43 >/dev/null 2>&1; then
-            gh release upload da-digital-v1.43 "$APK" DA-DIGITAL-SHA256.txt --clobber
+          if gh release view da-digital-v2.0 >/dev/null 2>&1; then
+            gh release upload da-digital-v2.0 "$APK" DA-DIGITAL-SHA256.txt --clobber
           else
-            gh release create da-digital-v1.43 "$APK" DA-DIGITAL-SHA256.txt \
-              --title "DA DIGITAL v1.43" \
+            gh release create da-digital-v2.0 "$APK" DA-DIGITAL-SHA256.txt \
+              --title "DA DIGITAL v2.0" \
               --notes "Verified offline DA DIGITAL APK. Built by GitHub Actions from the repository source."
           fi
 
       - uses: actions/upload-artifact@v4
         with:
-          name: DA-DIGITAL-offline-release-v1.43
+          name: DA-DIGITAL-offline-release-v2.0
           path: phonecatalog/build/outputs/apk/release/*.apk
           if-no-files-found: error
