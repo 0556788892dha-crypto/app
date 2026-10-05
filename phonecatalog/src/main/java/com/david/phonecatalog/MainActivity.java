@@ -454,11 +454,6 @@ public class MainActivity extends Activity {
         String v=d.optString("Notebookcheck Score","").trim(); return v.isEmpty()?"—":v;
     }
 
-    String extractNotebookcheck(Phone p){
-        JSONObject d=parseDetail(p); if(d==null)return "—";
-        String v=d.optString("Notebookcheck Score","").trim(); return v.isEmpty()?"—":v;
-    }
-
     String ratingText(Phone p){
         if(p==null)return "דירוג: —";
         if("laptop".equals(p.category))return "Notebookcheck: "+extractNotebookcheck(p);
