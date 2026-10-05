@@ -30,7 +30,13 @@ jobs:
         with:
           name: David-Notes-release
           path: app/build/outputs/apk/release/app-release.apk
+      - name: Prepare DA DIGITAL APK
+        run: cp phonecatalog/build/outputs/apk/release/phonecatalog-release.apk DA-DIGITAL-v2.2.apk
       - uses: actions/upload-artifact@v4
         with:
           name: DA-PHONES-release
           path: phonecatalog/build/outputs/apk/release/phonecatalog-release.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DA-DIGITAL-v2.2-final
+          path: DA-DIGITAL-v2.2.apk
