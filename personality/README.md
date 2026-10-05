@@ -25,3 +25,5 @@ Facial measurements are presented as visual measurements only. Traditional face-
 - Evidence labels to distinguish research-oriented vs reflective vs entertainment methods
 
 Final signed APK CI validation.
+
+Clean-install compatibility validation 1.5.
