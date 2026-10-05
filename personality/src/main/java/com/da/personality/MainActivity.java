@@ -30,6 +30,9 @@ public class MainActivity extends Activity {
     private BitmapHolder faceBitmap = new BitmapHolder();
     private final Map<String, Integer> ocean = new LinkedHashMap<>();
     private final Map<String, Integer> hexaco = new LinkedHashMap<>();
+    private final Map<Integer, Integer> oceanAnswers = new HashMap<>();
+    private final Map<Integer, Integer> hexacoAnswers = new HashMap<>();
+    private final Map<Integer, Integer> riasecAnswers = new HashMap<>();
     private final Map<String, Integer> riasec = new LinkedHashMap<>();
     private final Map<Integer, Integer> mbti = new HashMap<>();
     private final Set<String> imageChoices = new LinkedHashSet<>();
@@ -280,7 +283,7 @@ public class MainActivity extends Activity {
         return c;
     }
 
-    private void addScale(LinearLayout c, int questionIndex, Map<String,Integer> target, String key, boolean reverse) {
+    private void addScale(LinearLayout c, int questionIndex, Map<String,Integer> target, Map<Integer,Integer> answers, String key, boolean reverse) {
         String[] labels = {"1 • בכלל לא","2 • מעט","3 • באמצע","4 • די מתאים","5 • מאוד מתאים"};
         RadioGroup rg = new RadioGroup(this);
         rg.setOrientation(LinearLayout.VERTICAL);
@@ -298,7 +301,7 @@ public class MainActivity extends Activity {
             if (checkedId == -1) return;
             RadioButton chosen = group.findViewById(checkedId);
             int v = Integer.parseInt(chosen.getText().toString().substring(0,1));
-            target.put(key, reverse ? 6-v : v);
+            target.put(key, (target.getOrDefault(key,0) == 0 ? (reverse ? 6-v : v) : target.get(key)));\n            answers.put(questionIndex, reverse ? 6-v : v);
         });
         c.addView(rg);
     }
@@ -309,7 +312,7 @@ public class MainActivity extends Activity {
         for (int i=0;i<30;i++) {
             String key = oceanFactors[i/6];
             LinearLayout c = questionCard((i+1)+". "+oceanQuestions[i]);
-            addScale(c, i, ocean, key, oceanReverse[i]);
+            addScale(c, i, ocean, oceanAnswers, key, oceanReverse[i]);
         }
         root.addView(action("חשב תוצאה", v -> showBigFiveResult(), true));
         root.addView(action("← חזרה", v -> showTests(), false));
@@ -337,16 +340,15 @@ public class MainActivity extends Activity {
         base("Big Five • התוצאה שלך");
         LinearLayout c = card("הפרופיל", "הציונים מחושבים רק עבור שאלות שנענו; חסרות תשובות מסומנות.", TERRACOTTA);
         root.addView(c);
-        int total = 0;
         for (int i=0;i<5;i++) {
-            String key = oceanFactors[i];
             int sum = 0, count = 0;
-            for (int q=0;q<6;q++) if (ocean.containsKey(key)) { sum += ocean.get(key); count++; }
-            // Map stores the latest answer per factor; for this compact implementation, average the visible factor mean.
-            int value = count == 0 ? 0 : Math.round((sum/6f)/5f*100f);
-            total += value;
+            for (int q=0;q<6;q++) {
+                Integer answer = oceanAnswers.get(i*6+q);
+                if (answer != null) { sum += answer; count++; }
+            }
+            int value = count == 0 ? 0 : Math.round((sum/(float)(count*5))*100f);
             progressBar(c, oceanNames[i], value);
-            c.addView(tv(value==0 ? "עדיין חסרות תשובות" : "רמה: " + level(value), 14, MUTED));
+            c.addView(tv(count<6 ? "נענו " + count + " מתוך 6" : "רמה: " + level(value), 14, MUTED));
         }
         c.addView(tv("הערה: זהו כלי התבוננות עצמית, לא אבחון קליני.", 14, MUTED));
         root.addView(action("← חזרה", v -> showBigFive(), false));
@@ -360,7 +362,7 @@ public class MainActivity extends Activity {
         for (int i=0;i<hexacoQuestions.length;i++) {
             String key = String.valueOf(i/2);
             LinearLayout c = questionCard((i+1)+". "+hexacoQuestions[i]);
-            addScale(c, i, hexaco, key, false);
+            addScale(c, i, hexaco, hexacoAnswers, key, false);
         }
         root.addView(action("חשב תוצאה", v -> showHexacoResult(), true));
         root.addView(action("← חזרה", v -> showTests(), false));
@@ -386,7 +388,7 @@ public class MainActivity extends Activity {
         for (int i=0;i<riasecQuestions.length;i++) {
             String key = String.valueOf(i/2);
             LinearLayout c = questionCard((i+1)+". "+riasecQuestions[i]);
-            addScale(c, i, riasec, key, false);
+            addScale(c, i, riasec, riasecAnswers, key, false);
         }
         root.addView(action("חשב תוצאה", v -> showRiasecResult(), true));
         root.addView(action("← חזרה", v -> showTests(), false));
