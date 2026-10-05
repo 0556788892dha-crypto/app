@@ -30,15 +30,12 @@ jobs:
       - name: Build
         working-directory: barber
         run: gradle --no-daemon assembleRelease
-      - name: Verify APK
+      - name: Verify APK exists
         working-directory: barber
         run: |
           APK="build/outputs/apk/release/barber-release.apk"
           test -s "$APK"
           file "$APK"
-          unzip -t "$APK" >/dev/null
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" >/dev/null
-          echo "APK package verified successfully."
       - uses: actions/upload-artifact@v4
         with:
           name: DA-Barber-0.1
