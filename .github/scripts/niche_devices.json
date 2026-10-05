@@ -2535,5 +2535,614 @@
     "cellular": "5G",
     "nfc": "Not specified",
     "source": "Unihertz official product page"
+  },
+  {
+    "category": "laptop",
+    "brand": "Lenovo",
+    "name": "ThinkPad T16 Gen 5 AMD",
+    "image_url": "",
+    "image": "",
+    "summary": "16.00 inch • AMD Ryzen 5 PRO 215 • AMD Radeon 740M • 1.86 kg • Notebookcheck 87%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "87%",
+      "Review Date": "2026-06-10",
+      "Price": "1640 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "16.00 inch",
+          "Resolution": "1920 x 1200"
+        },
+        "Platform": {
+          "Processor": "AMD Ryzen 5 PRO 215",
+          "GPU": "AMD Radeon 740M"
+        },
+        "Body": {
+          "Weight": "1.86 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "MSI",
+    "name": "Prestige 16 AI+ C3MTG",
+    "image_url": "",
+    "image": "",
+    "summary": "16.00 inch • Intel Core Ultra X7 358H • Intel Arc B390 • 1.64 kg • Notebookcheck 87%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "87%",
+      "Review Date": "2026-05-07",
+      "Price": "2100 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "16.00 inch",
+          "Resolution": "2880 x 1800"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra X7 358H",
+          "GPU": "Intel Arc B390"
+        },
+        "Body": {
+          "Weight": "1.64 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Lenovo",
+    "name": "Legion 5 15IAX11",
+    "image_url": "",
+    "image": "",
+    "summary": "15.30 inch • Intel Core Ultra 7 251HX • NVIDIA GeForce RTX 5070 Laptop • 1.946 kg • Notebookcheck 87%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "87%",
+      "Review Date": "2026-08-29",
+      "Price": "2300 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "15.30 inch",
+          "Resolution": "2560 x 1600"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 7 251HX",
+          "GPU": "NVIDIA GeForce RTX 5070 Laptop"
+        },
+        "Body": {
+          "Weight": "1.946 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "HP",
+    "name": "EliteBook 8 G2a 16",
+    "image_url": "",
+    "image": "",
+    "summary": "16.00 inch • AMD Ryzen AI 7 450 • AMD Radeon 860M • 1.926 kg • Notebookcheck 87%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "87%",
+      "Review Date": "2026-09-21",
+      "Price": "2800 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "16.00 inch",
+          "Resolution": "1920 x 1200"
+        },
+        "Platform": {
+          "Processor": "AMD Ryzen AI 7 450",
+          "GPU": "AMD Radeon 860M"
+        },
+        "Body": {
+          "Weight": "1.926 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Asus",
+    "name": "ZenBook S16 UM5606GA",
+    "image_url": "",
+    "image": "",
+    "summary": "16.00 inch • AMD Ryzen AI 9 465 • AMD Radeon 880M • 1.529 kg • Notebookcheck 87%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "87%",
+      "Review Date": "2026-02-09",
+      "Price": "1799 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "16.00 inch",
+          "Resolution": "2880 x 1800"
+        },
+        "Platform": {
+          "Processor": "AMD Ryzen AI 9 465",
+          "GPU": "AMD Radeon 880M"
+        },
+        "Body": {
+          "Weight": "1.529 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Dell",
+    "name": "XPS 14 Core Ultra 7 355",
+    "image_url": "",
+    "image": "",
+    "summary": "14.00 inch • Intel Core Ultra 7 355 • Intel Graphics 4 Xe3 Panther Lake • 1.455 kg • Notebookcheck 85%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "85%",
+      "Review Date": "2026-02-14",
+      "Price": "1600 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "14.00 inch",
+          "Resolution": "1920 x 1200"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 7 355",
+          "GPU": "Intel Graphics 4 Xe3 Panther Lake"
+        },
+        "Body": {
+          "Weight": "1.455 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Dell",
+    "name": "Pro 7 14 P714265",
+    "image_url": "",
+    "image": "",
+    "summary": "14.00 inch • AMD Ryzen AI 9 HX PRO 470 • AMD Radeon 890M • 1.349 kg • Notebookcheck 85%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "85%",
+      "Review Date": "2026-07-21",
+      "Price": "4900 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "14.00 inch",
+          "Resolution": "1920 x 1200"
+        },
+        "Platform": {
+          "Processor": "AMD Ryzen AI 9 HX PRO 470",
+          "GPU": "AMD Radeon 890M"
+        },
+        "Body": {
+          "Weight": "1.349 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Asus",
+    "name": "ExpertBook PM3406",
+    "image_url": "",
+    "image": "",
+    "summary": "14.00 inch • AMD Ryzen AI 7 350 • AMD Radeon 860M • 1.443 kg • Notebookcheck 85%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "85%",
+      "Review Date": "2026-01-12",
+      "Price": "979 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "14.00 inch",
+          "Resolution": "1920 x 1200"
+        },
+        "Platform": {
+          "Processor": "AMD Ryzen AI 7 350",
+          "GPU": "AMD Radeon 860M"
+        },
+        "Body": {
+          "Weight": "1.443 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Dell",
+    "name": "Pro 7 14 P714260",
+    "image_url": "",
+    "image": "",
+    "summary": "14.00 inch • Intel Core Ultra 7 366H • Intel Graphics 4 Xe3 Panther Lake • 1.355 kg • Notebookcheck 85%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "85%",
+      "Review Date": "2026-09-08",
+      "Price": "4900 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "14.00 inch",
+          "Resolution": "1920 x 1200"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 7 366H",
+          "GPU": "Intel Graphics 4 Xe3 Panther Lake"
+        },
+        "Body": {
+          "Weight": "1.355 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Lenovo",
+    "name": "ThinkBook 14x",
+    "image_url": "",
+    "image": "",
+    "summary": "14.00 inch • Intel Core Ultra 5 226V • Intel Arc Graphics 130V • 1.013 kg • Notebookcheck 85%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "85%",
+      "Review Date": "2026-09-25",
+      "Price": "949 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "14.00 inch",
+          "Resolution": "1920 x 1200"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 5 226V",
+          "GPU": "Intel Arc Graphics 130V"
+        },
+        "Body": {
+          "Weight": "1.013 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Apple",
+    "name": "MacBook Pro 14 2026 M5 Max",
+    "image_url": "",
+    "image": "",
+    "summary": "14.20 inch • Apple M5 Max • 40-Core GPU • 1.613 kg • Notebookcheck 90%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "90%",
+      "Review Date": "2026-07-05",
+      "Price": "8589 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "14.20 inch",
+          "Resolution": "3024 x 1964"
+        },
+        "Platform": {
+          "Processor": "Apple M5 Max",
+          "GPU": "40-Core GPU"
+        },
+        "Body": {
+          "Weight": "1.613 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Asus",
+    "name": "ROG Zephyrus G16 2026",
+    "image_url": "",
+    "image": "",
+    "summary": "16.00 inch • Intel Core Ultra 9 386H • NVIDIA GeForce RTX 5090 Laptop • 1.95 kg • Notebookcheck 90%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "90%",
+      "Review Date": "2026-09-07",
+      "Price": "",
+      "specifications": {
+        "Display": {
+          "Size": "16.00 inch",
+          "Resolution": "2560 x 1600"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 9 386H",
+          "GPU": "NVIDIA GeForce RTX 5090 Laptop"
+        },
+        "Body": {
+          "Weight": "1.95 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Lenovo",
+    "name": "ThinkPad T1g Gen 8",
+    "image_url": "",
+    "image": "",
+    "summary": "16.00 inch • Intel Core Ultra 9 285H • NVIDIA GeForce RTX 5070 Laptop • 1.911 kg • Notebookcheck 84%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "84%",
+      "Review Date": "2026-09-08",
+      "Price": "4500 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "16.00 inch",
+          "Resolution": "3200 x 2000"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 9 285H",
+          "GPU": "NVIDIA GeForce RTX 5070 Laptop"
+        },
+        "Body": {
+          "Weight": "1.911 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Acer",
+    "name": "Predator Helios Neo 16S AI",
+    "image_url": "",
+    "image": "",
+    "summary": "16.00 inch • Intel Core Ultra 9 275HX • NVIDIA GeForce RTX 5070 Ti Laptop • 2.19 kg • Notebookcheck 82%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "82%",
+      "Review Date": "2026-01-14",
+      "Price": "2400 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "16.00 inch",
+          "Resolution": "2560 x 1600"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 9 275HX",
+          "GPU": "NVIDIA GeForce RTX 5070 Ti Laptop"
+        },
+        "Body": {
+          "Weight": "2.19 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Dell",
+    "name": "16S DS16260",
+    "image_url": "",
+    "image": "",
+    "summary": "16.00 inch • Intel Core Ultra 7 355 • Intel Graphics 4 Xe3 Panther Lake • 1.802 kg • Notebookcheck 82%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "82%",
+      "Review Date": "2026-08-18",
+      "Price": "1700 EUR",
+      "specifications": {
+        "Display": {
+          "Size": "16.00 inch",
+          "Resolution": "2880 x 1800"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 7 355",
+          "GPU": "Intel Graphics 4 Xe3 Panther Lake"
+        },
+        "Body": {
+          "Weight": "1.802 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Lenovo",
+    "name": "Pro 9 16IPH11 RTX 5070",
+    "image_url": "",
+    "image": "",
+    "summary": "16.00 inch • Intel Core Ultra 9 386H • NVIDIA GeForce RTX 5070 Laptop • 1.93 kg • Notebookcheck 97%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "97%",
+      "Review Date": "2026-06-23",
+      "Price": "",
+      "specifications": {
+        "Display": {
+          "Size": "16.00 inch",
+          "Resolution": "3200 x 2000"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 9 386H",
+          "GPU": "NVIDIA GeForce RTX 5070 Laptop"
+        },
+        "Body": {
+          "Weight": "1.93 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Gigabyte",
+    "name": "Aero X16 2WHA",
+    "image_url": "",
+    "image": "",
+    "summary": "16.00 inch • AMD Ryzen AI 9 HX 370 • NVIDIA GeForce RTX 5070 Laptop • 1.9 kg • Notebookcheck 90%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "90%",
+      "Review Date": "2026-06-28",
+      "Price": "",
+      "specifications": {
+        "Display": {
+          "Size": "16.00 inch",
+          "Resolution": "2560 x 1600"
+        },
+        "Platform": {
+          "Processor": "AMD Ryzen AI 9 HX 370",
+          "GPU": "NVIDIA GeForce RTX 5070 Laptop"
+        },
+        "Body": {
+          "Weight": "1.9 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Acer",
+    "name": "Predator Helios Neo 16 PHN16-72",
+    "image_url": "",
+    "image": "",
+    "summary": "16.00 inch • Intel Core i7-14650HX • NVIDIA GeForce RTX 4060 Laptop • 2.5 kg • Notebookcheck 69%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "69%",
+      "Review Date": "2026-01-01",
+      "Price": "",
+      "specifications": {
+        "Display": {
+          "Size": "16.00 inch",
+          "Resolution": "2560 x 1600"
+        },
+        "Platform": {
+          "Processor": "Intel Core i7-14650HX",
+          "GPU": "NVIDIA GeForce RTX 4060 Laptop"
+        },
+        "Body": {
+          "Weight": "2.5 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Asus",
+    "name": "ZenBook 14 OLED UX3405CA",
+    "image_url": "",
+    "image": "",
+    "summary": "14.00 inch • Intel Core Ultra 7 255H • Intel Arc Graphics 140T • 1.288 kg • Notebookcheck 88%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "88%",
+      "Review Date": "2026-01-01",
+      "Price": "",
+      "specifications": {
+        "Display": {
+          "Size": "14.00 inch",
+          "Resolution": "1920 x 1200"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 7 255H",
+          "GPU": "Intel Arc Graphics 140T"
+        },
+        "Body": {
+          "Weight": "1.288 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "MSI",
+    "name": "Prestige 13 AI+ A3MG",
+    "image_url": "",
+    "image": "",
+    "summary": "13.30 inch • Intel Core Ultra 9 386H • Intel Graphics 4 Xe3 • 0.888 kg • Notebookcheck 88%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "88%",
+      "Review Date": "2026-01-01",
+      "Price": "",
+      "specifications": {
+        "Display": {
+          "Size": "13.30 inch",
+          "Resolution": "2880 x 1800"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 9 386H",
+          "GPU": "Intel Graphics 4 Xe3"
+        },
+        "Body": {
+          "Weight": "0.888 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
+  },
+  {
+    "category": "laptop",
+    "brand": "Lenovo",
+    "name": "ThinkPad X1 Carbon Gen 13 Aura Edition",
+    "image_url": "",
+    "image": "",
+    "summary": "14.00 inch • Intel Core Ultra 7 258V • Intel Arc 140V • ~0.986 kg • Notebookcheck 91%",
+    "detail": {
+      "category": "laptop",
+      "Notebookcheck Score": "91%",
+      "Review Date": "2025-01-01",
+      "Price": "",
+      "specifications": {
+        "Display": {
+          "Size": "14.00 inch",
+          "Resolution": "2880 x 1800"
+        },
+        "Platform": {
+          "Processor": "Intel Core Ultra 7 258V",
+          "GPU": "Intel Arc 140V"
+        },
+        "Body": {
+          "Weight": "~0.986 kg"
+        }
+      },
+      "source_page": "Notebookcheck Laptop Search"
+    },
+    "source": "Notebookcheck"
   }
 ]
