@@ -141,7 +141,7 @@ public class MainActivity extends Activity {
                     JSONObject d=x.optJSONObject("detail");
                     String flat=flat(d);
                     p.detailRaw=d==null?"":flat;
-                    p.score=score(p.summary+" "+flat);
+                    p.score=x.has("score")?x.optDouble("score",score(p.summary+" "+flat)):score(p.summary+" "+flat);
                     p.screenSize=screenFromObject(d,p.summary);
                     p.searchText=(p.brand+" "+p.name+" "+p.summary+" "+compactSearch(d)).toLowerCase(Locale.ROOT);
                     if(!p.brand.isEmpty()&&!p.name.isEmpty()&&keys.add(key(p)+"|"+p.category))loaded.add(p);
@@ -217,14 +217,14 @@ public class MainActivity extends Activity {
     }
 
     void ui(){
-        root=new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL); root.setPadding(dp(10),dp(8),dp(10),0);
+        root=new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL); root.setPadding(dp(10),dp(8),dp(10),dp(2));
         root.setAlpha(0f);
         root.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,
-                new int[]{Color.rgb(244,248,252),Color.WHITE}));
+                new int[]{Color.rgb(9,14,22),Color.rgb(19,27,39)}));
 
         LinearLayout top=new LinearLayout(this); top.setGravity(Gravity.CENTER_VERTICAL);
         TextView title=txt(activeTab==0?"מכשירים":activeTab==1?"השוואה":activeTab==2?"תוספות":"הגדרות",22,true);
-        title.setTextColor(Color.rgb(18,48,76)); top.addView(title,new LinearLayout.LayoutParams(0,-2,1));
+        title.setTextColor(Color.rgb(235,242,249)); top.addView(title,new LinearLayout.LayoutParams(0,-2,1));
         root.addView(top);
 
         if(activeTab==0) buildDevices();
@@ -243,10 +243,11 @@ public class MainActivity extends Activity {
         search=new EditText(this);
         search.setSingleLine(true); search.setHint("חיפוש דגם, מותג, מעבד או מפרט…");
         search.setTextSize(15*scale); search.setPadding(dp(14),dp(10),dp(14),dp(10));
-        search.setBackground(roundBg(Color.WHITE,dp(12),Color.rgb(210,220,230)));
+        search.setTextColor(Color.rgb(235,242,249)); search.setHintTextColor(Color.rgb(145,160,179));
+        search.setBackground(roundBg(Color.rgb(25,34,48),dp(12),Color.rgb(65,83,107)));
         root.addView(search,new LinearLayout.LayoutParams(-1,dp(50)));
         category=new Spinner(this); category.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,
-                new String[]{"כל הקטגוריות","טלפונים","טאבלטים","שעונים חכמים"}));
+                new String[]{"כל הקטגוריות","טלפונים","טאבלטים","שעונים חכמים","מחשבים ניידים"}));
         brand=new Spinner(this); brands();
         sort=new Spinner(this); sort.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,
                 new String[]{"מיון: מותג ודגם","מיון: דירוג DA","מיון: גודל מסך"}));
@@ -256,7 +257,7 @@ public class MainActivity extends Activity {
         filters.addView(brand,new LinearLayout.LayoutParams(0,dp(42),1));
         filters.addView(sort,new LinearLayout.LayoutParams(0,dp(42),1));
         root.addView(filters);
-        status=txt("",12,false);status.setTextColor(Color.rgb(80,95,110));root.addView(status);
+        status=txt("",12,false);status.setTextColor(Color.rgb(155,171,191));root.addView(status);
         list=new ListView(this);
         list.setDivider(new ColorDrawable(Color.TRANSPARENT));
         list.setDividerHeight(dp(10));
@@ -279,13 +280,13 @@ public class MainActivity extends Activity {
         box.setPadding(0,dp(6),0,dp(10));
 
         TextView intro=txt("השוואת מכשירים",21,true);
-        intro.setTextColor(Color.rgb(16,78,121));
+        intro.setTextColor(Color.rgb(118,196,255));
         box.addView(intro);
 
         TextView info=txt(compare.isEmpty()
             ?"בחר עד 4 מכשירים במסך המכשירים כדי להשוות ביניהם."
             :"הצגה מסודרת לפי קטגוריות. הנתון החזק ביותר בכל שורה מודגש בירוק.",14,false);
-        info.setTextColor(Color.rgb(82,100,116));
+        info.setTextColor(Color.rgb(158,175,196));
         info.setPadding(0,dp(6),0,dp(12));
         box.addView(info);
 
@@ -306,16 +307,16 @@ public class MainActivity extends Activity {
             for(Phone p:compare){
                 TextView chip=txt("✓ "+p.brand+" "+p.name,12,true);
                 chip.setGravity(Gravity.CENTER);
-                chip.setTextColor(Color.rgb(16,78,121));
+                chip.setTextColor(Color.rgb(216,232,245));
                 chip.setPadding(dp(7),dp(7),dp(7),dp(7));
-                chip.setBackground(roundBg(Color.rgb(236,245,252),dp(12),Color.rgb(190,211,228)));
+                chip.setBackground(roundBg(Color.rgb(29,48,66),dp(12),Color.rgb(69,99,128)));
                 LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(0,dp(40),1);
                 cp.setMargins(dp(3),0,dp(3),0);
                 selected.addView(chip,cp);
             }
             box.addView(selected);
 
-            box.addView(buildCompareTable(),new LinearLayout.LayoutParams(-1,0,1));
+            ScrollView compareVertical=new ScrollView(this); compareVertical.setFillViewport(true); compareVertical.addView(buildCompareTable(),new ScrollView.LayoutParams(-1,-2)); box.addView(compareVertical,new LinearLayout.LayoutParams(-1,0,1));
 
             Button clear=actionButton("נקה השוואה");
             clear.setOnClickListener(v->{compare.clear();ui();});
@@ -332,12 +333,12 @@ public class MainActivity extends Activity {
 
         ArrayList<String> fields=new ArrayList<>();
         Collections.addAll(fields,
-            "דירוג DA","מסך","רזולוציה","ערכת שבבים","RAM","אחסון",
-            "מצלמה אחורית","מצלמה קדמית","סוללה","טעינה","5G","NFC",
-            "Wi‑Fi","Bluetooth","GPS","משקל","מידות","מערכת הפעלה");
+            "קטגוריה","דירוג DA","Notebookcheck","מסך","רזולוציה","מעבד / SoC","GPU","RAM","אחסון",
+            "קצב רענון","מצלמה אחורית","מצלמה קדמית","סוללה","טעינה","5G","NFC",
+            "Wi‑Fi","Bluetooth","GPS","משקל","מידות","מערכת הפעלה","יציאות");
 
         TableRow header=new TableRow(this);
-        header.setBackground(roundBg(Color.rgb(16,78,121),dp(12),Color.rgb(16,78,121)));
+        header.setBackground(roundBg(Color.rgb(28,111,161),dp(12),Color.rgb(54,137,184)));
         addTableCell(header,"נתון",true,false);
         for(Phone p:compare)addTableCell(header,p.brand+"\n"+p.name,true,false);
         table.addView(header,new TableLayout.LayoutParams(-2,-2));
@@ -345,8 +346,8 @@ public class MainActivity extends Activity {
         for(int rowIndex=0;rowIndex<fields.size();rowIndex++){
             String field=fields.get(rowIndex);
             TableRow row=new TableRow(this);
-            int bg=(rowIndex%2==0)?Color.WHITE:Color.rgb(247,250,253);
-            row.setBackground(roundBg(bg,dp(9),Color.rgb(222,230,237)));
+            int bg=(rowIndex%2==0)?Color.rgb(24,33,46):Color.rgb(20,29,41);
+            row.setBackground(roundBg(bg,dp(9),Color.rgb(57,73,94)));
             addTableCell(row,field,true,false);
             double best=bestMetric(field);
             for(Phone p:compare){
@@ -369,13 +370,13 @@ public class MainActivity extends Activity {
     void addTableCell(TableRow row,String value,boolean header,boolean winner){
         TextView cell=txt(value,header?14:13,header);
         cell.setGravity(Gravity.CENTER);
-        cell.setTextColor(header?Color.WHITE:(winner?Color.rgb(25,98,52):Color.rgb(35,55,72)));
+        cell.setTextColor(header?Color.WHITE:(winner?Color.rgb(126,226,165):Color.rgb(216,226,238)));
         cell.setPadding(dp(9),dp(9),dp(9),dp(9));
         cell.setMinHeight(dp(52));
         cell.setMaxWidth(dp(220));
         cell.setBackground(roundBg(
-            header?Color.rgb(16,78,121):(winner?Color.rgb(224,246,231):Color.WHITE),
-            dp(9),header?Color.rgb(16,78,121):(winner?Color.rgb(154,211,169):Color.rgb(224,230,236))
+            header?Color.rgb(28,111,161):(winner?Color.rgb(27,65,50):Color.rgb(28,39,53)),
+            dp(9),header?Color.rgb(54,137,184):(winner?Color.rgb(74,146,105):Color.rgb(61,78,100))
         ));
         TableRow.LayoutParams lp=new TableRow.LayoutParams(dp(156),-2);
         lp.setMargins(dp(3),dp(2),dp(3),dp(2));
@@ -383,16 +384,21 @@ public class MainActivity extends Activity {
     }
 
     String findCompare(Phone p,String field){
+        if(field.equals("קטגוריה"))return catLabel(p.category);
         if(field.equals("דירוג DA"))return Math.round(p.score)+"/100";
+        if(field.equals("Notebookcheck"))return extractNotebookcheck(p);
         if(field.equals("מסך"))return spec(p,"Display","Size","screen_size");
         if(field.equals("רזולוציה"))return spec(p,"Display","Resolution","resolution");
         if(field.equals("ערכת שבבים"))return spec(p,"Platform","Chipset","chipset");
+        if(field.equals("מעבד / SoC"))return firstSpec(p,"Platform","Processor","chipset");
+        if(field.equals("GPU"))return firstSpec(p,"Platform","GPU","gpu");
         if(field.equals("RAM"))return extractRam(p);
         if(field.equals("אחסון"))return extractStorage(p);
         if(field.equals("מצלמה אחורית"))return extractCamera(p,false);
         if(field.equals("מצלמה קדמית"))return extractCamera(p,true);
         if(field.equals("סוללה"))return spec(p,"Battery","Type","battery_capacity");
         if(field.equals("טעינה"))return spec(p,"Battery","Charging","charging_w");
+        if(field.equals("קצב רענון"))return firstSpec(p,"Display","Refresh Rate","refresh_rate");
         if(field.equals("5G"))return hasFeature(p,"5G");
         if(field.equals("NFC"))return hasFeature(p,"NFC");
         if(field.equals("Wi‑Fi"))return firstSpec(p,"Wi-Fi","wifi","WiFi");
@@ -400,6 +406,7 @@ public class MainActivity extends Activity {
         if(field.equals("GPS"))return firstSpec(p,"GPS","gps","GPS");
         if(field.equals("משקל"))return spec(p,"Body","Weight","weight_g");
         if(field.equals("מידות"))return spec(p,"Body","Dimensions","dimensions");
+        if(field.equals("יציאות"))return firstSpec(p,"Connectivity","Ports","ports");
         if(field.equals("מערכת הפעלה"))return spec(p,"","os","os");
         return "לא צוין";
     }
@@ -441,6 +448,11 @@ public class MainActivity extends Activity {
         java.util.regex.Matcher mm=pat.matcher(raw);
         if(mm.find())return mm.group(1)+" MP";
         return "לא צוין";
+    }
+
+    String extractNotebookcheck(Phone p){
+        JSONObject d=parseDetail(p); if(d==null)return "—";
+        String v=d.optString("Notebookcheck Score","").trim(); return v.isEmpty()?"—":v;
     }
 
     String firstSpec(Phone p,String group,String key1,String key2){
@@ -809,7 +821,7 @@ public class MainActivity extends Activity {
         b.setGravity(Gravity.CENTER);
         b.setSingleLine(true);
         b.setEllipsize(null);
-        b.setTextColor(Color.rgb(13,69,101));
+        b.setTextColor(Color.rgb(210,228,242));
         b.setPadding(dp(9),0,dp(9),0);
         b.setMinHeight(0);
         b.setMinWidth(0);
@@ -817,7 +829,7 @@ public class MainActivity extends Activity {
         b.setMinimumWidth(0);
         b.setIncludeFontPadding(false);
         b.setTypeface(Typeface.create("sans-serif-medium",Typeface.NORMAL));
-        b.setBackground(roundBg(Color.rgb(239,247,252),dp(14),Color.rgb(183,208,224)));
+        b.setBackground(roundBg(Color.rgb(29,44,61),dp(14),Color.rgb(69,103,132)));
         b.setMinimumHeight(dp(48));
         b.setHeight(dp(48));
         return b;
@@ -864,7 +876,7 @@ public class MainActivity extends Activity {
             card.setOrientation(LinearLayout.HORIZONTAL);
             card.setPadding(dp(12),dp(11),dp(12),dp(11));
             card.setGravity(Gravity.CENTER_VERTICAL);
-            card.setBackground(roundBg(Color.WHITE,dp(16),Color.rgb(216,226,235)));
+            card.setBackground(roundBg(Color.rgb(24,33,46),dp(16),Color.rgb(57,74,97)));
 
             pic=new ImageView(MainActivity.this);
             pic.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
@@ -875,11 +887,11 @@ public class MainActivity extends Activity {
             box.setPadding(dp(8),dp(2),dp(4),dp(2));
 
             title=txt("",16,true);
-            title.setTextColor(Color.rgb(16,50,78));
+            title.setTextColor(Color.rgb(232,240,248));
             box.addView(title);
 
             desc=txt("",13,false);
-            desc.setTextColor(Color.rgb(76,89,104));
+            desc.setTextColor(Color.rgb(169,184,202));
             box.addView(desc);
 
             actions=new LinearLayout(MainActivity.this);
@@ -908,9 +920,9 @@ public class MainActivity extends Activity {
         v.setGravity(Gravity.CENTER);
         v.setSingleLine(true);
         v.setIncludeFontPadding(false);
-        v.setTextColor(Color.rgb(12,58,92));
+        v.setTextColor(Color.rgb(207,224,239));
         v.setPadding(dp(3),0,dp(3),0);
-        v.setBackground(roundBg(Color.rgb(248,251,253),dp(11),Color.rgb(194,209,222)));
+        v.setBackground(roundBg(Color.rgb(30,43,58),dp(11),Color.rgb(67,86,110)));
         v.setClickable(true);
         v.setFocusable(true);
         return v;
@@ -1109,8 +1121,8 @@ public class MainActivity extends Activity {
         return x;
     }
 
-    String catLabel(String c){return c.equals("tablet")?"טאבלטים":c.equals("watch")?"שעונים חכמים":c.equals("all")?"כל הקטגוריות":"טלפונים";}
-    String catValue(){if(category==null||category.getSelectedItem()==null)return "all";String x=String.valueOf(category.getSelectedItem());if(x.equals("טלפונים"))return "phone";if(x.equals("טאבלטים"))return "tablet";if(x.equals("שעונים חכמים"))return "watch";return "all";}
+    String catLabel(String c){return c.equals("tablet")?"טאבלטים":c.equals("watch")?"שעונים חכמים":c.equals("laptop")?"מחשבים ניידים":c.equals("all")?"כל הקטגוריות":"טלפונים";}
+    String catValue(){if(category==null||category.getSelectedItem()==null)return "all";String x=String.valueOf(category.getSelectedItem());if(x.equals("טלפונים"))return "phone";if(x.equals("טאבלטים"))return "tablet";if(x.equals("שעונים חכמים"))return "watch";if(x.equals("מחשבים ניידים"))return "laptop";return "all";}
 
     void brands(){
         if(brand==null){brand=new Spinner(this);}
@@ -1184,7 +1196,7 @@ public class MainActivity extends Activity {
         version.setTextColor(Color.rgb(70,88,105));
         box.addView(version);
 
-        TextView rights=txt("© 2026 DA DIGITAL — כל הזכויות שמורות\\nתאריך הוצאה: 04/10/2026",13,false);
+        TextView rights=txt("© 2026 DA DIGITAL — כל הזכויות שמורות\\nתאריך הוצאה: 05/10/2026",13,false);
         rights.setGravity(Gravity.CENTER);
         rights.setPadding(0,dp(4),0,dp(12));
         box.addView(rights);
@@ -1194,14 +1206,14 @@ public class MainActivity extends Activity {
         box.addView(intro);
 
         TextView changes=txt(
-            "מה חדש בגרסה 1.43\n"+
+            "מה חדש בגרסה 2.0\n"+
             "• מסך פתיחה חדש עם סמל DA DIGITAL\n"+
             "• איור מכשירים משודרג ומראה מודרני יותר\n"+
             "• שדרוג הגדרות ותיקון מסך ההגדרות\n"+
             "• לשוניות ניווט עם סמלים ברורים\n"+
             "• לשונית תוספות עם דירוגים ומילון מושגים מורחב\n"+
             "• שיפור טעינת תמונות מכשירים מקומיות ועבודה מלאה אופליין\n"+
-            "• תיקון מיזוג נתוני הנישה כך שמפרט מלא גובר על נתון גיבוי\n\n"+
+            "• תיקון מיזוג נתוני הנישה כך שמפרט מלא גובר על נתון גיבוי\n• השוואה עם גלילה אנכית ואופקית וכל שורות המפרט\n• עיצוב כהה ומודרני חדש\n• קטגוריית מחשבים ניידים המבוססת על Notebookcheck\n\n"+
             "גרסה 1.42\n"+
             "• מאגר מכשירים אופליין\n"+
             "• חיפוש וסינון לפי קטגוריה ומותג\n"+
