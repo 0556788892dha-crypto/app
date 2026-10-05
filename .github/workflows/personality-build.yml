@@ -2,6 +2,8 @@ name: Build DA Personality
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
     paths:
       - "personality/**"
       - ".github/workflows/personality-build.yml"
