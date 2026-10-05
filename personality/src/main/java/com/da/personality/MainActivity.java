@@ -27,12 +27,9 @@ public class MainActivity extends Activity {
     private static final int REQ_CAMERA = 1101;
     private LinearLayout root;
     private BitmapHolder faceBitmap = new BitmapHolder();
-    private final Map<String, Integer> ocean = new LinkedHashMap<>();
-    private final Map<String, Integer> hexaco = new LinkedHashMap<>();
     private final Map<Integer, Integer> oceanAnswers = new HashMap<>();
     private final Map<Integer, Integer> hexacoAnswers = new HashMap<>();
     private final Map<Integer, Integer> riasecAnswers = new HashMap<>();
-    private final Map<String, Integer> riasec = new LinkedHashMap<>();
     private final Map<Integer, Integer> mbti = new HashMap<>();
     private final Set<String> imageChoices = new LinkedHashSet<>();
     private final Map<Integer, Integer> situationAnswers = new HashMap<>();
@@ -328,7 +325,7 @@ public class MainActivity extends Activity {
         return c;
     }
 
-    private void addScale(LinearLayout c, int questionIndex, Map<String,Integer> target, Map<Integer,Integer> answers, String key, boolean reverse) {
+    private void addScale(LinearLayout c, int questionIndex, Map<Integer,Integer> answers, boolean reverse) {
         String[] labels = {"1 • בכלל לא","2 • מעט","3 • באמצע","4 • די מתאים","5 • מאוד מתאים"};
         RadioGroup rg = new RadioGroup(this);
         rg.setOrientation(LinearLayout.VERTICAL);
@@ -346,7 +343,6 @@ public class MainActivity extends Activity {
             if (checkedId == -1) return;
             RadioButton chosen = group.findViewById(checkedId);
             int v = Integer.parseInt(chosen.getText().toString().substring(0,1));
-            target.put(key, (target.getOrDefault(key,0) == 0 ? (reverse ? 6-v : v) : target.get(key)));
             answers.put(questionIndex, reverse ? 6-v : v);
         });
         c.addView(rg);
@@ -358,7 +354,7 @@ public class MainActivity extends Activity {
         for (int i=0;i<30;i++) {
             String key = oceanFactors[i/6];
             LinearLayout c = questionCard((i+1)+". "+oceanQuestions[i]);
-            addScale(c, i, ocean, oceanAnswers, key, oceanReverse[i]);
+            addScale(c, i, oceanAnswers, oceanReverse[i]);
         }
         root.addView(action("חשב תוצאה", v -> showBigFiveResult(), true));
         root.addView(action("← חזרה", v -> showTests(), false));
@@ -408,7 +404,7 @@ public class MainActivity extends Activity {
         for (int i=0;i<hexacoQuestions.length;i++) {
             String key = String.valueOf(i/2);
             LinearLayout c = questionCard((i+1)+". "+hexacoQuestions[i]);
-            addScale(c, i, hexaco, hexacoAnswers, key, false);
+            addScale(c, i, hexacoAnswers, false);
         }
         root.addView(action("חשב תוצאה", v -> showHexacoResult(), true));
         root.addView(action("← חזרה", v -> showTests(), false));
@@ -438,7 +434,7 @@ public class MainActivity extends Activity {
         for (int i=0;i<riasecQuestions.length;i++) {
             String key = String.valueOf(i/2);
             LinearLayout c = questionCard((i+1)+". "+riasecQuestions[i]);
-            addScale(c, i, riasec, riasecAnswers, key, false);
+            addScale(c, i, riasecAnswers, false);
         }
         root.addView(action("חשב תוצאה", v -> showRiasecResult(), true));
         root.addView(action("← חזרה", v -> showTests(), false));
@@ -521,7 +517,8 @@ public class MainActivity extends Activity {
                     }
                 }, false);
                 buttons[option]=b;
-                if (situationAnswers.getOrDefault(qIndex,-1)==option) {
+                Integer selected=situationAnswers.get(qIndex);
+                if (selected!=null && selected==option) {
                     b.setText("✓ "+qs[qi][j]);
                     b.setBackground(bg(PEACH,34));
                 }
@@ -556,7 +553,7 @@ public class MainActivity extends Activity {
         root.addView(action("הצג נטייה", v -> {
             String type = "";
             String[] left={"E","S","T","J"}, right={"I","N","F","P"};
-            for(int i=0;i<4;i++) type += mbti.getOrDefault(i,0)==1?right[i]:left[i];
+            for(int i=0;i<4;i++) { Integer chosen=mbti.get(i); type += (chosen!=null && chosen==1)?right[i]:left[i]; }
             showTextResult("MBTI-style", "הנטייה שסומנה: "+type+"\\n\\nזו תווית רפלקטיבית בלבד, לא אבחון.", false);
         }, true));
         root.addView(action("← חזרה", v -> showTests(), false));
@@ -747,7 +744,7 @@ public class MainActivity extends Activity {
         reflective.addView(tv("מצבים שנענו: "+situationAnswers.size()+" מתוך 8",15,BROWN));
         if (!mbti.isEmpty()) {
             String type=""; String[] left={"E","S","T","J"}, right={"I","N","F","P"};
-            for(int i=0;i<4;i++) type += mbti.getOrDefault(i,0)==1?right[i]:left[i];
+            for(int i=0;i<4;i++) { Integer chosen=mbti.get(i); type += (chosen!=null && chosen==1)?right[i]:left[i]; }
             reflective.addView(tv("MBTI-style: "+type+" • "+mbti.size()+" מתוך 4 צירים",15,BROWN));
         } else reflective.addView(tv("MBTI-style: עדיין לא מולא.",15,BROWN));
         root.addView(reflective);
