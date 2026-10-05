@@ -23,3 +23,5 @@ Facial measurements are presented as visual measurements only. Traditional face-
 - Small-screen friendly vertical layout
 - Warm skin/peach/terracotta visual palette
 - Evidence labels to distinguish research-oriented vs reflective vs entertainment methods
+
+Final CI validation marker: 1.2.
