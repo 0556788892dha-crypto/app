@@ -3,6 +3,8 @@
     <application
         android:theme="@style/AppTheme"
         android:label="DA Personality"
+        android:icon="@drawable/ic_da_personality"
+        android:roundIcon="@drawable/ic_da_personality"
         android:allowBackup="false"
         android:supportsRtl="true">
         <activity android:name=".MainActivity" android:screenOrientation="portrait" android:exported="true">
