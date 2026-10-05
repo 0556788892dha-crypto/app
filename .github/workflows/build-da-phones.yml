@@ -1,10 +1,9 @@
 name: Build DA DIGITAL APK
-# v2.1 verification pipeline
 permissions:
   contents: write
 
 concurrency:
-  group: da-phones-build-${{ github.ref }}
+  group: da-digital-build-${{ github.ref }}
   cancel-in-progress: true
 
 on:
@@ -20,42 +19,97 @@ on:
       - '.github/scripts/build_catalog.py'
       - '.github/scripts/audit_catalog.py'
       - '.github/scripts/niche_devices.json'
+
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+
       - name: Get GSMArena scraped dataset
         run: git clone --depth 1 https://github.com/bytecharts/device_specs_gsmarena.git .cache/device_specs_gsmarena
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+
       - name: Install image tooling
         run: python -m pip install --disable-pip-version-check pillow
+
       - name: Build offline catalog
         run: python .github/scripts/build_catalog.py
+
       - name: Audit catalog
         run: python .github/scripts/audit_catalog.py
+
+      - name: Verify embedded offline catalog
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s phonecatalog/src/main/assets/catalog.json
+          BYTES=$(wc -c < phonecatalog/src/main/assets/catalog.json)
+          echo "catalog.json bytes=$BYTES"
+          test "$BYTES" -gt 1000000
+          python - <<'PY'
+          import json
+          p="phonecatalog/src/main/assets/catalog.json"
+          d=json.load(open(p,encoding="utf-8"))
+          n=len(d.get("phones",[]))
+          print("catalog devices=",n)
+          assert n >= 10000, f"Catalog unexpectedly small: {n}"
+          PY
+
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
+
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Build APK
-        run: gradle :phonecatalog:assembleRelease --stacktrace
-      - name: Validate APK
+
+      - name: Build release APK
+        run: gradle :phonecatalog:clean :phonecatalog:assembleRelease --stacktrace
+
+      - name: Validate APK completely
         shell: bash
         run: |
           set -euo pipefail
           APK=$(find phonecatalog/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | head -n 1)
           test -n "$APK"
           test -s "$APK"
+
+          echo "APK=$APK"
+          ls -lh "$APK"
+
           AAPT=$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)
-          "$AAPT" dump badging "$APK" | grep -q "package: name='com.da.phones'"
+          ZIPALIGN=$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -n 1)
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)
+
+          "$AAPT" dump badging "$APK" | tee apk-badging.txt
+          grep -q "package: name='com.da.phones'"
+          grep -q "versionName='2.2'"
+          grep -q "sdkVersion:'23'"
+          grep -q "targetSdkVersion:'35'"
+
+          "$ZIPALIGN" -c -v 4 "$APK"
+          "$APKSIGNER" verify --verbose --print-certs "$APK"
+
+          # A valid DA DIGITAL offline build must not collapse to a tiny empty APK.
+          APK_BYTES=$(stat -c%s "$APK")
+          echo "apk_bytes=$APK_BYTES"
+          test "$APK_BYTES" -gt 10000000
+
           sha256sum "$APK" | tee DA-DIGITAL-SHA256.txt
+
+      - name: Prepare final APK filename
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=$(find phonecatalog/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | head -n 1)
+          cp "$APK" "DA-DIGITAL-v2.2.apk"
+          sha256sum "DA-DIGITAL-v2.2.apk" | tee DA-DIGITAL-v2.2-SHA256.txt
 
       - name: Publish direct APK release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -64,17 +118,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          APK=$(find phonecatalog/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' | head -n 1)
-          if gh release view da-digital-v2.1 >/dev/null 2>&1; then
-            gh release upload da-digital-v2.0 "$APK" DA-DIGITAL-SHA256.txt --clobber
+          TAG="da-digital-v2.2"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "DA-DIGITAL-v2.2.apk" "DA-DIGITAL-v2.2-SHA256.txt" --clobber
           else
-            gh release create da-digital-v2.0 "$APK" DA-DIGITAL-SHA256.txt \
-              --title "DA DIGITAL v2.0" \
-              --notes "Verified offline DA DIGITAL APK. Built by GitHub Actions from the repository source."
+            gh release create "$TAG" "DA-DIGITAL-v2.2.apk" "DA-DIGITAL-v2.2-SHA256.txt"               --title "DA DIGITAL v2.2"               --notes "Verified offline DA DIGITAL APK. Catalog is embedded locally; no network is required for normal catalog browsing."
           fi
 
       - uses: actions/upload-artifact@v4
         with:
-          name: DA-DIGITAL-offline-release-v2.0
-          path: phonecatalog/build/outputs/apk/release/*.apk
+          name: DA-DIGITAL-v2.2-offline-release
+          path: |
+            DA-DIGITAL-v2.2.apk
+            DA-DIGITAL-v2.2-SHA256.txt
           if-no-files-found: error
