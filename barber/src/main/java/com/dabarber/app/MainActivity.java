@@ -506,9 +506,6 @@ public class MainActivity extends Activity {
             target.setText(String.format(Locale.US,"%02d:%02d",h,m));
             target.setTextColor(text);
         },hour,minute,true);
-        dlg.setOnShowListener(x->{
-            try{dlg.getTimePicker().setIs24HourView(true);}catch(Exception ignored){}
-        });
         dlg.show();
     }
 
