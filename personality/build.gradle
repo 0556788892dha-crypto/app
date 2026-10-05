@@ -7,11 +7,14 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId 'com.da.personality'
+        applicationId 'com.da.personality.final'
         minSdk 23
         targetSdk 35
         versionCode 3
-        versionName '1.2'
+        versionName '1.3'
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
     }
 
     buildTypes {
