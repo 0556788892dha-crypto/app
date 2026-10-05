@@ -38,6 +38,6 @@ jobs:
           test "$APK_COUNT" -ge 1
       - uses: actions/upload-artifact@v4
         with:
-          name: DA-Barber-0.1
+          name: DA-Barber-0.3
           path: barber/build/outputs/apk/release/*.apk
           if-no-files-found: error
