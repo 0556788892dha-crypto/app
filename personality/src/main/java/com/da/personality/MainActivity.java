@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -692,7 +693,7 @@ public class MainActivity extends Activity {
                     float aspect=r.height()==0?0:r.width()/(float)r.height();
                     String shape = aspect>1.05f ? "רחבה יחסית" : aspect<0.78f ? "ארוכה יחסית" : "מאוזנת/אליפטית יחסית";
                     Float smile=f.getSmilingProbability(), le=f.getLeftEyeOpenProbability(), re=f.getRightEyeOpenProbability();
-                    float front=100f-Math.min(100f,Math.abs(f.getHeadEulerAngleY)*2.5f+Math.abs(f.getHeadEulerAngleZ)*2.0f);
+                    float front=100f-Math.min(100f,Math.abs(f.getHeadEulerAngleY())*2.5f+Math.abs(f.getHeadEulerAngleZ())*2.0f);
                     StringBuilder s=new StringBuilder();
                     s.append("צורת מסגרת פנים מדודה: ").append(shape).append("\n");
                     s.append("יחס רוחב/גובה של המסגרת: ").append(String.format(Locale.US,"%.2f",aspect)).append("\n");
@@ -701,8 +702,8 @@ public class MainActivity extends Activity {
                     if(le!=null && re!=null)s.append("\nעיניים פתוחות: ").append(Math.round(((le+re)/2f)*100)).append("%");
                     FaceContour eyes=f.getContour(FaceContour.LEFT_EYE);
                     FaceContour mouth=f.getContour(FaceContour.UPPER_LIP_TOP);
-                    if(eyes!=null && eyes.getPoints()!=null && eyes.getPoints().length>4) s.append("\nקונטור עיניים: זוהה");
-                    if(mouth!=null && mouth.getPoints()!=null && mouth.getPoints().length>4) s.append(" • קונטור שפתיים: זוהה");
+                    if(eyes!=null && eyes.getPoints()!=null && eyes.getPoints().size()>4) s.append("\nקונטור עיניים: זוהה");
+                    if(mouth!=null && mouth.getPoints()!=null && mouth.getPoints().size()>4) s.append(" • קונטור שפתיים: זוהה");
                     s.append("\n\nזהו מידע חזותי בלבד; הוא לא מוכיח תכונות אישיות.");
                     faceSummary=s.toString();
                     faceFolklore=folklore(shape, smile==null?0:smile, front);
@@ -787,7 +788,7 @@ public class MainActivity extends Activity {
     private void showTextResult(String title,String text,boolean backHome) {
         base(title);
         root.addView(card("תוצאה",text,TERRACOTTA));
-        root.addView(action("← חזרה",v->backHome?showHome():showTests(),false));
+        root.addView(action("← חזרה",v->{ if(backHome) showHome(); else showTests(); },false));
         bottomNav();
     }
 
