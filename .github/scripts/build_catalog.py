@@ -15,7 +15,7 @@ CSV_URL = "https://raw.githubusercontent.com/AayushChhuka7/mobile-recommendation
 NICHE = Path(".github/scripts/niche_devices.json")
 OUT = Path("phonecatalog/src/main/assets/catalog.json")
 IMAGE_DIR = Path("phonecatalog/src/main/assets/images")
-MAX_EMBEDDED_IMAGES = 20
+MAX_EMBEDDED_IMAGES = 14000
 
 NON_PHONE_TERMS = (
     "ipad", "watch", "galaxy tab", "redmi pad", "matepad", "tablet",
