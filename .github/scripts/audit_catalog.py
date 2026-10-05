@@ -18,4 +18,5 @@ def main():
     print(f"unique={len(keys)} duplicates={len(phones)-len(keys)} images={imgs} details={details} missing_identity={len(missing)}")
     if len(keys)!=len(phones) or missing: raise SystemExit("Catalog validation failed")
     if cats.get("tablet",0)<20 or cats.get("watch",0)<20: raise SystemExit("Tablet/watch catalog validation failed")
+    if cats.get("laptop",0)<20: raise SystemExit("Laptop catalog validation failed")
 if __name__=="__main__": main()
