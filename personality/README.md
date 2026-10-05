@@ -1,5 +1,7 @@
 # DA Personality
 
+Build target: 1.2
+
 Offline-first Android app for multi-method personality exploration.
 
 ## Current modules
