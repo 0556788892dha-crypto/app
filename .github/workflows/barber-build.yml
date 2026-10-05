@@ -36,7 +36,7 @@ jobs:
           APK="build/outputs/apk/release/barber-release.apk"
           test -s "$APK"
           file "$APK"
-          apksigner verify --verbose "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
       - uses: actions/upload-artifact@v4
         with:
           name: DA-Barber-0.1
