@@ -30,15 +30,35 @@ jobs:
           echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
           echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
           echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
+          echo "$ANDROID_HOME/build-tools/35.0.0" >> "$GITHUB_PATH"
           sdkmanager --version
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+      - name: Create release signing key
+        run: |
+          keytool -genkeypair -v -keystore "$RUNNER_TEMP/da-personality.keystore" \
+            -storepass "$DA_KEYSTORE_PASSWORD" \
+            -keypass "$DA_KEYSTORE_PASSWORD" \
+            -alias "$DA_KEY_ALIAS" \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=DA Personality, OU=DA, O=DA, L=Tel Aviv, ST=Tel Aviv, C=IL"
+        env:
+          DA_KEYSTORE_PASSWORD: "DA-Personality-Local-2026"
+          DA_KEY_ALIAS: "da-personality"
+          DA_KEYSTORE: ${{ runner.temp }}/da-personality.keystore
       - name: Build DA Personality release
         run: gradle --no-daemon :personality:assembleRelease
+        env:
+          DA_KEYSTORE_PASSWORD: "DA-Personality-Local-2026"
+          DA_KEY_ALIAS: "da-personality"
+          DA_KEYSTORE: ${{ runner.temp }}/da-personality.keystore
       - name: Verify APK
         run: |
-          test -s personality/build/outputs/apk/release/personality-release.apk
-          ls -lh personality/build/outputs/apk/release/personality-release.apk
+          APK="personality/build/outputs/apk/release/personality-release.apk"
+          test -s "$APK"
+          ls -lh "$APK"
+          file "$APK"
+          apksigner verify --verbose --print-certs "$APK"
       - uses: actions/upload-artifact@v4
         with:
           name: DA-PERSONALITY-release
