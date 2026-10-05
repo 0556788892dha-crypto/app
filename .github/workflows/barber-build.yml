@@ -6,6 +6,9 @@ on:
       - "barber/**"
       - ".github/workflows/barber-build.yml"
   workflow_dispatch:
+concurrency:
+  group: da-barber-build
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
