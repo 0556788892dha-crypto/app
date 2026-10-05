@@ -5,8 +5,6 @@ on:
     paths:
       - "barber/**"
       - ".github/workflows/barber-build.yml"
-      - "settings.gradle"
-      - "build.gradle"
   workflow_dispatch:
 jobs:
   build:
@@ -30,10 +28,12 @@ jobs:
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
       - name: Build
-        run: gradle --no-daemon :barber:assembleRelease
+        working-directory: barber
+        run: gradle --no-daemon assembleRelease
       - name: Verify APK
+        working-directory: barber
         run: |
-          APK="barber/build/outputs/apk/release/barber-release.apk"
+          APK="build/outputs/apk/release/barber-release.apk"
           test -s "$APK"
           file "$APK"
           apksigner verify --verbose "$APK"
