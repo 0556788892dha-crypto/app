@@ -2,6 +2,12 @@ name: Build DA Personality
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - "personality/**"
+      - ".github/workflows/personality-build.yml"
+      - "settings.gradle"
+      - "build.gradle"
+      - "gradle.properties"
   pull_request:
     branches: [ "main" ]
     paths:
