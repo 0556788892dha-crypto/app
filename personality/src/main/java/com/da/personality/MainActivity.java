@@ -374,8 +374,12 @@ public class MainActivity extends Activity {
         LinearLayout c = card("ששת הממדים", "כל ציון מוצג כאחוז משוער לפי שני הפריטים שלו.", TERRACOTTA);
         root.addView(c);
         for (int i=0;i<6;i++) {
-            int a = hexaco.getOrDefault(String.valueOf(i),0);
-            int value = a == 0 ? 0 : Math.round(a/5f*100f);
+            int sum = 0, count = 0;
+            for (int q=0;q<2;q++) {
+                Integer answer = hexacoAnswers.get(i*2+q);
+                if (answer != null) { sum += answer; count++; }
+            }
+            int value = count == 0 ? 0 : Math.round((sum/(float)(count*5))*100f);
             progressBar(c, hexacoNames[i], value);
         }
         root.addView(action("← חזרה", v -> showHexaco(), false));
@@ -400,8 +404,13 @@ public class MainActivity extends Activity {
         LinearLayout c = card("מפת הנטיות", "הציון הוא ממוצע של שני פריטים לכל תחום.", ROSE);
         root.addView(c);
         for (int i=0;i<6;i++) {
-            int v = riasec.getOrDefault(String.valueOf(i),0);
-            progressBar(c, riasecNames[i], v==0?0:Math.round(v/5f*100f));
+            int sum = 0, count = 0;
+            for (int q=0;q<2;q++) {
+                Integer answer = riasecAnswers.get(i*2+q);
+                if (answer != null) { sum += answer; count++; }
+            }
+            int value = count == 0 ? 0 : Math.round((sum/(float)(count*5))*100f);
+            progressBar(c, riasecNames[i], value);
         }
         root.addView(action("← חזרה", v -> showRiasec(), false));
         bottomNav();
