@@ -30,14 +30,14 @@ jobs:
       - name: Build
         working-directory: barber
         run: gradle --no-daemon assembleRelease
-      - name: Verify APK exists
+      - name: Locate APK
         working-directory: barber
         run: |
-          APK="build/outputs/apk/release/barber-release.apk"
-          test -s "$APK"
-          file "$APK"
+          find build/outputs -type f -name "*.apk" -print
+          APK_COUNT=$(find build/outputs -type f -name "*.apk" | wc -l)
+          test "$APK_COUNT" -ge 1
       - uses: actions/upload-artifact@v4
         with:
           name: DA-Barber-0.1
-          path: barber/build/outputs/apk/release/barber-release.apk
+          path: barber/build/outputs/apk/release/*.apk
           if-no-files-found: error
