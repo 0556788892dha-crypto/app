@@ -247,8 +247,10 @@ public class MainActivity extends Activity {
     private void replace(String key,int index,JSONObject value){
         JSONArray a=arr(key);
         if(index>=0 && index<a.length()){
-            a.put(index,value);
-            prefs.edit().putString(key,a.toString()).apply();
+            try{
+                a.put(index,value);
+                prefs.edit().putString(key,a.toString()).apply();
+            }catch(JSONException ignored){}
         }
     }
 
