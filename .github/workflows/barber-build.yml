@@ -42,6 +42,6 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: DA-Barber-0.5
+          name: DA-Barber-0.7
           path: barber/build/outputs/apk/release/*.apk
           if-no-files-found: error
