@@ -250,6 +250,17 @@ public class MainActivity extends Activity {
             h.put("sourceAppointmentId",o.optString("id",""));
             push("haircuts",h);
             o.put("autoHaircutLogged",true);
+            JSONArray ap=arr("appointments");
+            String id=o.optString("id","");
+            for(int i=0;i<ap.length();i++){
+                JSONObject a=ap.optJSONObject(i);
+                if(a!=null && id.equals(a.optString("id",""))){
+                    a.put("autoHaircutLogged",true);
+                    ap.put(i,a);
+                    saveArray("appointments",ap);
+                    break;
+                }
+            }
             Toast.makeText(this,"התספורת נוספה אוטומטית ליומן התספורות ✓",Toast.LENGTH_SHORT).show();
         }catch(Exception ignored){}
     }
