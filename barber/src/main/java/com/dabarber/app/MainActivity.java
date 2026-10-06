@@ -120,10 +120,10 @@ public class MainActivity extends Activity {
         LinearLayout n=new LinearLayout(this);
         n.setPadding(dp(4),dp(4),dp(4),dp(4));n.setBackgroundColor(panel);
         n.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        addNavItem(n,NavIconView.APPOINTMENTS,()->showAppointments(),currentPage==0);
-        addNavItem(n,NavIconView.HAIRCUTS,()->showHaircuts(),currentPage==1);
-        addNavItem(n,NavIconView.CLIENTS,()->showClients(),currentPage==2);
-        addNavItem(n,NavIconView.HOME,()->showHome(),currentPage==3);
+        addNavItem(n,ImageFrame.APPOINTMENTS,()->showAppointments(),currentPage==0);
+        addNavItem(n,ImageFrame.HAIRCUTS,()->showHaircuts(),currentPage==1);
+        addNavItem(n,ImageFrame.CLIENTS,()->showClients(),currentPage==2);
+        addNavItem(n,ImageFrame.HOME,()->showHome(),currentPage==3);
         return n;
     }
 
@@ -281,6 +281,8 @@ public class MainActivity extends Activity {
         gapInside(l,5);
 
         TextView date=chooserField(editing?existing.optString("date",""):"","בחר תאריך עברי");
+        if(editing && existing.optInt("hYear",0)>0 && existing.optInt("hMonth",-1)>=0 && existing.optInt("hDay",0)>0)
+            date.setTag(new int[]{existing.optInt("hYear"),existing.optInt("hMonth"),existing.optInt("hDay")});
         date.setOnClickListener(v->showHebrewDatePicker(date,existing));
         l.addView(date,new LinearLayout.LayoutParams(-1,53));gapInside(l,5);
 
@@ -310,6 +312,7 @@ public class MainActivity extends Activity {
                 if(dateValue.equals("בחר תאריך עברי")||dateValue.equals("בחר תאריך"))dateValue="";
                 String timeValue=time.getText().toString();
                 if(timeValue.equals("בחר שעה"))timeValue="";
+                int[] chosenDate=(int[])date.getTag();
                 int reminderMin=selectedReminder(reminder);
                 try{
                     JSONObject o=editing?existing:new JSONObject();
