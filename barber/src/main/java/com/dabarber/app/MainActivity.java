@@ -427,7 +427,7 @@ public class MainActivity extends Activity {
 
     private AutoCompleteTextView clientInput(String initial){
         AutoCompleteTextView e=new AutoCompleteTextView(this);e.setHint(tr("שם הלקוח","Client name"));e.setHintTextColor(muted);e.setTextColor(text);e.setTextSize(16);e.setSingleLine(true);e.setGravity(Gravity.RIGHT);e.setPadding(dp(12),0,dp(12),0);e.setBackground(box(panel,15));e.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);e.setThreshold(1);
-        e.setAdapter(new OfficialClientAdapter(getClientNames()));e.setText(initial);e.setSelection(e.length());e.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int c,int a){}public void onTextChanged(CharSequence s,int st,int before,int count){if(s.length()>0)e.showDropDown();}public void afterTextChanged(Editable s){}});return e;
+        e.setAdapter(new OfficialClientAdapter(this,getClientNames()));e.setText(initial);e.setSelection(e.length());e.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int c,int a){}public void onTextChanged(CharSequence s,int st,int before,int count){if(s.length()>0)e.showDropDown();}public void afterTextChanged(Editable s){}});return e;
     }
     private ArrayList<String> getClientNames(){LinkedHashSet<String> set=new LinkedHashSet<>();addNames(set,arr("clients"),"name");addNames(set,arr("appointments"),"client");addNames(set,arr("haircuts"),"client");return new ArrayList<>(set);}
     private void addNames(Set<String> set,JSONArray a,String key){for(int i=0;i<a.length();i++){JSONObject o=a.optJSONObject(i);if(o!=null){String n=o.optString(key,"").trim();if(!n.isEmpty())set.add(n);}}}
@@ -721,13 +721,11 @@ public class MainActivity extends Activity {
 
     public static class OfficialClientAdapter extends ArrayAdapter<String>{
         private final ArrayList<String> data;
-        OfficialClientAdapter(ArrayList<String> names){super(new MainActivityDummyContext(),android.R.layout.simple_list_item_1,names);data=names;}
+        OfficialClientAdapter(Context context,ArrayList<String> names){super(context,android.R.layout.simple_list_item_1,names);data=names;}
         @Override public View getView(int position,View convertView,ViewGroup parent){LinearLayout r=new LinearLayout(parent.getContext());r.setGravity(Gravity.CENTER_VERTICAL);r.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);TextView badge=new TextView(parent.getContext());badge.setText("✓");badge.setTextColor(Color.rgb(79,195,113));badge.setTextSize(18);badge.setGravity(Gravity.CENTER);r.addView(badge,new LinearLayout.LayoutParams(36,48));TextView n=new TextView(parent.getContext());n.setText(data.get(position));n.setTextColor(Color.WHITE);n.setTextSize(16);n.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);r.addView(n,new LinearLayout.LayoutParams(-1,48));return r;}
         @Override public View getDropDownView(int position,View convertView,ViewGroup parent){LinearLayout r=new LinearLayout(parent.getContext());r.setGravity(Gravity.CENTER_VERTICAL);r.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);TextView badge=new TextView(parent.getContext());badge.setText("✓");badge.setTextColor(Color.rgb(79,195,113));badge.setTextSize(18);badge.setGravity(Gravity.CENTER);r.addView(badge,new LinearLayout.LayoutParams(36,48));TextView n=new TextView(parent.getContext());n.setText(data.get(position));n.setTextColor(Color.WHITE);n.setTextSize(16);n.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);r.addView(n,new LinearLayout.LayoutParams(-1,48));return r;}
     }
 
-    // Adapter needs a context; instantiated from activity with a safe local context wrapper.
-    static class MainActivityDummyContext extends android.test.mock.MockContext{}
 
     public static class NavIcon extends View{
         static final int APPOINTMENTS=0,HAIRCUTS=1,CLIENTS=2,HOME=3;int type;boolean active;int ac,ic;Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);
