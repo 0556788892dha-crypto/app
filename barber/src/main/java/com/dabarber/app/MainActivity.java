@@ -427,7 +427,7 @@ public class MainActivity extends Activity {
 
     private AutoCompleteTextView clientInput(String initial){
         AutoCompleteTextView e=new AutoCompleteTextView(this);e.setHint(tr("שם הלקוח","Client name"));e.setHintTextColor(muted);e.setTextColor(text);e.setTextSize(16);e.setSingleLine(true);e.setGravity(Gravity.RIGHT);e.setPadding(dp(12),0,dp(12),0);e.setBackground(box(panel,15));e.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);e.setThreshold(1);
-        e.setAdapter(new OfficialClientAdapter(this,getClientNames()));e.setText(initial);e.setSelection(e.length());e.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int c,int a){}public void onTextChanged(CharSequence s,int st,int before,int count){if(s.length()>0)e.showDropDown();}public void afterTextChanged(Editable s){}});return e;
+        e.setAdapter(new OfficialClientAdapter(getClientNames()));e.setText(initial);e.setSelection(e.length());e.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int c,int a){}public void onTextChanged(CharSequence s,int st,int before,int count){if(s.length()>0)e.showDropDown();}public void afterTextChanged(Editable s){}});return e;
     }
     private ArrayList<String> getClientNames(){LinkedHashSet<String> set=new LinkedHashSet<>();addNames(set,arr("clients"),"name");addNames(set,arr("appointments"),"client");addNames(set,arr("haircuts"),"client");return new ArrayList<>(set);}
     private void addNames(Set<String> set,JSONArray a,String key){for(int i=0;i<a.length();i++){JSONObject o=a.optJSONObject(i);if(o!=null){String n=o.optString(key,"").trim();if(!n.isEmpty())set.add(n);}}}
@@ -461,7 +461,7 @@ public class MainActivity extends Activity {
         for(int i=0;i<a.length();i++){JSONObject o=a.optJSONObject(i);if(o==null)continue;int y=o.optInt("gYear",0);if(y>0)years.computeIfAbsent(y,k->new ArrayList<>()).add(o);else undated.add(o);}
         for(Map.Entry<Integer,ArrayList<JSONObject>> e:years.entrySet()){
             int y=e.getKey();String yKey=String.valueOf(y);int count=e.getValue().size();double total=0;for(JSONObject o:e.getValue())total+=o.optDouble("amount",0);
-            Button year=groupButton(hebrewYearLabelFromGregorian(y)+"  •  "+count+" "+tr("תספורות","haircuts")+"  •  ₪"+money(total),expandedYears.contains(yKey));
+            Button year=groupButton(String.valueOf(y)+"  •  "+count+" "+tr("תספורות","haircuts")+"  •  ₪"+money(total),expandedYears.contains(yKey));
             year.setOnClickListener(v->{toggle(expandedYears,yKey);showHaircuts();});add(year,64);gap(5);
             if(expandedYears.contains(yKey)){
                 TreeMap<Integer,ArrayList<JSONObject>> months=new TreeMap<>(Collections.reverseOrder());
@@ -719,11 +719,18 @@ public class MainActivity extends Activity {
     private void replace(String key,int index,JSONObject o){JSONArray a=arr(key);if(index>=0&&index<a.length()){try{a.put(index,o);saveArray(key,a);}catch(Exception ignored){}}}
     private void saveArray(String key,JSONArray a){prefs.edit().putString(key,a.toString()).apply();}
 
-    public static class OfficialClientAdapter extends ArrayAdapter<String>{
+    public class OfficialClientAdapter extends ArrayAdapter<String>{
         private final ArrayList<String> data;
-        OfficialClientAdapter(Context context,ArrayList<String> names){super(context,android.R.layout.simple_list_item_1,names);data=names;}
-        @Override public View getView(int position,View convertView,ViewGroup parent){LinearLayout r=new LinearLayout(parent.getContext());r.setGravity(Gravity.CENTER_VERTICAL);r.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);TextView badge=new TextView(parent.getContext());badge.setText("✓");badge.setTextColor(Color.rgb(79,195,113));badge.setTextSize(18);badge.setGravity(Gravity.CENTER);r.addView(badge,new LinearLayout.LayoutParams(36,48));TextView n=new TextView(parent.getContext());n.setText(data.get(position));n.setTextColor(Color.WHITE);n.setTextSize(16);n.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);r.addView(n,new LinearLayout.LayoutParams(-1,48));return r;}
-        @Override public View getDropDownView(int position,View convertView,ViewGroup parent){LinearLayout r=new LinearLayout(parent.getContext());r.setGravity(Gravity.CENTER_VERTICAL);r.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);TextView badge=new TextView(parent.getContext());badge.setText("✓");badge.setTextColor(Color.rgb(79,195,113));badge.setTextSize(18);badge.setGravity(Gravity.CENTER);r.addView(badge,new LinearLayout.LayoutParams(36,48));TextView n=new TextView(parent.getContext());n.setText(data.get(position));n.setTextColor(Color.WHITE);n.setTextSize(16);n.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);r.addView(n,new LinearLayout.LayoutParams(-1,48));return r;}
+        OfficialClientAdapter(ArrayList<String> names){super(MainActivity.this,android.R.layout.simple_list_item_1,names);data=names;}
+        private View row(int position,ViewGroup parent){
+            LinearLayout r=new LinearLayout(parent.getContext());r.setGravity(Gravity.CENTER_VERTICAL);r.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);r.setPadding(dp(4),0,dp(4),0);
+            boolean official=isOfficialClient(data.get(position));
+            ClientBadge badge=new ClientBadge(parent.getContext(),official,green);r.addView(badge,new LinearLayout.LayoutParams(36,48));
+            TextView n=new TextView(parent.getContext());n.setText(data.get(position));n.setTextColor(text);n.setTextSize(16);n.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);r.addView(n,new LinearLayout.LayoutParams(-1,48));
+            r.setBackground(box(panel,8));return r;
+        }
+        @Override public View getView(int position,View convertView,ViewGroup parent){return row(position,parent);}
+        @Override public View getDropDownView(int position,View convertView,ViewGroup parent){return row(position,parent);}
     }
 
 
