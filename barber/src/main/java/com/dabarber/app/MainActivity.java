@@ -314,6 +314,8 @@ public class MainActivity extends Activity {
                     if(!o.has("id"))o.put("id",String.valueOf(System.currentTimeMillis()+new Random().nextInt(10000)));
                     if(editing)cancelReminder(o);
                     o.put("client",client);o.put("service",service);o.put("date",dateValue);o.put("time",timeValue);
+                    if(chosenDate!=null){o.put("hYear",chosenDate[0]);o.put("hMonth",chosenDate[1]);o.put("hDay",chosenDate[2]);}
+                    else if(dateValue.isEmpty()){o.remove("hYear");o.remove("hMonth");o.remove("hDay");}
                     o.put("reminderMinutes",reminderMin);o.put("completed",done.isChecked());
                     if(editing)replace("appointments",editIndex,o);else push("appointments",o);
                     if(done.isChecked() && !o.optBoolean("autoHaircutLogged",false))logHaircutFromAppointment(o);
@@ -384,7 +386,7 @@ public class MainActivity extends Activity {
                 Button b=btn("");int day=slot-start+1;
                 if(day>=1&&day<=max){
                     b.setText(hebrewNumber(day));styleChip(b,day==selected);
-                    final int picked=day;b.setOnClickListener(v->{w.set(HebrewCalendar.DAY_OF_MONTH,picked);String shown=formatHebrewDate(w);target.setText(shown);target.setTextColor(text);dlg.dismiss();});
+                    final int picked=day;b.setOnClickListener(v->{w.set(HebrewCalendar.DAY_OF_MONTH,picked);String shown=formatHebrewDate(w);target.setText(shown);target.setTextColor(text);target.setTag(new int[]{w.get(HebrewCalendar.YEAR),w.get(HebrewCalendar.MONTH),w.get(HebrewCalendar.DAY_OF_MONTH)});dlg.dismiss();});
                 }else{b.setEnabled(false);b.setBackgroundColor(Color.TRANSPARENT);}
                 row.addView(b,new LinearLayout.LayoutParams(0,43,1));
             }
