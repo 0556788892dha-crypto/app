@@ -473,7 +473,7 @@ public class MainActivity extends Activity {
                     mb.setOnClickListener(v->{toggle(expandedMonths,mk);showHaircuts();});add(mb,56);gap(4);
                     if(expandedMonths.contains(mk))for(JSONObject o:me.getValue()){int idx=findHaircutIndexById(o.optString("id",""));if(idx>=0){add(haircutRow(o,idx),60);gap(3);}}
                 }
-                TextView breakdown=tv(monthBreakdown(year,e.getValue()),12,muted);breakdown.setBackground(box(panel,10));add(breakdown,72);gap(5);
+                TextView breakdown=tv(monthBreakdown(y,e.getValue()),12,muted);breakdown.setBackground(box(panel,10));add(breakdown,72);gap(5);
             }
         }
         if(!undated.isEmpty()){
@@ -736,7 +736,7 @@ public class MainActivity extends Activity {
 
     public static class ClientBadge extends View{
         boolean official;int green;Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);ClientBadge(Context c,boolean o,int g){super(c);official=o;green=g;}
-        @Override protected void onDraw(Canvas c){float x=getWidth()/2f,y=getHeight()/2f;p.setStyle(Paint.Style.STROKE);p.setStrokeWidth(2.2f);p.setColor(Color.rgb(170,178,188));c.drawCircle(x,y-6,5,p);c.drawArc(x-9,y+1,x+9,y+15,190,160,false,p);if(official){p.setColor(green);p.setStrokeWidth(3);c.drawCircle(x+8,y+8,8,p);p.setColor(bg);p.setStrokeWidth(2);c.drawLine(x+3,y+8,x+7,y+11,p);c.drawLine(x+7,y+11,x+13,y+4,p);}}}
+        @Override protected void onDraw(Canvas c){float x=getWidth()/2f,y=getHeight()/2f;p.setStyle(Paint.Style.STROKE);p.setStrokeWidth(2.2f);p.setColor(Color.rgb(170,178,188));c.drawCircle(x,y-6,5,p);c.drawArc(x-9,y+1,x+9,y+15,190,160,false,p);if(official){p.setColor(green);p.setStrokeWidth(3);c.drawCircle(x+8,y+8,8,p);p.setColor(Color.rgb(7,10,13));p.setStrokeWidth(2);c.drawLine(x+3,y+8,x+7,y+11,p);c.drawLine(x+7,y+11,x+13,y+4,p);}}}
     
     public static class MenuIconView extends View{
         Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);int color=Color.WHITE;MenuIconView(Context c){super(c);p.setStrokeCap(Paint.Cap.ROUND);}
