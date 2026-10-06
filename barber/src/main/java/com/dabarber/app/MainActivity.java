@@ -288,6 +288,8 @@ public class MainActivity extends Activity {
         time.setOnClickListener(v->showClockPicker(time,editing?existing.optString("time",""):null));
         l.addView(time,new LinearLayout.LayoutParams(-1,53));gapInside(l,5);
 
+        TextView reminderLabel=tv("תזכורן לתור",13,muted);
+        l.addView(reminderLabel,new LinearLayout.LayoutParams(-1,28));
         Spinner reminder=reminderSpinner(editing?existing.optInt("reminderMinutes",prefs.getInt("defaultReminder",15)):prefs.getInt("defaultReminder",15));
         l.addView(reminder,new LinearLayout.LayoutParams(-1,53));gapInside(l,3);
 
@@ -591,7 +593,7 @@ public class MainActivity extends Activity {
     }
 
     private void chooseImportFile(){
-        Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("text/*");startActivityForResult(i,REQ_IMPORT);
+        Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("*/*");startActivityForResult(i,REQ_IMPORT);
     }
 
     private void showExportOptions(){
@@ -769,7 +771,7 @@ public class MainActivity extends Activity {
             p.setStyle(Paint.Style.STROKE);p.setStrokeWidth(r*.055f);Path s=new Path();s.moveTo(cx-r*.48f,cy+r*.32f);s.lineTo(cx-r*.05f,cy-r*.05f);s.lineTo(cx-r*.31f,cy-r*.32f);c.drawPath(s,p);Path s2=new Path();s2.moveTo(cx-r*.48f,cy-r*.32f);s2.lineTo(cx-r*.05f,cy+r*.05f);s2.lineTo(cx-r*.31f,cy+r*.32f);c.drawPath(s2,p);
             p.setStyle(Paint.Style.FILL);p.setColor(Color.rgb(217,164,65));c.drawCircle(cx-r*.07f,cy, r*.055f,p);
             p.setColor(Color.rgb(241,200,115));p.setTextAlign(Paint.Align.CENTER);p.setTypeface(Typeface.create("sans",Typeface.BOLD));p.setTextSize(r*.26f);c.drawText("D.A",cx,cy+r*.60f,p);
-            p.setTextSize(r*.10f);p.setLetterSpacing(.18f);c.drawText("BARBER",cx,cy+r*.77f,p);p.setLetterSpacing(0);
+            p.setTextSize(r*.10f);c.drawText("BARBER",cx,cy+r*.77f,p);
         }
     }
 }
