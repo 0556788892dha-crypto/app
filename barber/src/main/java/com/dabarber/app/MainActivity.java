@@ -353,7 +353,7 @@ public class MainActivity extends Activity {
 
     private void showClockPicker(TextView target,String current){
         Calendar now=Calendar.getInstance();int h=now.get(Calendar.HOUR_OF_DAY),m=now.get(Calendar.MINUTE);
-        if(current!=null&&current.matches("\\\d{1,2}:\\\d{2}")){try{int q=current.indexOf(':');h=Integer.parseInt(current.substring(0,q));m=Integer.parseInt(current.substring(q+1));}catch(Exception ignored){}}
+        if(current!=null&&current.matches("\\d{1,2}:\\d{2}")){try{int q=current.indexOf(':');h=Integer.parseInt(current.substring(0,q));m=Integer.parseInt(current.substring(q+1));}catch(Exception ignored){}}
         TimePickerDialog dlg=new TimePickerDialog(this,(v,hh,mm)->{target.setText(String.format(Locale.US,"%02d:%02d",hh,mm));target.setTextColor(text);},h,m,true);
         dlg.show();
     }
@@ -399,7 +399,7 @@ public class MainActivity extends Activity {
     }
 
     private void parseLegacyDateInto(HebrewCalendar cal,String s){
-        if(s==null||!s.matches("\\\d{1,2}/\\\d{1,2}/\\\d{4}"))return;
+        if(s==null||!s.matches("\\d{1,2}/\\d{1,2}/\\d{4}"))return;
         try{
             String[] p=s.split("/");cal.clear();cal.set(HebrewCalendar.YEAR,Integer.parseInt(p[2]));cal.set(HebrewCalendar.MONTH,Integer.parseInt(p[1])-1);cal.set(HebrewCalendar.DAY_OF_MONTH,Integer.parseInt(p[0]));
         }catch(Exception ignored){}
@@ -642,7 +642,7 @@ public class MainActivity extends Activity {
             String x=line.trim();
             if(x.equals("[APPOINTMENTS]")||x.equals("[HAIRCUTS]")||x.equals("[CLIENTS]")){section=x;continue;}
             if(x.isEmpty()||x.startsWith("D.A BARBER EXPORT")||x.equals("[IMPORTED TEXT]")||x.equals("---"))continue;
-            String[] p=x.split("\\\|",-1);
+            String[] p=x.split("\\|",-1);
             if(section.equals("[APPOINTMENTS]")&&p.length>=1){
                 JSONObject o=new JSONObject();o.put("id",String.valueOf(System.currentTimeMillis()+added+100));o.put("client",p[0]);if(p.length>1)o.put("service",p[1]);if(p.length>2)o.put("date",p[2]);if(p.length>3)o.put("time",p[3]);if(p.length>4)o.put("reminderMinutes",safeInt(p[4]));if(p.length>5)o.put("completed",Boolean.parseBoolean(p[5]));push("appointments",o);added++;
             }else if(section.equals("[HAIRCUTS]")&&p.length>=1){
@@ -706,7 +706,7 @@ public class MainActivity extends Activity {
         try{
             int y=o.optInt("hYear",0),m=o.optInt("hMonth",-1),d=o.optInt("hDay",0);
             if(y==0||m<0||d==0)return 0;
-            String t=o.optString("time","09:00");int hh=9,mm=0;if(t.matches("\\\d{1,2}:\\\d{2}")){int q=t.indexOf(':');hh=Integer.parseInt(t.substring(0,q));mm=Integer.parseInt(t.substring(q+1));}
+            String t=o.optString("time","09:00");int hh=9,mm=0;if(t.matches("\\d{1,2}:\\d{2}")){int q=t.indexOf(':');hh=Integer.parseInt(t.substring(0,q));mm=Integer.parseInt(t.substring(q+1));}
             HebrewCalendar h=new HebrewCalendar();h.clear();h.set(HebrewCalendar.YEAR,y);h.set(HebrewCalendar.MONTH,m);h.set(HebrewCalendar.DAY_OF_MONTH,d);h.set(HebrewCalendar.HOUR_OF_DAY,hh);h.set(HebrewCalendar.MINUTE,mm);h.set(HebrewCalendar.SECOND,0);h.set(HebrewCalendar.MILLISECOND,0);return h.getTimeInMillis();
         }catch(Exception e){return 0;}
     }
@@ -718,7 +718,7 @@ public class MainActivity extends Activity {
                 if(!o.has("id")){o.put("id",String.valueOf(System.currentTimeMillis()+i+1));changed=true;}
                 if(!o.has("reminderMinutes")){o.put("reminderMinutes",0);changed=true;}
                 if(!o.has("completed")){o.put("completed",false);changed=true;}
-                if((!o.has("hYear")||!o.has("hMonth")||!o.has("hDay"))&&o.optString("date","").matches("\\\d{1,2}/\\\d{1,2}/\\\d{4}")){
+                if((!o.has("hYear")||!o.has("hMonth")||!o.has("hDay"))&&o.optString("date","").matches("\\d{1,2}/\\d{1,2}/\\d{4}")){
                     String[] p=o.optString("date").split("/");o.put("hDay",Integer.parseInt(p[0]));o.put("hMonth",Integer.parseInt(p[1])-1);o.put("hYear",Integer.parseInt(p[2]));o.put("date",formatHebrewDateFromFields(o.optInt("hYear"),o.optInt("hMonth"),o.optInt("hDay")));changed=true;
                 }
             }catch(Exception ignored){}
