@@ -1,4 +1,4 @@
-name: Build Android apps
+name: Build DA INFO and OSIRIS
 on:
   push:
     branches: [ "main" ]
@@ -26,27 +26,13 @@ jobs:
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
       - name: Refresh DA OSIRIS offline snapshot
         run: python3 osiris/tools/fetch_snapshot.py
-      - name: Build all debug APKs
+      - name: Build DA INFO and OSIRIS debug APKs
         run: gradle --no-daemon :info:assembleDebug :osiris:assembleDebug
-      - uses: actions/upload-artifact@v4
-        with:
-          name: David-Notes-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
-      - uses: actions/upload-artifact@v4
-        with:
-          name: DA-PHONES-debug
-          path: phonecatalog/build/outputs/apk/debug/phonecatalog-debug.apk
-      - uses: actions/upload-artifact@v4
-        with:
-          name: DA-PERSONALITY-debug
-          path: personality/build/outputs/apk/debug/personality-debug.apk
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: DA-OSIRIS-debug
-          path: osiris/app/build/outputs/apk/debug/app-debug.apk
-
       - uses: actions/upload-artifact@v4
         with:
           name: DA-INFO-debug
           path: info/build/outputs/apk/debug/info-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DA-OSIRIS-debug
+          path: osiris/app/build/outputs/apk/debug/app-debug.apk
