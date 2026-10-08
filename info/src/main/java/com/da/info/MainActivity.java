@@ -66,13 +66,13 @@ public class MainActivity extends Activity {
     }
     void articleCard(JSONObject it,String category){
         LinearLayout box=column();box.setPadding(dp(16),dp(15),dp(16),dp(15));box.setBackground(shape(CARD,16));box.setElevation(dp(2));box.setClipToOutline(true);
-        box.addView(label(it.optString("title"),18,WHITE,true));TextView body=label(it.optString("body"),14,MUTED,false);body.setLineSpacing(dp(3),1f);body.setMaxLines(3);box.addView(body);
+        box.addView(label(it.optString("title"),18,WHITE,true));TextView body=label(it.optString("body"),14,MUTED,false);body.setLineSpacing(dp(4),1.04f);body.setMaxLines(3);body.setEllipsize(android.text.TextUtils.TruncateAt.END);box.addView(body);
         TextView more=label("לקריאה מלאה  ←",12,CYAN,true);more.setPadding(0,dp(10),0,0);box.addView(more);box.setOnClickListener(v->readArticle(it,category));
         LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.bottomMargin=dp(10);content.addView(box,p);
     }
     void readArticle(JSONObject it,String category){
         clear();backButton();TextView cat=label(category,13,CYAN,true);content.addView(cat);gap(5);content.addView(label(it.optString("title"),27,WHITE,true));gap(14);
-        LinearLayout panel=column();panel.setPadding(dp(18),dp(18),dp(18),dp(18));panel.setBackground(shape(CARD,18));TextView body=label(it.optString("body"),17,Color.rgb(220,226,241),false);body.setLineSpacing(dp(7),1.08f);panel.addView(body);content.addView(panel);
+        LinearLayout panel=column();panel.setPadding(dp(18),dp(18),dp(18),dp(18));panel.setBackground(shape(CARD,18));TextView body=label(it.optString("body"),18,Color.rgb(220,226,241),false);body.setLineSpacing(dp(8),1.12f);body.setTextIsSelectable(true);panel.addView(body);content.addView(panel);
         gap(16);content.addView(label("מושג מתוך מאגר DA מידע",12,MUTED,false));status.setText("●  קריאה אופליין");
     }
     void search(String q){
