@@ -24,17 +24,22 @@ jobs:
           sdkmanager --version
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
-      - name: Build all release APKs
-        run: gradle --no-daemon assembleRelease
+      - name: Build all debug APKs
+        run: gradle --no-daemon assembleDebug
       - uses: actions/upload-artifact@v4
         with:
-          name: David-Notes-release
-          path: app/build/outputs/apk/release/app-release.apk
+          name: David-Notes-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: DA-PHONES-release
-          path: phonecatalog/build/outputs/apk/release/phonecatalog-release.apk
+          name: DA-PHONES-debug
+          path: phonecatalog/build/outputs/apk/debug/phonecatalog-debug.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: DA-PERSONALITY-release
-          path: personality/build/outputs/apk/release/personality-release.apk
+          name: DA-PERSONALITY-debug
+          path: personality/build/outputs/apk/debug/personality-debug.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DA-OSIRIS-debug
+          path: osiris/app/build/outputs/apk/debug/app-debug.apk
