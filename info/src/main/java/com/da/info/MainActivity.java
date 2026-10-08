@@ -21,6 +21,7 @@ public class MainActivity extends Activity {
     android.content.SharedPreferences prefs;
     boolean english=false, dark=true;
     String screen="home";
+    String activeQuery="";
     Runnable backAction;
     String ui(String he,String en){return english?en:he;}
     int dp(float n){return (int)(n*getResources().getDisplayMetrics().density+0.5f);}
@@ -47,7 +48,10 @@ public class MainActivity extends Activity {
         content.addView(hero,new LinearLayout.LayoutParams(-1,-2));gap(18);
         content.addView(label(ui("מה תרצה לגלות היום?","What would you like to discover?"),21,WHITE,true));gap(8);
         EditText q=new EditText(this);q.setSingleLine(true);q.setTextSize(15);q.setTextColor(WHITE);q.setHintTextColor(MUTED);q.setHint(ui("חיפוש מושג או נושא…","Search a term or topic…"));q.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);q.setPadding(dp(16),0,dp(16),0);q.setBackground(shape(Color.rgb(25,33,52),16));q.setElevation(dp(2));content.addView(q,new LinearLayout.LayoutParams(-1,dp(54)));
-        gap(8);Button search=button("⌕   "+ui("חיפוש במאגר","Search library"),ACC);search.setOnClickListener(v->search(q.getText().toString()));content.addView(search,new LinearLayout.LayoutParams(-1,dp(48)));gap(22);
+        LinearLayout suggestions=column();content.addView(suggestions,new LinearLayout.LayoutParams(-1,-2));
+        q.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int count,int after){}public void onTextChanged(CharSequence s,int start,int before,int count){showSuggestions(s.toString(),suggestions,q);}public void afterTextChanged(android.text.Editable e){}});
+        gap(8);Button search=button("⌕   "+ui("חיפוש במאגר","Search library"),ACC);search.setOnClickListener(v->search(q.getText().toString()));content.addView(search,new LinearLayout.LayoutParams(-1,dp(48)));gap(10);
+        LinearLayout quick=row();Button favBtn=button("★  "+ui("מועדפים","Bookmarks"),Color.rgb(37,49,75));Button histBtn=button("◷  "+ui("אחרונים","Recent"),Color.rgb(37,49,75));LinearLayout.LayoutParams qp=new LinearLayout.LayoutParams(0,dp(42),1);qp.setMargins(0,0,dp(5),0);quick.addView(favBtn,qp);LinearLayout.LayoutParams hp=new LinearLayout.LayoutParams(0,dp(42),1);hp.setMargins(dp(5),0,0,0);quick.addView(histBtn,hp);favBtn.setOnClickListener(v->savedEntries(false));histBtn.setOnClickListener(v->savedEntries(true));content.addView(quick);gap(15);
         LinearLayout heading=row();LinearLayout htxt=column();htxt.addView(label(ui("תחומי ידע","Knowledge topics"),21,WHITE,true));htxt.addView(label(ui("בחר תחום כדי להתחיל","Choose a topic to begin"),13,MUTED,false));heading.addView(htxt,new LinearLayout.LayoutParams(0,-2,1));TextView badge=text(cats.length()+" "+ui("תחומים","topics"),12,CYAN,true);badge.setGravity(Gravity.CENTER);badge.setPadding(dp(10),dp(7),dp(10),dp(7));badge.setBackground(shape(Color.rgb(22,51,65),20));heading.addView(badge);content.addView(heading);gap(12);
         Button settings=button("⚙  "+ui("הגדרות","Settings"),Color.rgb(30,39,61));settings.setOnClickListener(v->settings());LinearLayout.LayoutParams stp=new LinearLayout.LayoutParams(-1,dp(42));stp.bottomMargin=dp(12);content.addView(settings,stp);
         android.widget.GridLayout grid=new android.widget.GridLayout(this);grid.setColumnCount(2);grid.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
@@ -79,6 +83,24 @@ public class MainActivity extends Activity {
         status.setText("●  "+ui("הגדרות","Settings"));
     }
     @Override public void onBackPressed(){if(backAction!=null){Runnable action=backAction;backAction=null;action.run();}else if(!"home".equals(screen)){home();}else{super.onBackPressed();}}
+    void showSuggestions(String query,LinearLayout holder,EditText input){
+        holder.removeAllViews();String z=query==null?"":query.trim().toLowerCase(java.util.Locale.ROOT);if(z.length()<1)return;int shown=0;
+        for(int i=0;i<cats.length()&&shown<6;i++)try{JSONObject c=cats.getJSONObject(i);JSONArray a=c.getJSONArray("items");for(int j=0;j<a.length()&&shown<6;j++){JSONObject it=a.getJSONObject(j);String title=it.optString("title");if(title.toLowerCase(java.util.Locale.ROOT).contains(z)||c.optString("title").toLowerCase(java.util.Locale.ROOT).contains(z)){
+            TextView suggestion=label("⌕  "+title+"   ·   "+c.optString("title"),13,WHITE,false);suggestion.setPadding(dp(12),dp(10),dp(12),dp(10));suggestion.setBackground(shape(CARD,10));LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.topMargin=dp(4);holder.addView(suggestion,p);suggestion.setOnClickListener(v->{input.setText(title);input.setSelection(input.length());search(title);});shown++;
+        }} }catch(Exception ignored){}
+    }
+    void highlight(TextView view,String text,String query){
+        if(text==null||query==null||query.trim().isEmpty())return;String lower=text.toLowerCase(java.util.Locale.ROOT),needle=query.trim().toLowerCase(java.util.Locale.ROOT);if(needle.isEmpty())return;
+        android.text.SpannableString sp=new android.text.SpannableString(text);int from=0;while((from=lower.indexOf(needle,from))>=0){int end=from+needle.length();sp.setSpan(new android.text.style.BackgroundColorSpan(Color.rgb(255,218,96)),from,end,android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);sp.setSpan(new android.text.style.ForegroundColorSpan(Color.rgb(30,32,42)),from,end,android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);from=end;}view.setText(sp);
+    }
+    String entryKey(String category,String title){return category+"||"+title;}
+    void recordHistory(String key){String old=prefs.getString("history","");java.util.LinkedHashSet<String> keys=new java.util.LinkedHashSet<>();keys.add(key);for(String x:old.split("\\n"))if(!x.trim().isEmpty()&&!x.equals(key)&&keys.size()<25)keys.add(x);StringBuilder b=new StringBuilder();for(String x:keys){if(b.length()>0)b.append("\\n");b.append(x);}prefs.edit().putString("history",b.toString()).apply();}
+    void savedEntries(boolean recent){
+        clear();activeQuery="";screen=recent?"history":"favorites";backAction=()->home();content.addView(label(recent?ui("נצפו לאחרונה","Recently viewed"):ui("המועדפים שלי","My bookmarks"),25,WHITE,true));gap(12);
+        java.util.Set<String> keys=new java.util.LinkedHashSet<>();if(recent){String raw=prefs.getString("history","");for(String k:raw.split("\\n"))if(!k.trim().isEmpty())keys.add(k);}else keys.addAll(prefs.getStringSet("favorites",new java.util.HashSet<>()));
+        int found=0;for(String key:keys){int cut=key.indexOf("||");if(cut<0)continue;String catName=key.substring(0,cut),title=key.substring(cut+2);for(int i=0;i<cats.length();i++)try{JSONObject c=cats.getJSONObject(i);if(!c.optString("title").equals(catName))continue;JSONArray a=c.getJSONArray("items");for(int j=0;j<a.length();j++){JSONObject it=a.getJSONObject(j);if(it.optString("title").equals(title)){articleCard(it,catName);found++;break;}}}catch(Exception ignored){}}
+        if(found==0)content.addView(label(recent?ui("עדיין לא פתחת ערכים.","You have not opened any entries yet."):ui("עדיין לא שמרת ערכים למועדפים.","No bookmarks saved yet."),15,MUTED,false));status.setText("●  "+found+" "+ui("ערכים","entries"));
+    }
     void category(JSONObject c){
         clear();screen="category";backAction=()->home();content.addView(label(c.optString("title"),26,WHITE,true));content.addView(label(ui("תוכן זמין לקריאה ללא חיבור","Available offline"),13,MUTED,false));gap(15);
         JSONArray a=c.optJSONArray("items");if(a!=null)for(int i=0;i<a.length();i++)try{articleCard(a.getJSONObject(i),c.optString("title"));}catch(Exception ignored){}
@@ -86,18 +108,18 @@ public class MainActivity extends Activity {
     }
     void articleCard(JSONObject it,String category){
         LinearLayout box=column();box.setPadding(dp(16),dp(15),dp(16),dp(15));box.setBackground(shape(CARD,16));box.setElevation(dp(2));box.setClipToOutline(true);
-        box.addView(label(it.optString("title"),18,WHITE,true));TextView body=label(it.optString("body"),14,MUTED,false);body.setLineSpacing(dp(4),1.04f);body.setMaxLines(3);body.setEllipsize(android.text.TextUtils.TruncateAt.END);box.addView(body);
+        TextView titleView=label(it.optString("title"),18,WHITE,true);highlight(titleView,it.optString("title"),activeQuery);box.addView(titleView);TextView body=label(it.optString("body"),14,MUTED,false);highlight(body,it.optString("body"),activeQuery);body.setLineSpacing(dp(4),1.04f);body.setMaxLines(3);body.setEllipsize(android.text.TextUtils.TruncateAt.END);box.addView(body);
         TextView more=label(ui("לקריאה מלאה","Read full entry")+"  ←",12,CYAN,true);more.setPadding(0,dp(10),0,0);box.addView(more);box.setOnClickListener(v->readArticle(it,category));
         LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.bottomMargin=dp(10);content.addView(box,p);
     }
     JSONObject findCategory(String title)throws Exception{for(int i=0;i<cats.length();i++){JSONObject c=cats.getJSONObject(i);if(c.optString("title").equals(title))return c;}return new JSONObject();}
     void readArticle(JSONObject it,String category){
-        clear();screen="article";backAction=()->{try{JSONObject c=findCategory(category);category(c);}catch(Exception e){home();}};TextView cat=label(category,13,CYAN,true);content.addView(cat);gap(5);content.addView(label(it.optString("title"),27,WHITE,true));gap(14);
+        clear();screen="article";recordHistory(entryKey(category,it.optString("title")));backAction=()->{try{JSONObject c=findCategory(category);category(c);}catch(Exception e){home();}};TextView cat=label(category,13,CYAN,true);content.addView(cat);gap(5);content.addView(label(it.optString("title"),27,WHITE,true));gap(14);
         LinearLayout panel=column();panel.setPadding(dp(18),dp(18),dp(18),dp(18));panel.setBackground(shape(CARD,18));TextView body=label(it.optString("body"),18,Color.rgb(220,226,241),false);body.setLineSpacing(dp(8),1.12f);body.setTextIsSelectable(true);panel.addView(body);content.addView(panel);
-        gap(16);content.addView(label(ui("מושג מתוך מאגר DA מידע","An entry from the DA INFO library"),12,MUTED,false));status.setText("●  קריאה אופליין");
+        gap(16);Button fav=button((prefs.getStringSet("favorites",new java.util.HashSet<>()).contains(entryKey(category,it.optString("title")))? "★  "+ui("הסר מהמועדפים","Remove bookmark"):"☆  "+ui("הוסף למועדפים","Add bookmark"),ACC);fav.setOnClickListener(v->{java.util.Set<String> keys=new java.util.HashSet<>(prefs.getStringSet("favorites",new java.util.HashSet<>()));String key=entryKey(category,it.optString("title"));if(keys.contains(key))keys.remove(key);else keys.add(key);prefs.edit().putStringSet("favorites",keys).apply();readArticle(it,category);});content.addView(fav,new LinearLayout.LayoutParams(-1,dp(46)));gap(8);content.addView(label(ui("מושג מתוך מאגר DA מידע","An entry from the DA INFO library"),12,MUTED,false));status.setText("●  קריאה אופליין");
     }
     void search(String q){
-        clear();screen="search";backAction=()->home();content.addView(label(ui("תוצאות חיפוש","Search results"),25,WHITE,true));String z=q==null?"":q.trim().toLowerCase();content.addView(label(z.isEmpty()?ui("כל הערכים במאגר","All library entries"):ui("חיפוש: ","Search: ")+q,13,MUTED,false));gap(12);int hits=0;
+        activeQuery=q==null?"":q.trim();clear();screen="search";backAction=()->home();content.addView(label(ui("תוצאות חיפוש","Search results"),25,WHITE,true));String z=q==null?"":q.trim().toLowerCase();content.addView(label(z.isEmpty()?ui("כל הערכים במאגר","All library entries"):ui("חיפוש: ","Search: ")+q,13,MUTED,false));gap(12);int hits=0;
         for(int i=0;i<cats.length();i++)try{JSONObject c=cats.getJSONObject(i);JSONArray a=c.getJSONArray("items");for(int j=0;j<a.length();j++){JSONObject it=a.getJSONObject(j);String hay=(it.optString("title")+" "+it.optString("body")+" "+c.optString("title")).toLowerCase();if(z.isEmpty()||hay.contains(z)){articleCard(it,c.optString("title"));hits++;}}}catch(Exception ignored){}
         if(hits==0)content.addView(label(ui("לא נמצאו תוצאות. נסה מונח אחר.","No results found. Try another term."),15,MUTED,false));status.setText("●  "+hits+" "+ui("תוצאות  ·  חיפוש מקומי","results · local search"));
     }
