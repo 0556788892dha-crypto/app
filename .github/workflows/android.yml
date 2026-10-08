@@ -24,6 +24,8 @@ jobs:
           sdkmanager --version
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+      - name: Refresh DA OSIRIS offline snapshot
+        run: python3 osiris/tools/fetch_snapshot.py
       - name: Build all debug APKs
         run: gradle --no-daemon assembleDebug
       - uses: actions/upload-artifact@v4
