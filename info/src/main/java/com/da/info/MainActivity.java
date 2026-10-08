@@ -103,7 +103,14 @@ public class MainActivity extends Activity {
     }
     void category(JSONObject c){
         clear();screen="category";backAction=()->home();content.addView(label(c.optString("title"),26,WHITE,true));content.addView(label(ui("תוכן זמין לקריאה ללא חיבור","Available offline"),13,MUTED,false));gap(15);
-        JSONArray a=c.optJSONArray("items");if(a!=null)for(int i=0;i<a.length();i++)try{articleCard(a.getJSONObject(i),c.optString("title"));}catch(Exception ignored){}
+        JSONArray a=c.optJSONArray("items");if(a!=null){
+            java.util.LinkedHashMap<String,java.util.ArrayList<JSONObject>> groups=new java.util.LinkedHashMap<>();
+            for(int i=0;i<a.length();i++)try{JSONObject it=a.getJSONObject(i);String sub=it.optString("subcategory",ui("נושאים נוספים","Other topics"));if(sub.trim().isEmpty())sub=ui("נושאים נוספים","Other topics");if(!groups.containsKey(sub))groups.put(sub,new java.util.ArrayList<>());groups.get(sub).add(it);}catch(Exception ignored){}
+            for(java.util.Map.Entry<String,java.util.ArrayList<JSONObject>> group:groups.entrySet()){
+                LinearLayout head=row();TextView subTitle=label(group.getKey(),17,CYAN,true);head.addView(subTitle,new LinearLayout.LayoutParams(0,-2,1));TextView number=label(String.valueOf(group.getValue().size()),12,MUTED,true);head.addView(number);content.addView(head);gap(7);
+                for(JSONObject it:group.getValue())articleCard(it,c.optString("title"));gap(7);
+            }
+        }
         status.setText("●  "+c.optString("title")+"  ·  אופליין");
     }
     void articleCard(JSONObject it,String category){
