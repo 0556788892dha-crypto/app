@@ -1,0 +1,11 @@
+package com.da.osiris;
+import android.content.Context;import java.io.InputStream;import java.nio.charset.StandardCharsets;import java.util.Iterator;import org.json.*;
+public final class OfflineStore{
+ private final JSONObject root;
+ public OfflineStore(Context c){JSONObject x;try(InputStream in=c.getAssets().open("data/snapshot.json")){byte[] b=new byte[in.available()];int n=in.read(b);x=new JSONObject(new String(b,0,n,StandardCharsets.UTF_8));}catch(Exception e){x=new JSONObject();}root=x;}
+ public String capturedAt(){return root.optString("capturedAt","לא ידוע");} public boolean isTestData(){return root.optBoolean("testData",false);}
+ public JSONObject section(String k){JSONObject s=root.optJSONObject("sections");return s==null?null:s.optJSONObject(k);} public String endpoint(String k){JSONObject s=section(k);return s==null?"":s.optString("endpoint","");} public Object data(String k){JSONObject s=section(k);return s==null?null:s.opt("data");}
+ public int count(String k){return countValue(data(k));} public int total(){JSONObject s=root.optJSONObject("sections");if(s==null)return 0;int n=0;Iterator<String>i=s.keys();while(i.hasNext())n+=count(i.next());return n;}
+ private int countValue(Object v){if(v instanceof JSONArray)return ((JSONArray)v).length();if(v instanceof JSONObject){int n=0;Iterator<String>i=((JSONObject)v).keys();while(i.hasNext()){Object x=((JSONObject)v).opt(i.next());if(x instanceof JSONArray)n+=((JSONArray)x).length();else if(x instanceof JSONObject)n+=countValue(x);}return n;}return v==null?0:1;}
+ public String search(String q){JSONArray out=new JSONArray();String z=q==null?"":q.trim().toLowerCase();if(z.isEmpty())return out.toString();JSONObject s=root.optJSONObject("sections");if(s==null)return out.toString();Iterator<String>i=s.keys();while(i.hasNext()){String k=i.next();JSONObject sec=s.optJSONObject(k);if(sec!=null&&sec.toString().toLowerCase().contains(z)){try{JSONObject h=new JSONObject();h.put("section",k);h.put("data",data(k));out.put(h);}catch(Exception ignored){}}}return out.toString();}
+}
