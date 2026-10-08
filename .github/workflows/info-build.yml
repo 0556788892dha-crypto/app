@@ -1,0 +1,45 @@
+name: DA INFO Android APK build
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'info/**'
+      - '.github/workflows/info-build.yml'
+      - 'build.gradle'
+      - 'settings.gradle'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Validate knowledge database JSON
+        run: python3 -c "import json; d=json.load(open('info/src/main/assets/data.json', encoding='utf-8')); assert len(d['categories']) >= 15; assert sum(len(c['items']) for c in d['categories']) >= 1200; print('Valid JSON:', len(d['categories']), 'categories,', sum(len(c['items']) for c in d['categories']), 'entries')"
+      - name: Build DA INFO debug APK
+        run: gradle :info:assembleDebug --no-daemon
+      - name: Check APK output
+        run: |
+          ls -lh info/build/outputs/apk/debug/*.apk
+          test -s info/build/outputs/apk/debug/*.apk
+      - name: Upload DA INFO APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: DA-INFO-debug-APK
+          path: info/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
