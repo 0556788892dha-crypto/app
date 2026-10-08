@@ -1,11 +1,6 @@
 pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
 dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
 rootProject.name='DavidNotes'
-include ':app'
-include ':phonecatalog'
-include ':sanon'
-include ':personality'
-include ':barber'
-include ':osiris'
 include ':info'
+include ':osiris'
 project(':osiris').projectDir = file('osiris/app')
