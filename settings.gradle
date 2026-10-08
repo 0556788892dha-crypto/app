@@ -7,4 +7,5 @@ include ':sanon'
 include ':personality'
 include ':barber'
 include ':osiris'
+include ':info'
 project(':osiris').projectDir = file('osiris/app')
