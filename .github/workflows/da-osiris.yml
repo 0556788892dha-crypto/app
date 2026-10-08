@@ -1,0 +1,42 @@
+name: DA OSIRIS Android Build
+on:
+  push:
+    paths: ['osiris/**']
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * 1'
+permissions:
+  contents: write
+  actions: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Fetch OSIRIS snapshot
+        working-directory: osiris
+        run: python3 tools/fetch_snapshot.py
+      - name: Build APK
+        working-directory: osiris
+        run: gradle assembleDebug --no-daemon
+      - name: Verify APK
+        run: test -s osiris/app/build/outputs/apk/debug/app-debug.apk && ls -lh osiris/app/build/outputs/apk/debug/app-debug.apk
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DA-OSIRIS-debug-${{ github.run_number }}
+          path: osiris/app/build/outputs/apk/debug/app-debug.apk
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: da-osiris-v1.0.${{ github.run_number }}
+          name: DA OSIRIS v1.0.${{ github.run_number }}
+          generate_release_notes: true
+          files: osiris/app/build/outputs/apk/debug/app-debug.apk
