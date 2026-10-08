@@ -6,3 +6,5 @@ include ':phonecatalog'
 include ':sanon'
 include ':personality'
 include ':barber'
+include ':osiris'
+project(':osiris').projectDir = file('osiris/app')
