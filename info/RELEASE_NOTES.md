@@ -11,3 +11,11 @@
 
 ## Content quality rule
 Missing information is preferable to fabricated facts. The new entries are concise educational summaries; entry counts are not a substitute for future fact-checking and editorial review.
+
+
+## v0.9 (content expansion)
+- Version code: 9; version name: 0.9.
+- Expanded the offline Hebrew knowledge base with 27 additional distinct educational entries across science, computing, psychology and learning, history, geography, finance, transport, environment, mathematics, design, business, and practical technology.
+- Entries are added only when titles are unique and bodies meet a minimum length check; no filler records are generated to inflate the count.
+- The database remains bundled locally for offline use.
+- This is an incremental step toward the 2,000-entry target; the verified total is recorded in the repository after this batch.
