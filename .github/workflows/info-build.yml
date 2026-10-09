@@ -36,12 +36,15 @@ jobs:
               data = json.load(f)
           items = [item for category in data['categories'] for item in category['items']]
           assert len(data['categories']) >= 15, 'Expected at least 15 categories'
-          assert len(items) >= 400, f'Expected at least 400 real entries, got {len(items)}'
+          assert len(items) >= 650, f'Expected at least 650 real entries, got {len(items)}'
           assert all(item.get('title', '').strip() and item.get('body', '').strip() and item.get('subcategory', '').strip() for item in items), 'An entry is missing title, body, or subcategory'
           assert not any(re.search(r'מדריך\s+\d+', item['title']) for item in items), 'Template filler title detected'
           bodies = [' '.join(item['body'].lower().split()) for item in items]
+          titles = [item['title'].strip().lower() for item in items]
           assert len(bodies) == len(set(bodies)), 'Duplicate article bodies detected'
-          print(f"Valid JSON: {len(data['categories'])} categories, {len(items)} entries; no template titles or duplicate article bodies.")
+          assert len(titles) == len(set(titles)), 'Duplicate article titles detected'
+          assert all(len(item['body'].strip()) >= 45 for item in items), 'Article body too short'
+          print(f"Valid JSON: {len(data['categories'])} categories, {len(items)} entries; no template titles or duplicate titles/bodies.")
           PY
       - name: Build DA INFO debug APK
         run: gradle :info:assembleDebug --no-daemon
