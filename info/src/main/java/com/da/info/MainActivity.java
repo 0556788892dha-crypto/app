@@ -111,7 +111,7 @@ public class MainActivity extends Activity {
         LinearLayout aboutText=column();aboutText.setPadding(dp(14),dp(4),0,0);
         aboutText.addView(label("DA INFO",21,WHITE,true));
         aboutText.addView(label(ui("מאגר ידע אישי ואופליין","Personal offline knowledge library"),12,Color.rgb(210,221,247),false));
-        brand.addView(aboutText,new LinearLayout.LayoutParams(0,-2,1));about.addView(brand);gap(10);
+        brand.addView(aboutText,new LinearLayout.LayoutParams(0,-2,1));about.addView(brand);View aboutGap=new View(this);about.addView(aboutGap,new LinearLayout.LayoutParams(1,dp(10)));
         String version="לא ידוע";
         try{version=getPackageManager().getPackageInfo(getPackageName(),0).versionName;}catch(Exception ignored){}
         about.addView(label(ui("גרסה ","Version ")+version,15,CYAN,true));
