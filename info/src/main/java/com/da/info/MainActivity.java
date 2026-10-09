@@ -73,14 +73,53 @@ public class MainActivity extends Activity {
     }
     void settings(){
         clear();screen="settings";backAction=()->home();
-        content.addView(label(ui("הגדרות","Settings"),27,WHITE,true));gap(5);content.addView(label(ui("התאמה אישית של DA INFO","Personalize DA INFO"),13,MUTED,false));gap(18);
+        content.addView(label(ui("הגדרות","Settings"),27,WHITE,true));
+        gap(5);content.addView(label(ui("התאמה אישית של DA INFO","Personalize DA INFO"),13,MUTED,false));gap(18);
+
         LinearLayout language=column();language.setPadding(dp(16),dp(16),dp(16),dp(16));language.setBackground(shape(CARD,16));
-        language.addView(label(ui("שפת הממשק","Interface language"),17,WHITE,true));language.addView(label(ui("הטקסטים והכפתורים בלבד; תוכן המאגר נשאר בעברית.","Menus and buttons only; library content remains Hebrew."),12,MUTED,false));
-        Switch lang=new Switch(this);lang.setText(ui("English interface","ממשק בעברית"));lang.setTextColor(WHITE);lang.setChecked(english);lang.setPadding(0,dp(12),0,0);lang.setOnCheckedChangeListener((v,on)->{english=on;prefs.edit().putBoolean("english",on).apply();settings();});language.addView(lang);content.addView(language);gap(12);
-        LinearLayout theme=column();theme.setPadding(dp(16),dp(16),dp(16),dp(16));theme.setBackground(shape(CARD,16));theme.addView(label(ui("מראה המסך","Screen appearance"),17,WHITE,true));theme.addView(label(ui("בחירת מצב תצוגה","Choose display mode"),12,MUTED,false));
-        Switch darkSwitch=new Switch(this);darkSwitch.setText(ui("מצב כהה","Dark mode"));darkSwitch.setTextColor(WHITE);darkSwitch.setChecked(dark);darkSwitch.setPadding(0,dp(12),0,0);darkSwitch.setOnCheckedChangeListener((v,on)->{dark=on;prefs.edit().putBoolean("dark",on).apply();applyTheme();settings();});theme.addView(darkSwitch);content.addView(theme);gap(12);
-        LinearLayout about=column();about.setPadding(dp(16),dp(16),dp(16),dp(16));about.setBackground(shape(CARD,16));about.addView(label(ui("אודות האפליקציה","About the app"),17,WHITE,true));gap(4);about.addView(label("DA INFO",15,CYAN,true));about.addView(label(ui("מאגר ידע לשימוש גם ללא חיבור לאינטרנט.","An offline knowledge library."),13,MUTED,false));gap(8);about.addView(label("© "+java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)+" DA Aplications",13,WHITE,true));about.addView(label(ui("כל הזכויות שמורות.","All rights reserved."),12,MUTED,false));about.addView(label(ui("פותח עבור למידה, עיון וגילוי ידע.","Made for learning, reading and discovery."),12,MUTED,false));content.addView(about);
-        status.setText("●  "+ui("הגדרות","Settings"));
+        language.addView(label(ui("שפת הממשק","Interface language"),17,WHITE,true));
+        language.addView(label(ui("שינוי שפת התפריטים והכפתורים; תוכן המאגר נשאר בעברית.","Changes menus and buttons; library content remains Hebrew."),12,MUTED,false));
+        Switch lang=new Switch(this);lang.setText(ui("English interface","ממשק בעברית"));lang.setTextColor(themedText(WHITE));lang.setChecked(english);lang.setPadding(0,dp(12),0,0);
+        lang.setOnCheckedChangeListener((v,on)->{english=on;prefs.edit().putBoolean("english",on).apply();settings();});language.addView(lang);content.addView(language);gap(12);
+
+        LinearLayout theme=column();theme.setPadding(dp(16),dp(16),dp(16),dp(16));theme.setBackground(shape(CARD,16));
+        theme.addView(label(ui("מראה המסך","Screen appearance"),17,WHITE,true));
+        theme.addView(label(ui("בחירת מצב תצוגה נוח לעיניים.","Choose the display mode that feels comfortable."),12,MUTED,false));
+        Switch darkSwitch=new Switch(this);darkSwitch.setText(ui("מצב כהה","Dark mode"));darkSwitch.setTextColor(themedText(WHITE));darkSwitch.setChecked(dark);darkSwitch.setPadding(0,dp(12),0,0);
+        darkSwitch.setOnCheckedChangeListener((v,on)->{dark=on;prefs.edit().putBoolean("dark",on).apply();applyTheme();settings();});theme.addView(darkSwitch);content.addView(theme);gap(12);
+
+        LinearLayout reading=column();reading.setPadding(dp(16),dp(16),dp(16),dp(16));reading.setBackground(shape(CARD,16));
+        reading.addView(label(ui("נוחות קריאה","Reading comfort"),17,WHITE,true));
+        reading.addView(label(ui("אפשר להגדיל את הטקסט בערכים המלאים.","Increase text size in full articles."),12,MUTED,false));
+        Switch largeText=new Switch(this);largeText.setText(ui("טקסט קריאה מוגדל","Larger reading text"));largeText.setTextColor(themedText(WHITE));largeText.setChecked(prefs.getBoolean("large_text",false));largeText.setPadding(0,dp(12),0,0);
+        largeText.setOnCheckedChangeListener((v,on)->prefs.edit().putBoolean("large_text",on).apply());reading.addView(largeText);content.addView(reading);gap(12);
+
+        LinearLayout dataTools=column();dataTools.setPadding(dp(16),dp(16),dp(16),dp(16));dataTools.setBackground(shape(CARD,16));
+        dataTools.addView(label(ui("ניהול נתונים","Data management"),17,WHITE,true));
+        dataTools.addView(label(ui("המועדפים וההיסטוריה נשמרים במכשיר בלבד.","Bookmarks and history are stored on this device."),12,MUTED,false));gap(8);
+        Button clearHistory=button(ui("ניקוי היסטוריית צפייה","Clear viewing history"),Color.rgb(37,49,75));
+        clearHistory.setOnClickListener(v->new android.app.AlertDialog.Builder(this).setTitle(ui("לנקות היסטוריה?","Clear history?")).setMessage(ui("רשימת הערכים שנפתחו לאחרונה תימחק.","The recently viewed list will be deleted.")).setNegativeButton(ui("ביטול","Cancel"),(d,w)->{}).setPositiveButton(ui("ניקוי","Clear"),(d,w)->{prefs.edit().remove("history").apply();Toast.makeText(this,ui("ההיסטוריה נוקתה","History cleared"),Toast.LENGTH_SHORT).show();}).show());
+        dataTools.addView(clearHistory,new LinearLayout.LayoutParams(-1,dp(44)));gap(8);
+        Button clearFavorites=button(ui("מחיקת כל המועדפים","Clear all bookmarks"),Color.rgb(37,49,75));
+        clearFavorites.setOnClickListener(v->new android.app.AlertDialog.Builder(this).setTitle(ui("למחוק את כל המועדפים?","Clear all bookmarks?")).setMessage(ui("לא ניתן לשחזר את רשימת המועדפים לאחר המחיקה.","Your bookmark list cannot be restored after deletion.")).setNegativeButton(ui("ביטול","Cancel"),(d,w)->{}).setPositiveButton(ui("מחיקה","Delete"),(d,w)->{prefs.edit().remove("favorites").apply();Toast.makeText(this,ui("המועדפים נמחקו","Bookmarks cleared"),Toast.LENGTH_SHORT).show();}).show());
+        dataTools.addView(clearFavorites,new LinearLayout.LayoutParams(-1,dp(44)));content.addView(dataTools);gap(12);
+
+        LinearLayout about=column();about.setPadding(dp(18),dp(18),dp(18),dp(18));about.setBackground(gradient(Color.rgb(29,34,68),Color.rgb(17,54,70),20));
+        LinearLayout brand=row();
+        ImageView appIcon=new ImageView(this);appIcon.setImageResource(R.drawable.ic_da_info);appIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        brand.addView(appIcon,new LinearLayout.LayoutParams(dp(76),dp(76)));
+        LinearLayout aboutText=column();aboutText.setPadding(dp(14),dp(4),0,0);
+        aboutText.addView(label("DA INFO",21,WHITE,true));
+        aboutText.addView(label(ui("מאגר ידע אישי ואופליין","Personal offline knowledge library"),12,Color.rgb(210,221,247),false));
+        brand.addView(aboutText,new LinearLayout.LayoutParams(0,-2,1));about.addView(brand);gap(10);
+        String version="לא ידוע";
+        try{version=getPackageManager().getPackageInfo(getPackageName(),0).versionName;}catch(Exception ignored){}
+        about.addView(label(ui("גרסה ","Version ")+version,15,CYAN,true));
+        about.addView(label(ui("מספר ערכים: ","Entries: ")+count(),13,WHITE,false));gap(5);
+        about.addView(label(ui("פותח עבור למידה, עיון וגילוי ידע.","Made for learning, reading and discovery."),13,MUTED,false));
+        about.addView(label("© "+java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)+" DA Applications",12,MUTED,false));
+        content.addView(about);
+        status.setText("●  "+ui("הגדרות","Settings")+"  ·  v"+version);
     }
     @Override public void onBackPressed(){if(backAction!=null){Runnable action=backAction;backAction=null;action.run();}else if(!"home".equals(screen)){home();}else{super.onBackPressed();}}
     void showSuggestions(String query,LinearLayout holder,EditText input){
@@ -122,7 +161,7 @@ public class MainActivity extends Activity {
     JSONObject findCategory(String title)throws Exception{for(int i=0;i<cats.length();i++){JSONObject c=cats.getJSONObject(i);if(c.optString("title").equals(title))return c;}return new JSONObject();}
     void readArticle(JSONObject it,String category){
         clear();screen="article";recordHistory(entryKey(category,it.optString("title")));backAction=()->{try{JSONObject c=findCategory(category);category(c);}catch(Exception e){home();}};TextView cat=label(category,13,CYAN,true);content.addView(cat);gap(5);content.addView(label(it.optString("title"),27,WHITE,true));gap(14);
-        LinearLayout panel=column();panel.setPadding(dp(18),dp(18),dp(18),dp(18));panel.setBackground(shape(CARD,18));TextView body=label(it.optString("body"),18,Color.rgb(220,226,241),false);body.setLineSpacing(dp(8),1.12f);body.setTextIsSelectable(true);panel.addView(body);content.addView(panel);
+        LinearLayout panel=column();panel.setPadding(dp(18),dp(18),dp(18),dp(18));panel.setBackground(shape(CARD,18));TextView body=label(it.optString("body"),prefs.getBoolean("large_text",false)?21:18,Color.rgb(220,226,241),false);body.setLineSpacing(dp(8),1.12f);body.setTextIsSelectable(true);panel.addView(body);content.addView(panel);
         gap(16);Button fav=button(prefs.getStringSet("favorites",new java.util.HashSet<>()).contains(entryKey(category,it.optString("title")))? "★  "+ui("הסר מהמועדפים","Remove bookmark"):"☆  "+ui("הוסף למועדפים","Add bookmark"),ACC);fav.setOnClickListener(v->{java.util.Set<String> keys=new java.util.HashSet<>(prefs.getStringSet("favorites",new java.util.HashSet<>()));String key=entryKey(category,it.optString("title"));if(keys.contains(key))keys.remove(key);else keys.add(key);prefs.edit().putStringSet("favorites",keys).apply();readArticle(it,category);});content.addView(fav,new LinearLayout.LayoutParams(-1,dp(46)));gap(8);content.addView(label(ui("מושג מתוך מאגר DA מידע","An entry from the DA INFO library"),12,MUTED,false));status.setText("●  קריאה אופליין");
     }
     void search(String q){
