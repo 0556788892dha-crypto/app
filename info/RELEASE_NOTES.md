@@ -15,12 +15,13 @@ Missing information is preferable to fabricated facts. The new entries are conci
 
 ## v0.9 (content expansion)
 - Version code: 9; version name: 0.9.
-- Expanded the offline Hebrew knowledge base with 214 additional distinct educational entries since the prior 1,351-entry checkpoint across science, computing, psychology and learning, history, geography, finance, transport, environment, mathematics, design, business, and practical technology.
+- Expanded the offline Hebrew knowledge base with 246 additional distinct educational entries since the prior 1,351-entry checkpoint across science, computing, psychology and learning, history, geography, finance, transport, environment, mathematics, design, business, and practical technology.
 - Entries are added only when titles are unique and bodies meet a minimum length check; no filler records are generated to inflate the count.
 - The database remains bundled locally for offline use.
 - This is an incremental step toward the 2,000-entry target; the verified total is recorded in the repository after this batch.
 
 
-- Current verified database count: 1565 entries across 45 categories; 435 entries remain toward the requested target.
 - UI improvements in this release candidate: subcategory tiles that open their full entry lists, compact circular settings control at the top, increased metric-card height to prevent clipping, and a refreshed app mark.
 - Automated APK build is configured to produce the v0.9 artifact; the artifact is not considered ready until the GitHub Actions run succeeds.
+
+- Current verified database count: 1,597 entries across 45 categories; 403 entries remain toward the requested 2,000-entry target.
