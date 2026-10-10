@@ -212,21 +212,24 @@ public class MainActivity extends Activity {
         status.setText("●  "+c.optString("title")+"  ·  "+(a==null?0:a.length())+" "+ui("ערכים אופליין","offline entries"));
     }
     void showSubcategory(JSONObject c,String subName,java.util.ArrayList<JSONObject> entries){
-        clear();screen="subcategory";backAction=()->showSubcategory(c,subName,entries);
+        clear();screen="subcategory";backAction=()->category(c);
         LinearLayout header=row();LinearLayout labels=column();labels.addView(label(subName,24,WHITE,true));labels.addView(label(c.optString("title")+"  ·  "+entries.size()+" "+ui("ערכים","entries"),12,CYAN,false));header.addView(labels,new LinearLayout.LayoutParams(0,-2,1));
         TextView back=text("←",22,CYAN,true);back.setGravity(Gravity.CENTER);back.setBackground(shape(CARD,50));LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(dp(42),dp(42));p.setMargins(dp(8),0,0,0);header.addView(back,p);back.setOnClickListener(v->category(c));content.addView(header);gap(13);
-        for(JSONObject it:entries)articleCard(it,c.optString("title"));
+        for(JSONObject it:entries)articleCard(it,c.optString("title"),()->showSubcategory(c,subName,entries));
         status.setText("●  "+subName+"  ·  "+entries.size()+" "+ui("ערכים","entries"));
     }
     void articleCard(JSONObject it,String category){
+        articleCard(it,category,()->{try{category(findCategory(category));}catch(Exception e){home();}});
+    }
+    void articleCard(JSONObject it,String category,Runnable returnAction){
         LinearLayout box=column();box.setPadding(dp(16),dp(15),dp(16),dp(15));box.setBackground(shape(CARD,16));box.setElevation(dp(2));box.setClipToOutline(true);
         TextView titleView=label(it.optString("title"),19,WHITE,true);highlight(titleView,it.optString("title"),activeQuery);box.addView(titleView);TextView body=label(it.optString("body"),14,MUTED,false);highlight(body,it.optString("body"),activeQuery);body.setLineSpacing(dp(5),1.06f);body.setMaxLines(3);body.setEllipsize(android.text.TextUtils.TruncateAt.END);box.addView(body);
-        TextView more=label(ui("לקריאה מלאה","Read full entry")+"  ←",12,CYAN,true);more.setPadding(0,dp(10),0,0);box.addView(more);box.setOnClickListener(v->readArticle(it,category));
+        TextView more=label(ui("לקריאה מלאה","Read full entry")+"  ←",12,CYAN,true);more.setPadding(0,dp(10),0,0);box.addView(more);box.setOnClickListener(v->readArticle(it,category,returnAction));
         LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.bottomMargin=dp(10);content.addView(box,p);
     }
     JSONObject findCategory(String title)throws Exception{for(int i=0;i<cats.length();i++){JSONObject c=cats.getJSONObject(i);if(c.optString("title").equals(title))return c;}return new JSONObject();}
-    void readArticle(JSONObject it,String category){
-        Runnable returnToPrevious=backAction;
+    void readArticle(JSONObject it,String category){readArticle(it,category,()->{try{category(findCategory(category));}catch(Exception e){home();}});}
+    void readArticle(JSONObject it,String category,Runnable returnToPrevious){
         clear();screen="article";recordHistory(entryKey(category,it.optString("title")));backAction=()->{if(returnToPrevious!=null)returnToPrevious.run();else home();};TextView cat=label(category,13,CYAN,true);content.addView(cat);gap(5);content.addView(label(it.optString("title"),27,WHITE,true));gap(14);
         LinearLayout panel=column();panel.setPadding(dp(18),dp(18),dp(18),dp(18));panel.setBackground(shape(CARD,18));TextView body=label(it.optString("body"),prefs.getBoolean("large_text",false)?21:18,Color.rgb(220,226,241),false);body.setLineSpacing(dp(8),1.12f);body.setTextIsSelectable(true);panel.addView(body);content.addView(panel);
         gap(16);Button fav=button(prefs.getStringSet("favorites",new java.util.HashSet<>()).contains(entryKey(category,it.optString("title")))? "★  "+ui("הסר מהמועדפים","Remove bookmark"):"☆  "+ui("הוסף למועדפים","Add bookmark"),ACC);fav.setOnClickListener(v->{java.util.Set<String> keys=new java.util.HashSet<>(prefs.getStringSet("favorites",new java.util.HashSet<>()));String key=entryKey(category,it.optString("title"));if(keys.contains(key))keys.remove(key);else keys.add(key);prefs.edit().putStringSet("favorites",keys).apply();readArticle(it,category);});content.addView(fav,new LinearLayout.LayoutParams(-1,dp(46)));gap(8);content.addView(label(ui("מושג מתוך מאגר DA מידע","An entry from the DA INFO library"),12,MUTED,false));status.setText("●  קריאה אופליין");
