@@ -120,12 +120,11 @@ public class MainActivity extends Activity {
     Button button(String s,int color){Button b=new Button(this);b.setText(s);b.setAllCaps(false);b.setTextSize(14);b.setTextColor(WHITE);b.setTypeface(Typeface.DEFAULT,Typeface.BOLD);b.setBackground(shape(color,14));b.setPadding(dp(12),0,dp(12),0);return b;}
     String umbrellaFor(String id){
         if(java.util.Arrays.asList("science","technology","math","space","biology","physics","chemistry","energy","engineering","materials","materials_science","data","statistics","cybersecurity","networking","digital_tools").contains(id))return ui("מדע, טכנולוגיה ונתונים","Science, technology & data");
-        if(java.util.Arrays.asList("psychology","history","geography","economy","civics","law","urban").contains(id))return ui("אדם, חברה והעולם","People, society & the world");
+        if(java.util.Arrays.asList("psychology","history","geography","economy","civics","law","urban","travel").contains(id))return ui("אדם, חברה והעולם","People, society & the world");
         if(java.util.Arrays.asList("personal_finance","business","project_management","logistics").contains(id))return ui("כסף, עסקים וניהול","Money, business & management");
         if(java.util.Arrays.asList("cars","everyday","food","home","garden","agriculture","weather","environment").contains(id))return ui("חיי היום־יום והסביבה","Everyday life & environment");
         if(java.util.Arrays.asList("arts","music","photography","language","audio","architecture","materials_science").contains(id))return ui("יצירה, שפה ועיצוב","Creativity, language & design");
         if(java.util.Arrays.asList("thinking","productivity","education").contains(id))return ui("חשיבה, למידה והתפתחות","Thinking, learning & growth");
-        if(java.util.Arrays.asList("travel").contains(id))return ui("טיולים ותכנון","Travel & planning");
         return ui("ידע נוסף","More knowledge");
     }
     View categoryCard(JSONObject c,int i){
