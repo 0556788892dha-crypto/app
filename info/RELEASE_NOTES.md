@@ -35,11 +35,17 @@ Missing information is preferable to fabricated facts. The new entries are conci
 - This release updates the knowledge database and version metadata; the APK must still pass the automated build before it is considered ready to install.
 
 
-## v1.2 (layout and release history)
+## v1.1 (navigation, search and content expansion)
+- Restored the complete v1.1 implementation instead of carrying forward only the v1.2 visual changes.
+- Added 331 distinct offline entries in `data_v1_1.json`, bringing the combined library to 2,331 entries across the existing knowledge domains.
+- Improved Hebrew search normalization and suggestions, including matching article bodies; matching terms are highlighted in results.
+- Restored fixed bottom navigation, umbrella grouping on the home screen, and Back navigation to the originating subcategory.
+- The build validates base and added content together, rejecting duplicate titles/bodies, missing fields and filler titles.
+
+## v1.2 (v1.1 + visual refresh)
 - Version code: 12; version name: 1.2.
-- Replaced the app icon with a polished globe-and-open-book knowledge symbol.
-- Centered all text and counts inside category and subcategory tiles.
-- Made category/subcategory cards more compact without reducing the main category icon size; corrected subcategory grid to consistently use three columns.
-- Kept the version change-log button in About and updated its v1.2 description to match the actual visual changes.
-- Preserved the offline database and existing search, suggestions, bookmarks, history, dark mode, and interface-language setting.
-- Automated build now labels the APK and artifact as v1.2; build validation is required before release.
+- Preserved all v1.1 features and all 331 added entries.
+- Replaced the app icon with a globe-and-open-book knowledge symbol.
+- Centered category and subcategory text/counts and made tiles more compact while retaining their original icon sizes.
+- Preserved three-column grids, umbrella topic grouping, bottom navigation, search suggestions/highlighting, favorites, history, reading settings and the dedicated changelog screen.
+- Automated build labels the output `DA_INFO_v1.2.apk`; release requires a successful database validation and build.
