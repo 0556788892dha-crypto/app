@@ -228,7 +228,7 @@ public class MainActivity extends Activity {
             ui("נוסף מבנה לתוכן מורחב שנפתח בלחצן ייעודי מתוך הערך.","Added an expandable in-depth section opened from each article."),
             ui("נוסף מנגנון לטעינת חבילת תוכן 1.3 בנפרד, כדי לשמור על חבילות התוכן הקודמות.","Added a separate loader for the v1.3 content pack to preserve earlier content packs."),
             ui("נוספה אפשרות להרחבת ערך בלחצן ייעודי, כאשר הערך כולל תוכן מורחב.","Entries with expanded content now offer a dedicated expand button."),
-            ui("נוספו 219 ערכים חדשים עם הסברים מורחבים בתשעה תחומי ידע; העבודה על יעד 300 הערכים נמשכת.","Added 219 new entries with in-depth explanations across nine knowledge areas; work toward the 300-entry target continues.")
+            ui("נוספו 302 ערכים חדשים עם הסברים מורחבים בתשעה תחומי ידע; העבודה על יעד 300 הערכים נמשכת.","Added 302 new entries with in-depth explanations across nine knowledge areas; work toward the 300-entry target continues.")
         },true);
         addChangelogEntry("1.2",ui("יומן שינויים וגרסה מעודכנת","Changelog and version update"),new String[]{
             ui("נוסף לחצן חדש באודות לפתיחת יומן השינויים.","Added an About button to open the version changelog."),
