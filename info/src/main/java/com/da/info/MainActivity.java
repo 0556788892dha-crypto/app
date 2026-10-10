@@ -68,7 +68,13 @@ public class MainActivity extends Activity {
     void gap(int h){View v=new View(this);content.addView(v,new LinearLayout.LayoutParams(1,dp(h)));}
     void clear(){content.removeAllViews();}
     int count(){int n=0;for(int i=0;i<cats.length();i++)try{n+=cats.getJSONObject(i).getJSONArray("items").length();}catch(Exception ignored){}return n;}
+    void updateNavActive(String active){
+        TextView homeTab=findViewById(R.id.navHome),settingsTab=findViewById(R.id.navSettings);
+        if(homeTab!=null){homeTab.setTextColor("home".equals(active)?CYAN:MUTED);homeTab.setTypeface(null,"home".equals(active)?Typeface.BOLD:Typeface.NORMAL);}
+        if(settingsTab!=null){settingsTab.setTextColor("settings".equals(active)?CYAN:MUTED);settingsTab.setTypeface(null,"settings".equals(active)?Typeface.BOLD:Typeface.NORMAL);}
+    }
     void home(){
+        updateNavActive("home");
         activeQuery="";clear();
         LinearLayout hero=column();hero.setPadding(dp(21),dp(23),dp(21),dp(23));hero.setBackground(gradient(Color.rgb(65,48,146),Color.rgb(12,103,119),26));hero.setElevation(dp(7));hero.setClipToOutline(true);
         LinearLayout brand=row();ImageView mark=new ImageView(this);mark.setImageResource(R.drawable.ic_da_info);mark.setScaleType(ImageView.ScaleType.FIT_CENTER);mark.setBackground(shape(Color.rgb(255,255,255),16));brand.addView(mark,new LinearLayout.LayoutParams(dp(58),dp(58)));
@@ -115,6 +121,7 @@ public class MainActivity extends Activity {
         box.setOnClickListener(v->category(c));return box;
     }
     void settings(){
+        updateNavActive("settings");
         clear();screen="settings";backAction=()->home();
         content.addView(label(ui("הגדרות","Settings"),27,WHITE,true));
         gap(5);content.addView(label(ui("התאמה אישית של DA INFO","Personalize DA INFO"),13,MUTED,false));gap(18);
