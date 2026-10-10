@@ -33,3 +33,11 @@ Missing information is preferable to fabricated facts. The new entries are conci
 - Kept category and subcategory metadata required for in-app grouping.
 - The Android build workflow now requires at least 2,000 entries and labels the output APK as DA_INFO_v1.0.apk.
 - This release updates the knowledge database and version metadata; the APK must still pass the automated build before it is considered ready to install.
+
+
+## v1.2 (layout and release history)
+- Version code: 12; version name: 1.2.
+- Changed knowledge-domain tiles to a three-column grid, with three tiles per row in subcategory selection as well.
+- Added a version change-log button to the About section, with a concise history of releases 1.0–1.2.
+- Preserved the offline database and existing search, suggestions, bookmarks, history, dark mode, and interface-language setting.
+- Automated build now labels the APK and artifact as v1.2; build validation is required before release.
