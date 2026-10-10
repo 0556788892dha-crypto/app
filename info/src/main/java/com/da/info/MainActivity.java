@@ -189,9 +189,50 @@ public class MainActivity extends Activity {
         about.addView(label(ui("מספר ערכים: ","Entries: ")+count(),13,WHITE,false));gap(5);
         about.addView(label(ui("פותח עבור למידה, עיון וגילוי ידע.","Made for learning, reading and discovery."),13,MUTED,false));
         about.addView(label("© "+java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)+" DA Applications",12,MUTED,false));
+        gap(10);
+        Button changelog=button("☷  "+ui("יומן שינויים בכל הגרסאות","Version history & changelog"),Color.rgb(49,65,104));
+        changelog.setOnClickListener(v->showChangelog());
+        about.addView(changelog,new LinearLayout.LayoutParams(-1,dp(48)));
         content.addView(about);
         status.setText("●  "+ui("הגדרות","Settings")+"  ·  v"+version);
     }
+    void showChangelog(){
+        clear();screen="changelog";backAction=()->settings();
+        LinearLayout header=row();LinearLayout titles=column();
+        titles.addView(label(ui("יומן שינויים","Version changelog"),25,WHITE,true));
+        titles.addView(label(ui("מה התחדש בכל גרסה של DA INFO","What changed in each DA INFO release"),13,MUTED,false));
+        header.addView(titles,new LinearLayout.LayoutParams(0,-2,1));
+        TextView back=text("←",22,CYAN,true);back.setGravity(Gravity.CENTER);back.setBackground(shape(CARD,50));
+        header.addView(back,new LinearLayout.LayoutParams(dp(42),dp(42)));back.setOnClickListener(v->settings());
+        content.addView(header);gap(14);
+        addChangelogEntry("1.2",ui("גרסה נוכחית — יומן שינויים","Current version — changelog"),new String[]{
+            ui("נוסף לחצן חדש באודות לפתיחת יומן השינויים.","Added a new About button to open the version changelog."),
+            ui("נוסף מסך מסודר עם פירוט השינויים לפי גרסה.","Added a dedicated screen listing changes by version."),
+            ui("עודכנו מספר הגרסה וקוד הגרסה ל־1.2.","Updated the app version name and code to 1.2.")
+        },true);
+        addChangelogEntry("1.1",ui("ניווט, חיפוש והרחבת המאגר","Navigation, search and library expansion"),new String[]{
+            ui("נוספו 331 ערכים חדשים — 2,331 ערכים בסך הכול.","Added 331 entries — 2,331 entries total."),
+            ui("שופרו הצעות החיפוש והדגשת מונחים בתוצאות.","Improved search suggestions and matching-term highlighting."),
+            ui("נוספו ניווט תחתון, הגדרות ומעבר חזרה לתת־הקטגוריה.","Added bottom navigation, settings and return-to-subcategory navigation."),
+            ui("תחומי הידע אורגנו בקבוצות ובתצוגת שלוש קוביות בשורה.","Grouped knowledge topics and used three-column tile layouts.")
+        },false);
+        addChangelogEntry("1.0",ui("המהדורה הראשונית","Initial release"),new String[]{
+            ui("מאגר ידע מקומי שניתן לעיין בו ללא חיבור לאינטרנט.","Offline knowledge library usable without an internet connection."),
+            ui("קטגוריות ותתי־קטגוריות, חיפוש וקריאת ערכים.","Categories and subcategories, search and article reading."),
+            ui("שמירת מועדפים והיסטוריית צפייה במכשיר.","On-device bookmarks and viewing history.")
+        },false);
+        gap(8);content.addView(label(ui("הערה: יומן זה מתעד את השינויים הידועים בגרסאות המפורטות כאן. בגרסאות עתידיות יתווסף סעיף חדש בראש הרשימה.","Note: this log documents known changes for the versions listed here. Future releases will add a new entry at the top."),12,MUTED,false));
+        status.setText("●  "+ui("יומן שינויים","Changelog")+"  ·  1.2");
+    }
+    void addChangelogEntry(String version,String heading,String[] changes,boolean current){
+        LinearLayout card=column();card.setPadding(dp(16),dp(15),dp(16),dp(15));card.setBackground(shape(CARD,16));card.setElevation(dp(2));
+        LinearLayout top=row();TextView ver=label("v"+version,17,current?CYAN:WHITE,true);top.addView(ver,new LinearLayout.LayoutParams(0,-2,1));
+        if(current){TextView badge=label(ui("נוכחית","Current"),11,CYAN,true);badge.setGravity(Gravity.CENTER);badge.setPadding(dp(9),dp(4),dp(9),dp(4));badge.setBackground(shape(Color.rgb(22,51,65),20));top.addView(badge);}
+        card.addView(top);card.addView(label(heading,14,WHITE,true));gapInside(card,6);
+        for(String change:changes){TextView line=label("•  "+change,13,MUTED,false);line.setLineSpacing(dp(3),1.0f);line.setPadding(0,dp(3),0,dp(3));card.addView(line);}
+        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.bottomMargin=dp(10);content.addView(card,p);
+    }
+    void gapInside(LinearLayout box,int h){View v=new View(this);box.addView(v,new LinearLayout.LayoutParams(1,dp(h)));}
     @Override public void onBackPressed(){if(backAction!=null){Runnable action=backAction;backAction=null;action.run();}else if(!"home".equals(screen)){home();}else{super.onBackPressed();}}
     void showSuggestions(String query,LinearLayout holder,EditText input){
         holder.removeAllViews();String z=normalizeSearch(query);if(z.length()<1)return;int shown=0;
