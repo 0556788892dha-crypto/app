@@ -226,8 +226,8 @@ public class MainActivity extends Activity {
         content.addView(header);gap(14);
         addChangelogEntry("1.3",ui("הרחבת מאגר הידע","Expanded knowledge library"),new String[]{
             ui("נוסף מבנה לתוכן מורחב שנפתח בלחצן ייעודי מתוך הערך.","Added an expandable in-depth section opened from each article."),
-            ui("נוספה חבילת תוכן נפרדת לגרסה 1.3, בלי לדרוס את חבילות 1.0 ו־1.1.","Added a separate v1.3 content pack without replacing earlier packs."),
-            ui("המאגר מתרחב בתחומי ידע נוספים, כולל חברה, אזרחות ומדיניות ציבורית.","Expanded the library across more topics, including civics and public policy.")
+            ui("נוסף מנגנון לטעינת חבילת תוכן 1.3 בנפרד, כדי לשמור על חבילות התוכן הקודמות.","Added a separate loader for the v1.3 content pack to preserve earlier content packs."),
+            ui("הגרסה מיועדת להעמקת הערכים ולהרחבת תחומי ידע, כולל אזרחות ומדיניות ציבורית.","This release is being developed to deepen entries and broaden topics, including civics and public policy.")
         },true);
         addChangelogEntry("1.2",ui("יומן שינויים וגרסה מעודכנת","Changelog and version update"),new String[]{
             ui("נוסף לחצן חדש באודות לפתיחת יומן השינויים.","Added an About button to open the version changelog."),
