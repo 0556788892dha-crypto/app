@@ -36,7 +36,7 @@ jobs:
               data = json.load(f)
           items = [item for category in data['categories'] for item in category['items']]
           assert len(data['categories']) >= 15, 'Expected at least 15 categories'
-          assert len(items) >= 650, f'Expected at least 650 real entries, got {len(items)}'
+          assert len(items) >= 2000, f'Expected at least 2000 real entries, got {len(items)}'
           assert all(item.get('title', '').strip() and item.get('body', '').strip() and item.get('subcategory', '').strip() for item in items), 'An entry is missing title, body, or subcategory'
           assert not any(re.search(r'מדריך\s+\d+', item['title']) for item in items), 'Template filler title detected'
           bodies = [' '.join(item['body'].lower().split()) for item in items]
@@ -52,12 +52,12 @@ jobs:
         run: |
           ls -lh info/build/outputs/apk/debug/*.apk
           test -s info/build/outputs/apk/debug/*.apk
-          cp info/build/outputs/apk/debug/*.apk info/build/outputs/apk/debug/DA_INFO_v0.9.apk
+          cp info/build/outputs/apk/debug/*.apk info/build/outputs/apk/debug/DA_INFO_v1.0.apk
           test -s info/build/outputs/apk/debug/DA_INFO_v0.9.apk
       - name: Upload DA INFO APK
         uses: actions/upload-artifact@v4
         with:
-          name: DA-INFO-v0.9-APK
+          name: DA-INFO-v1.0-APK
           path: info/build/outputs/apk/debug/DA_INFO_v0.9.apk
           if-no-files-found: error
           retention-days: 14
