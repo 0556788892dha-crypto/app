@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
     Runnable backAction;
     String ui(String he,String en){return english?en:he;}
     int dp(float n){return (int)(n*getResources().getDisplayMetrics().density+0.5f);}
-    public void onCreate(Bundle b){super.onCreate(b);prefs=getSharedPreferences("da_info",MODE_PRIVATE);english=prefs.getBoolean("english",false);dark=prefs.getBoolean("dark",true);applyTheme();setContentView(R.layout.activity_main);applyTheme();content=findViewById(R.id.content);status=findViewById(R.id.status);load();home();}
+    public void onCreate(Bundle b){super.onCreate(b);prefs=getSharedPreferences("da_info",MODE_PRIVATE);english=prefs.getBoolean("english",false);dark=prefs.getBoolean("dark",true);applyTheme();setContentView(R.layout.activity_main);applyTheme();content=findViewById(R.id.content);status=findViewById(R.id.status);findViewById(R.id.navHome).setOnClickListener(v->home());findViewById(R.id.navSettings).setOnClickListener(v->settings());load();home();}
     void applyTheme(){int bg=dark?Color.rgb(9,13,26):Color.rgb(242,245,251);getWindow().setStatusBarColor(bg);getWindow().setNavigationBarColor(bg);getWindow().getDecorView().setBackgroundColor(bg);if(findViewById(android.R.id.content) instanceof android.view.ViewGroup){android.view.ViewGroup root=(android.view.ViewGroup)findViewById(android.R.id.content);if(root.getChildCount()>0)root.getChildAt(0).setBackgroundColor(bg);}}
     void load(){
         cats=new JSONArray();
@@ -73,7 +73,6 @@ public class MainActivity extends Activity {
         LinearLayout hero=column();hero.setPadding(dp(21),dp(23),dp(21),dp(23));hero.setBackground(gradient(Color.rgb(65,48,146),Color.rgb(12,103,119),26));hero.setElevation(dp(7));hero.setClipToOutline(true);
         LinearLayout brand=row();ImageView mark=new ImageView(this);mark.setImageResource(R.drawable.ic_da_info);mark.setScaleType(ImageView.ScaleType.FIT_CENTER);mark.setBackground(shape(Color.rgb(255,255,255),16));brand.addView(mark,new LinearLayout.LayoutParams(dp(58),dp(58)));
         LinearLayout names=column();names.setPadding(dp(12),0,0,0);names.addView(label(ui("DA מידע","DA INFO"),25,WHITE,true));names.addView(label(ui("הידע שלך. במקום אחד.","Your knowledge. In one place."),13,Color.rgb(210,221,247),false));brand.addView(names,new LinearLayout.LayoutParams(0,-2,1));
-        TextView settingsCircle=text("⚙",21,WHITE,true);settingsCircle.setGravity(Gravity.CENTER);settingsCircle.setBackground(shape(Color.argb(48,255,255,255),50));settingsCircle.setContentDescription(ui("הגדרות","Settings"));settingsCircle.setElevation(dp(2));LinearLayout.LayoutParams scp=new LinearLayout.LayoutParams(dp(42),dp(42));scp.setMargins(dp(9),0,0,0);brand.addView(settingsCircle,scp);settingsCircle.setOnClickListener(v->settings());
         hero.addView(brand);
         TextView tagline=label(ui("לומדים משהו חדש בכל יום","Learn something new every day"),19,WHITE,true);tagline.setPadding(0,dp(22),0,dp(5));hero.addView(tagline);
         hero.addView(label(ui("מאגר ידע אישי שעובד גם בלי חיבור לאינטרנט.","An offline knowledge library, always with you."),14,Color.rgb(213,223,246),false));
@@ -213,7 +212,7 @@ public class MainActivity extends Activity {
         status.setText("●  "+c.optString("title")+"  ·  "+(a==null?0:a.length())+" "+ui("ערכים אופליין","offline entries"));
     }
     void showSubcategory(JSONObject c,String subName,java.util.ArrayList<JSONObject> entries){
-        clear();screen="subcategory";backAction=()->category(c);
+        clear();screen="subcategory";backAction=()->showSubcategory(c,subName,entries);
         LinearLayout header=row();LinearLayout labels=column();labels.addView(label(subName,24,WHITE,true));labels.addView(label(c.optString("title")+"  ·  "+entries.size()+" "+ui("ערכים","entries"),12,CYAN,false));header.addView(labels,new LinearLayout.LayoutParams(0,-2,1));
         TextView back=text("←",22,CYAN,true);back.setGravity(Gravity.CENTER);back.setBackground(shape(CARD,50));LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(dp(42),dp(42));p.setMargins(dp(8),0,0,0);header.addView(back,p);back.setOnClickListener(v->category(c));content.addView(header);gap(13);
         for(JSONObject it:entries)articleCard(it,c.optString("title"));
@@ -227,7 +226,8 @@ public class MainActivity extends Activity {
     }
     JSONObject findCategory(String title)throws Exception{for(int i=0;i<cats.length();i++){JSONObject c=cats.getJSONObject(i);if(c.optString("title").equals(title))return c;}return new JSONObject();}
     void readArticle(JSONObject it,String category){
-        clear();screen="article";recordHistory(entryKey(category,it.optString("title")));backAction=()->{try{JSONObject c=findCategory(category);category(c);}catch(Exception e){home();}};TextView cat=label(category,13,CYAN,true);content.addView(cat);gap(5);content.addView(label(it.optString("title"),27,WHITE,true));gap(14);
+        Runnable returnToPrevious=backAction;
+        clear();screen="article";recordHistory(entryKey(category,it.optString("title")));backAction=()->{if(returnToPrevious!=null)returnToPrevious.run();else home();};TextView cat=label(category,13,CYAN,true);content.addView(cat);gap(5);content.addView(label(it.optString("title"),27,WHITE,true));gap(14);
         LinearLayout panel=column();panel.setPadding(dp(18),dp(18),dp(18),dp(18));panel.setBackground(shape(CARD,18));TextView body=label(it.optString("body"),prefs.getBoolean("large_text",false)?21:18,Color.rgb(220,226,241),false);body.setLineSpacing(dp(8),1.12f);body.setTextIsSelectable(true);panel.addView(body);content.addView(panel);
         gap(16);Button fav=button(prefs.getStringSet("favorites",new java.util.HashSet<>()).contains(entryKey(category,it.optString("title")))? "★  "+ui("הסר מהמועדפים","Remove bookmark"):"☆  "+ui("הוסף למועדפים","Add bookmark"),ACC);fav.setOnClickListener(v->{java.util.Set<String> keys=new java.util.HashSet<>(prefs.getStringSet("favorites",new java.util.HashSet<>()));String key=entryKey(category,it.optString("title"));if(keys.contains(key))keys.remove(key);else keys.add(key);prefs.edit().putStringSet("favorites",keys).apply();readArticle(it,category);});content.addView(fav,new LinearLayout.LayoutParams(-1,dp(46)));gap(8);content.addView(label(ui("מושג מתוך מאגר DA מידע","An entry from the DA INFO library"),12,MUTED,false));status.setText("●  קריאה אופליין");
     }
