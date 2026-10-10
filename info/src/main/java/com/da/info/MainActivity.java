@@ -27,7 +27,37 @@ public class MainActivity extends Activity {
     int dp(float n){return (int)(n*getResources().getDisplayMetrics().density+0.5f);}
     public void onCreate(Bundle b){super.onCreate(b);prefs=getSharedPreferences("da_info",MODE_PRIVATE);english=prefs.getBoolean("english",false);dark=prefs.getBoolean("dark",true);applyTheme();setContentView(R.layout.activity_main);applyTheme();content=findViewById(R.id.content);status=findViewById(R.id.status);load();home();}
     void applyTheme(){int bg=dark?Color.rgb(9,13,26):Color.rgb(242,245,251);getWindow().setStatusBarColor(bg);getWindow().setNavigationBarColor(bg);getWindow().getDecorView().setBackgroundColor(bg);if(findViewById(android.R.id.content) instanceof android.view.ViewGroup){android.view.ViewGroup root=(android.view.ViewGroup)findViewById(android.R.id.content);if(root.getChildCount()>0)root.getChildAt(0).setBackgroundColor(bg);}}
-    void load(){try(InputStream in=getAssets().open("data.json")){byte[] x=new byte[in.available()];in.read(x);cats=new JSONObject(new String(x,StandardCharsets.UTF_8)).getJSONArray("categories");}catch(Exception e){cats=new JSONArray();}}
+    void load(){
+        cats=new JSONArray();
+        try(InputStream in=getAssets().open("data.json")){
+            byte[] x=new byte[in.available()];in.read(x);
+            cats=new JSONObject(new String(x,StandardCharsets.UTF_8)).getJSONArray("categories");
+        }catch(Exception e){cats=new JSONArray();return;}
+        // Optional versioned content pack: base entries remain usable if the pack is absent.
+        try(InputStream in=getAssets().open("data_v1_1.json")){
+            byte[] x=new byte[in.available()];in.read(x);
+            JSONArray extra=new JSONObject(new String(x,StandardCharsets.UTF_8)).getJSONArray("categories");
+            for(int i=0;i<extra.length();i++){
+                JSONObject add=extra.getJSONObject(i);String id=add.optString("id");
+                JSONArray addItems=add.optJSONArray("items");if(addItems==null)continue;
+                for(int j=0;j<cats.length();j++){
+                    JSONObject base=cats.getJSONObject(j);
+                    if(base.optString("id").equals(id)){
+                        JSONArray target=base.getJSONArray("items");
+                        for(int k=0;k<addItems.length();k++)target.put(addItems.getJSONObject(k));
+                        break;
+                    }
+                }
+            }
+        }catch(Exception ignored){}
+    }
+    String normalizeSearch(String value){
+        if(value==null)return "";
+        String s=java.text.Normalizer.normalize(value,java.text.Normalizer.Form.NFD)
+            .replaceAll("\\p{M}+","");
+        s=s.replace('ך','כ').replace('ם','מ').replace('ן','נ').replace('ף','פ').replace('ץ','צ');
+        return s.toLowerCase(java.util.Locale.ROOT).replaceAll("[^\\p{L}\\p{N}]+"," ").trim().replaceAll("\\s+"," ");
+    }
     int themedText(int color){if(!dark&&color==WHITE)return Color.rgb(26,34,52);if(!dark&&color==MUTED)return Color.rgb(91,103,125);return color;}
     GradientDrawable shape(int color,int radius){if(!dark&&color==CARD)color=Color.WHITE;if(!dark&&color==Color.rgb(25,33,52))color=Color.rgb(232,237,246);if(!dark&&color==Color.rgb(16,23,38))color=Color.rgb(232,237,246);GradientDrawable d=new GradientDrawable();d.setColor(color);d.setCornerRadius(dp(radius));return d;}
     GradientDrawable gradient(int a,int b,int radius){GradientDrawable d=new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{a,b});d.setCornerRadius(dp(radius));return d;}
@@ -55,6 +85,13 @@ public class MainActivity extends Activity {
         content.addView(label(ui("מה תרצה לגלות היום?","What would you like to discover?"),21,WHITE,true));gap(8);
         EditText q=new EditText(this);q.setSingleLine(true);q.setTextSize(16);q.setTextColor(WHITE);q.setHintTextColor(MUTED);q.setHint(ui("חיפוש מושג או נושא…","Search a term or topic…"));q.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);q.setPadding(dp(16),0,dp(16),0);q.setBackground(shape(Color.rgb(25,33,52),16));q.setElevation(dp(2));content.addView(q,new LinearLayout.LayoutParams(-1,dp(54)));
         LinearLayout suggestions=column();content.addView(suggestions,new LinearLayout.LayoutParams(-1,-2));
+        q.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH);
+        q.setOnEditorActionListener((v,action,event)->{
+            if(action==android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH ||
+               (event!=null&&event.getKeyCode()==android.view.KeyEvent.KEYCODE_ENTER&&event.getAction()==android.view.KeyEvent.ACTION_DOWN)){
+                search(q.getText().toString());return true;
+            }return false;
+        });
         q.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int count,int after){}public void onTextChanged(CharSequence s,int start,int before,int count){showSuggestions(s.toString(),suggestions,q);}public void afterTextChanged(android.text.Editable e){}});
         gap(8);Button search=button("⌕   "+ui("חיפוש במאגר","Search library"),ACC);search.setOnClickListener(v->search(q.getText().toString()));content.addView(search,new LinearLayout.LayoutParams(-1,dp(48)));gap(10);
         LinearLayout quick=row();Button favBtn=button("★  "+ui("מועדפים","Bookmarks"),Color.rgb(37,49,75));Button histBtn=button("◷  "+ui("אחרונים","Recent"),Color.rgb(37,49,75));LinearLayout.LayoutParams qp=new LinearLayout.LayoutParams(0,dp(42),1);qp.setMargins(0,0,dp(5),0);quick.addView(favBtn,qp);LinearLayout.LayoutParams hp=new LinearLayout.LayoutParams(0,dp(42),1);hp.setMargins(dp(5),0,0,0);quick.addView(histBtn,hp);favBtn.setOnClickListener(v->savedEntries(false));histBtn.setOnClickListener(v->savedEntries(true));content.addView(quick);gap(15);
