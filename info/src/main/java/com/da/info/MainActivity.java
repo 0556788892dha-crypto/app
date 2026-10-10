@@ -102,22 +102,40 @@ public class MainActivity extends Activity {
         LinearLayout quick=row();Button favBtn=button("★  "+ui("מועדפים","Bookmarks"),Color.rgb(37,49,75));Button histBtn=button("◷  "+ui("אחרונים","Recent"),Color.rgb(37,49,75));LinearLayout.LayoutParams qp=new LinearLayout.LayoutParams(0,dp(42),1);qp.setMargins(0,0,dp(5),0);quick.addView(favBtn,qp);LinearLayout.LayoutParams hp=new LinearLayout.LayoutParams(0,dp(42),1);hp.setMargins(dp(5),0,0,0);quick.addView(histBtn,hp);favBtn.setOnClickListener(v->savedEntries(false));histBtn.setOnClickListener(v->savedEntries(true));content.addView(quick);gap(15);
         LinearLayout heading=row();LinearLayout htxt=column();htxt.addView(label(ui("תחומי ידע","Knowledge topics"),21,WHITE,true));htxt.addView(label(ui("בחר תחום כדי להתחיל","Choose a topic to begin"),13,MUTED,false));heading.addView(htxt,new LinearLayout.LayoutParams(0,-2,1));TextView badge=text(cats.length()+" "+ui("תחומים","topics"),12,CYAN,true);badge.setGravity(Gravity.CENTER);badge.setPadding(dp(10),dp(7),dp(10),dp(7));badge.setBackground(shape(Color.rgb(22,51,65),20));heading.addView(badge);content.addView(heading);gap(12);
         
-        android.widget.GridLayout grid=new android.widget.GridLayout(this);grid.setColumnCount(2);grid.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        for(int i=0;i<cats.length();i++)try{JSONObject c=cats.getJSONObject(i);View tile=categoryCard(c,i);android.widget.GridLayout.LayoutParams gp=new android.widget.GridLayout.LayoutParams(android.widget.GridLayout.spec(i/2),android.widget.GridLayout.spec(i%2,1,1f));gp.width=0;gp.height=-2;gp.setMargins(dp(4),dp(4),dp(4),dp(4));grid.addView(tile,gp);}catch(Exception ignored){}
-        content.addView(grid,new LinearLayout.LayoutParams(-1,-2));
+        java.util.LinkedHashMap<String,java.util.ArrayList<JSONObject>> topicGroups=new java.util.LinkedHashMap<>();
+        for(int i=0;i<cats.length();i++)try{JSONObject c=cats.getJSONObject(i);String group=umbrellaFor(c.optString("id"));if(!topicGroups.containsKey(group))topicGroups.put(group,new java.util.ArrayList<>());topicGroups.get(group).add(c);}catch(Exception ignored){}
+        int cardIndex=0;
+        for(java.util.Map.Entry<String,java.util.ArrayList<JSONObject>> section:topicGroups.entrySet()){
+            gap(12);
+            LinearLayout sectionHeader=row();sectionHeader.addView(label(section.getKey(),17,WHITE,true),new LinearLayout.LayoutParams(0,-2,1));
+            sectionHeader.addView(label(section.getValue().size()+" "+ui("תחומים","topics"),11,CYAN,true));content.addView(sectionHeader);gap(5);
+            android.widget.GridLayout grid=new android.widget.GridLayout(this);grid.setColumnCount(3);grid.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            for(JSONObject c:section.getValue())try{View tile=categoryCard(c,cardIndex);android.widget.GridLayout.LayoutParams gp=new android.widget.GridLayout.LayoutParams(android.widget.GridLayout.spec(cardIndex%section.getValue().size()/3),android.widget.GridLayout.spec((cardIndex%section.getValue().size())%3,1,1f));gp.width=0;gp.height=-2;gp.setMargins(dp(3),dp(3),dp(3),dp(3));grid.addView(tile,gp);cardIndex++;}catch(Exception ignored){}
+            content.addView(grid,new LinearLayout.LayoutParams(-1,-2));
+        }
         gap(12);LinearLayout footer=column();footer.setPadding(dp(15),dp(13),dp(15),dp(13));footer.setBackground(shape(Color.rgb(16,23,38),16));footer.addView(label("◉  "+ui("עובד אופליין","Works offline"),14,CYAN,true));footer.addView(label(count()+" "+ui("ערכים זמינים כרגע במכשיר","entries available on this device"),12,MUTED,false));content.addView(footer);
         status.setText("●  "+ui("ללא אינטרנט","Offline")+"  ·  "+count()+" "+ui("ערכים","entries"));status.setTextColor(CYAN);
     }
     View metric(String caption,String value,int shade){LinearLayout m=column();m.setGravity(Gravity.CENTER_VERTICAL);m.setPadding(dp(12),dp(8),dp(12),dp(8));m.setBackground(shape(Color.argb(72,255,255,255),15));TextView n=label(value,21,WHITE,true);m.addView(n);m.addView(label(caption,11,Color.rgb(223,235,255),false));return m;}
     Button button(String s,int color){Button b=new Button(this);b.setText(s);b.setAllCaps(false);b.setTextSize(14);b.setTextColor(WHITE);b.setTypeface(Typeface.DEFAULT,Typeface.BOLD);b.setBackground(shape(color,14));b.setPadding(dp(12),0,dp(12),0);return b;}
+    String umbrellaFor(String id){
+        if(java.util.Arrays.asList("science","technology","math","space","biology","physics","chemistry","energy","engineering","materials","materials_science","data","statistics","cybersecurity","networking","digital_tools").contains(id))return ui("מדע, טכנולוגיה ונתונים","Science, technology & data");
+        if(java.util.Arrays.asList("psychology","history","geography","economy","civics","law","urban").contains(id))return ui("אדם, חברה והעולם","People, society & the world");
+        if(java.util.Arrays.asList("personal_finance","business","project_management","logistics").contains(id))return ui("כסף, עסקים וניהול","Money, business & management");
+        if(java.util.Arrays.asList("cars","everyday","food","home","garden","agriculture","weather","environment").contains(id))return ui("חיי היום־יום והסביבה","Everyday life & environment");
+        if(java.util.Arrays.asList("arts","music","photography","language","audio","architecture","materials_science").contains(id))return ui("יצירה, שפה ועיצוב","Creativity, language & design");
+        if(java.util.Arrays.asList("thinking","productivity","education").contains(id))return ui("חשיבה, למידה והתפתחות","Thinking, learning & growth");
+        if(java.util.Arrays.asList("travel").contains(id))return ui("טיולים ותכנון","Travel & planning");
+        return ui("ידע נוסף","More knowledge");
+    }
     View categoryCard(JSONObject c,int i){
         int[] accents={Color.rgb(112,132,255),Color.rgb(52,183,207),Color.rgb(171,112,244),Color.rgb(221,156,76)};
-        LinearLayout box=column();box.setPadding(dp(13),dp(14),dp(13),dp(14));box.setBackground(shape(CARD,20));box.setElevation(dp(2));box.setClipToOutline(true);
+        LinearLayout box=column();box.setPadding(dp(8),dp(9),dp(8),dp(9));box.setBackground(shape(CARD,16));box.setElevation(dp(2));box.setClipToOutline(true);
         String title=c.optString("title",ui("תחום","Topic"));String emoji="✦";int sp=title.indexOf(' ');if(sp>0){emoji=title.substring(0,sp);title=title.substring(sp+1);}
-        TextView icon=text(emoji,25,WHITE,true);icon.setGravity(Gravity.CENTER);icon.setBackground(gradient(accents[i%accents.length],Color.rgb(29,48,72),15));box.addView(icon,new LinearLayout.LayoutParams(dp(48),dp(48)));
-        TextView name=label(title,15,WHITE,true);name.setPadding(0,dp(11),0,dp(2));name.setMinHeight(dp(42));name.setMaxLines(2);name.setEllipsize(android.text.TextUtils.TruncateAt.END);box.addView(name);
-        JSONArray items=c.optJSONArray("items");TextView countLabel=label((items==null?0:items.length())+" "+ui("ערכים","entries"),12,MUTED,false);box.addView(countLabel);
-        View line=new View(this);line.setBackgroundColor(accents[i%accents.length]);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(dp(38),dp(3));lp.topMargin=dp(10);box.addView(line,lp);
+        TextView icon=text(emoji,25,WHITE,true);icon.setGravity(Gravity.CENTER);icon.setBackground(gradient(accents[i%accents.length],Color.rgb(29,48,72),15));box.addView(icon,new LinearLayout.LayoutParams(dp(34),dp(34)));
+        TextView name=label(title,12,WHITE,true);name.setPadding(0,dp(7),0,dp(2));name.setMinHeight(dp(36));name.setMaxLines(3);name.setEllipsize(android.text.TextUtils.TruncateAt.END);box.addView(name);
+        JSONArray items=c.optJSONArray("items");TextView countLabel=label((items==null?0:items.length())+" "+ui("ערכים","entries"),10,MUTED,false);box.addView(countLabel);
+        View line=new View(this);line.setBackgroundColor(accents[i%accents.length]);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(dp(24),dp(3));lp.topMargin=dp(7);box.addView(line,lp);
         box.setOnClickListener(v->category(c));return box;
     }
     void settings(){
@@ -201,16 +219,16 @@ public class MainActivity extends Activity {
         if(a!=null){
             java.util.LinkedHashMap<String,java.util.ArrayList<JSONObject>> groups=new java.util.LinkedHashMap<>();
             for(int i=0;i<a.length();i++)try{JSONObject it=a.getJSONObject(i);String sub=it.optString("subcategory",ui("נושאים נוספים","Other topics"));if(sub.trim().isEmpty())sub=ui("נושאים נוספים","Other topics");if(!groups.containsKey(sub))groups.put(sub,new java.util.ArrayList<>());groups.get(sub).add(it);}catch(Exception ignored){}
-            android.widget.GridLayout grid=new android.widget.GridLayout(this);grid.setColumnCount(2);grid.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            android.widget.GridLayout grid=new android.widget.GridLayout(this);grid.setColumnCount(3);grid.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             final int[] index={0};
             for(java.util.Map.Entry<String,java.util.ArrayList<JSONObject>> group:groups.entrySet()){
                 final java.util.ArrayList<JSONObject> entries=group.getValue();final String subName=group.getKey();
-                LinearLayout tile=column();tile.setPadding(dp(13),dp(14),dp(13),dp(14));tile.setBackground(shape(CARD,18));tile.setElevation(dp(2));tile.setClickable(true);tile.setFocusable(true);
-                TextView icon=text("✦",23,WHITE,true);icon.setGravity(Gravity.CENTER);icon.setBackground(gradient(Color.rgb(73+(index[0]*17)%100,105+(index[0]*11)%90,180),Color.rgb(24,43,68),14));tile.addView(icon,new LinearLayout.LayoutParams(dp(42),dp(42)));
-                TextView name=label(subName,15,WHITE,true);name.setPadding(0,dp(10),0,dp(4));name.setMinHeight(dp(42));name.setMaxLines(2);name.setEllipsize(android.text.TextUtils.TruncateAt.END);tile.addView(name);
-                tile.addView(label(entries.size()+" "+ui("ערכים","entries"),12,CYAN,true));
+                LinearLayout tile=column();tile.setPadding(dp(8),dp(9),dp(8),dp(9));tile.setBackground(shape(CARD,18));tile.setElevation(dp(2));tile.setClickable(true);tile.setFocusable(true);
+                TextView icon=text("✦",23,WHITE,true);icon.setGravity(Gravity.CENTER);icon.setBackground(gradient(Color.rgb(73+(index[0]*17)%100,105+(index[0]*11)%90,180),Color.rgb(24,43,68),14));tile.addView(icon,new LinearLayout.LayoutParams(dp(32),dp(32)));
+                TextView name=label(subName,12,WHITE,true);name.setPadding(0,dp(7),0,dp(3));name.setMinHeight(dp(38));name.setMaxLines(3);name.setEllipsize(android.text.TextUtils.TruncateAt.END);tile.addView(name);
+                tile.addView(label(entries.size()+" "+ui("ערכים","entries"),10,CYAN,true));
                 TextView open=label(ui("פתיחה  ›","Open  ›"),12,MUTED,false);open.setPadding(0,dp(8),0,0);tile.addView(open);
-                android.widget.GridLayout.LayoutParams gp=new android.widget.GridLayout.LayoutParams(android.widget.GridLayout.spec(index[0]/2),android.widget.GridLayout.spec(index[0]%2,1,1f));gp.width=0;gp.height=-2;gp.setMargins(dp(4),dp(4),dp(4),dp(4));grid.addView(tile,gp);
+                android.widget.GridLayout.LayoutParams gp=new android.widget.GridLayout.LayoutParams(android.widget.GridLayout.spec(index[0]/3),android.widget.GridLayout.spec(index[0]%3,1,1f));gp.width=0;gp.height=-2;gp.setMargins(dp(4),dp(4),dp(4),dp(4));grid.addView(tile,gp);
                 tile.setOnClickListener(v->showSubcategory(c,subName,entries));
                 index[0]++;
             }
