@@ -37,7 +37,9 @@ Missing information is preferable to fabricated facts. The new entries are conci
 
 ## v1.2 (layout and release history)
 - Version code: 12; version name: 1.2.
-- Changed knowledge-domain tiles to a three-column grid, with three tiles per row in subcategory selection as well.
-- Added a version change-log button to the About section, with a concise history of releases 1.0–1.2.
+- Replaced the app icon with a polished globe-and-open-book knowledge symbol.
+- Centered all text and counts inside category and subcategory tiles.
+- Made category/subcategory cards more compact without reducing the main category icon size; corrected subcategory grid to consistently use three columns.
+- Kept the version change-log button in About and updated its v1.2 description to match the actual visual changes.
 - Preserved the offline database and existing search, suggestions, bookmarks, history, dark mode, and interface-language setting.
 - Automated build now labels the APK and artifact as v1.2; build validation is required before release.
