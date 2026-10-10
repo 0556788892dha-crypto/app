@@ -53,7 +53,7 @@ jobs:
           ls -lh info/build/outputs/apk/debug/*.apk
           test -s info/build/outputs/apk/debug/*.apk
           cp info/build/outputs/apk/debug/*.apk info/build/outputs/apk/debug/DA_INFO_v1.0.apk
-          test -s info/build/outputs/apk/debug/DA_INFO_v0.9.apk
+          test -s info/build/outputs/apk/debug/DA_INFO_v1.0.apk
       - name: Upload DA INFO APK
         uses: actions/upload-artifact@v4
         with:
