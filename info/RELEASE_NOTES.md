@@ -25,3 +25,11 @@ Missing information is preferable to fabricated facts. The new entries are conci
 - Automated APK build is configured to produce the v0.9 artifact; the artifact is not considered ready until the GitHub Actions run succeeds.
 
 - Current verified database count: 1,597 entries across 45 categories; 403 entries remain toward the requested 2,000-entry target.
+
+## v1.0 (2,000-entry milestone)
+- Version code: 10; version name: 1.0.
+- Expanded the offline knowledge database to exactly 2,000 entries across 45 categories.
+- Added 399 entries during this content expansion; titles and article bodies were checked for duplicates.
+- Kept category and subcategory metadata required for in-app grouping.
+- The Android build workflow now requires at least 2,000 entries and labels the output APK as DA_INFO_v1.0.apk.
+- This release updates the knowledge database and version metadata; the APK must still pass the automated build before it is considered ready to install.
