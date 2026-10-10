@@ -109,8 +109,8 @@ public class MainActivity extends Activity {
             gap(12);
             LinearLayout sectionHeader=row();sectionHeader.addView(label(section.getKey(),17,WHITE,true),new LinearLayout.LayoutParams(0,-2,1));
             sectionHeader.addView(label(section.getValue().size()+" "+ui("תחומים","topics"),11,CYAN,true));content.addView(sectionHeader);gap(5);
-            android.widget.GridLayout grid=new android.widget.GridLayout(this);grid.setColumnCount(3);grid.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            for(JSONObject c:section.getValue())try{View tile=categoryCard(c,cardIndex);android.widget.GridLayout.LayoutParams gp=new android.widget.GridLayout.LayoutParams(android.widget.GridLayout.spec(cardIndex%section.getValue().size()/3),android.widget.GridLayout.spec((cardIndex%section.getValue().size())%3,1,1f));gp.width=0;gp.height=-2;gp.setMargins(dp(3),dp(3),dp(3),dp(3));grid.addView(tile,gp);cardIndex++;}catch(Exception ignored){}
+            android.widget.GridLayout grid=new android.widget.GridLayout(this);grid.setColumnCount(3);grid.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);int sectionIndex=0;
+            for(JSONObject c:section.getValue())try{View tile=categoryCard(c,cardIndex);android.widget.GridLayout.LayoutParams gp=new android.widget.GridLayout.LayoutParams(android.widget.GridLayout.spec(sectionIndex/3),android.widget.GridLayout.spec(sectionIndex%3,1,1f));gp.width=0;gp.height=-2;gp.setMargins(dp(3),dp(3),dp(3),dp(3));grid.addView(tile,gp);cardIndex++;sectionIndex++;}catch(Exception ignored){}
             content.addView(grid,new LinearLayout.LayoutParams(-1,-2));
         }
         gap(12);LinearLayout footer=column();footer.setPadding(dp(15),dp(13),dp(15),dp(13));footer.setBackground(shape(Color.rgb(16,23,38),16));footer.addView(label("◉  "+ui("עובד אופליין","Works offline"),14,CYAN,true));footer.addView(label(count()+" "+ui("ערכים זמינים כרגע במכשיר","entries available on this device"),12,MUTED,false));content.addView(footer);
