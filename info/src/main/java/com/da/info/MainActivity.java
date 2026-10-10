@@ -70,12 +70,12 @@ public class MainActivity extends Activity {
     Button button(String s,int color){Button b=new Button(this);b.setText(s);b.setAllCaps(false);b.setTextSize(14);b.setTextColor(WHITE);b.setTypeface(Typeface.DEFAULT,Typeface.BOLD);b.setBackground(shape(color,14));b.setPadding(dp(12),0,dp(12),0);return b;}
     View categoryCard(JSONObject c,int i){
         int[] accents={Color.rgb(112,132,255),Color.rgb(52,183,207),Color.rgb(171,112,244),Color.rgb(221,156,76)};
-        LinearLayout box=column();box.setPadding(dp(13),dp(14),dp(13),dp(14));box.setBackground(shape(CARD,20));box.setElevation(dp(2));box.setClipToOutline(true);
+        LinearLayout box=column();box.setGravity(Gravity.CENTER_HORIZONTAL);box.setPadding(dp(8),dp(9),dp(8),dp(9));box.setBackground(shape(CARD,16));box.setElevation(dp(2));box.setClipToOutline(true);
         String title=c.optString("title",ui("תחום","Topic"));String emoji="✦";int sp=title.indexOf(' ');if(sp>0){emoji=title.substring(0,sp);title=title.substring(sp+1);}
         TextView icon=text(emoji,25,WHITE,true);icon.setGravity(Gravity.CENTER);icon.setBackground(gradient(accents[i%accents.length],Color.rgb(29,48,72),15));box.addView(icon,new LinearLayout.LayoutParams(dp(48),dp(48)));
-        TextView name=label(title,15,WHITE,true);name.setPadding(0,dp(11),0,dp(2));name.setMinHeight(dp(42));name.setMaxLines(2);name.setEllipsize(android.text.TextUtils.TruncateAt.END);box.addView(name);
-        JSONArray items=c.optJSONArray("items");TextView countLabel=label((items==null?0:items.length())+" "+ui("ערכים","entries"),12,MUTED,false);box.addView(countLabel);
-        View line=new View(this);line.setBackgroundColor(accents[i%accents.length]);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(dp(38),dp(3));lp.topMargin=dp(10);box.addView(line,lp);
+        TextView name=label(title,14,WHITE,true);name.setGravity(Gravity.CENTER);name.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);name.setPadding(0,dp(6),0,dp(1));name.setMinHeight(dp(36));name.setMaxLines(2);name.setEllipsize(android.text.TextUtils.TruncateAt.END);box.addView(name,new LinearLayout.LayoutParams(-1,-2));
+        JSONArray items=c.optJSONArray("items");TextView countLabel=label((items==null?0:items.length())+" "+ui("ערכים","entries"),11,MUTED,false);countLabel.setGravity(Gravity.CENTER);countLabel.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);box.addView(countLabel,new LinearLayout.LayoutParams(-1,-2));
+        View line=new View(this);line.setBackgroundColor(accents[i%accents.length]);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(dp(30),dp(3));lp.topMargin=dp(6);lp.gravity=Gravity.CENTER_HORIZONTAL;box.addView(line,lp);
         box.setOnClickListener(v->category(c));return box;
     }
     void settings(){
@@ -159,15 +159,15 @@ public class MainActivity extends Activity {
         if(a!=null){
             java.util.LinkedHashMap<String,java.util.ArrayList<JSONObject>> groups=new java.util.LinkedHashMap<>();
             for(int i=0;i<a.length();i++)try{JSONObject it=a.getJSONObject(i);String sub=it.optString("subcategory",ui("נושאים נוספים","Other topics"));if(sub.trim().isEmpty())sub=ui("נושאים נוספים","Other topics");if(!groups.containsKey(sub))groups.put(sub,new java.util.ArrayList<>());groups.get(sub).add(it);}catch(Exception ignored){}
-            android.widget.GridLayout grid=new android.widget.GridLayout(this);grid.setColumnCount(2);grid.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            android.widget.GridLayout grid=new android.widget.GridLayout(this);grid.setColumnCount(3);grid.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             final int[] index={0};
             for(java.util.Map.Entry<String,java.util.ArrayList<JSONObject>> group:groups.entrySet()){
                 final java.util.ArrayList<JSONObject> entries=group.getValue();final String subName=group.getKey();
-                LinearLayout tile=column();tile.setPadding(dp(13),dp(14),dp(13),dp(14));tile.setBackground(shape(CARD,18));tile.setElevation(dp(2));tile.setClickable(true);tile.setFocusable(true);
+                LinearLayout tile=column();tile.setGravity(Gravity.CENTER_HORIZONTAL);tile.setPadding(dp(8),dp(9),dp(8),dp(9));tile.setBackground(shape(CARD,16));tile.setElevation(dp(2));tile.setClickable(true);tile.setFocusable(true);
                 TextView icon=text("✦",23,WHITE,true);icon.setGravity(Gravity.CENTER);icon.setBackground(gradient(Color.rgb(73+(index[0]*17)%100,105+(index[0]*11)%90,180),Color.rgb(24,43,68),14));tile.addView(icon,new LinearLayout.LayoutParams(dp(42),dp(42)));
-                TextView name=label(subName,15,WHITE,true);name.setPadding(0,dp(10),0,dp(4));name.setMinHeight(dp(42));name.setMaxLines(2);name.setEllipsize(android.text.TextUtils.TruncateAt.END);tile.addView(name);
-                tile.addView(label(entries.size()+" "+ui("ערכים","entries"),12,CYAN,true));
-                TextView open=label(ui("פתיחה  ›","Open  ›"),12,MUTED,false);open.setPadding(0,dp(8),0,0);tile.addView(open);
+                TextView name=label(subName,13,WHITE,true);name.setGravity(Gravity.CENTER);name.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);name.setPadding(0,dp(6),0,dp(2));name.setMinHeight(dp(34));name.setMaxLines(2);name.setEllipsize(android.text.TextUtils.TruncateAt.END);tile.addView(name,new LinearLayout.LayoutParams(-1,-2));
+                TextView subCount=label(entries.size()+" "+ui("ערכים","entries"),11,CYAN,true);subCount.setGravity(Gravity.CENTER);subCount.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);tile.addView(subCount,new LinearLayout.LayoutParams(-1,-2));
+                TextView open=label(ui("פתיחה  ›","Open  ›"),11,MUTED,false);open.setGravity(Gravity.CENTER);open.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);open.setPadding(0,dp(4),0,0);tile.addView(open,new LinearLayout.LayoutParams(-1,-2));
                 android.widget.GridLayout.LayoutParams gp=new android.widget.GridLayout.LayoutParams(android.widget.GridLayout.spec(index[0]/3),android.widget.GridLayout.spec(index[0]%3,1,1f));gp.width=0;gp.height=-2;gp.setMargins(dp(4),dp(4),dp(4),dp(4));grid.addView(tile,gp);
                 tile.setOnClickListener(v->showSubcategory(c,subName,entries));
                 index[0]++;
