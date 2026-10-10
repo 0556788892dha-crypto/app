@@ -34,9 +34,20 @@ jobs:
           import json, re
           with open('info/src/main/assets/data.json', encoding='utf-8') as f:
               data = json.load(f)
-          items = [item for category in data['categories'] for item in category['items']]
+          extra_path = 'info/src/main/assets/data_v1_1.json'
+          with open(extra_path, encoding='utf-8') as f:
+              extra = json.load(f)
+          base_items = [item for category in data['categories'] for item in category['items']]
+          extra_items = [item for category in extra['categories'] for item in category['items']]
+          items = base_items + extra_items
           assert len(data['categories']) >= 15, 'Expected at least 15 categories'
-          assert len(items) >= 2000, f'Expected at least 2000 real entries, got {len(items)}'
+          assert len(extra_items) >= 300, f'Expected at least 300 new v1.1 entries, got {len(extra_items)}'
+          assert len(items) >= 2300, f'Expected at least 2300 total entries, got {len(items)}'
+          base_titles = {item['title'].strip().lower() for item in base_items}
+          extra_titles = [item['title'].strip().lower() for item in extra_items]
+          assert not base_titles.intersection(extra_titles), 'v1.1 entries duplicate existing titles'
+          extra_bodies = [' '.join(item['body'].lower().split()) for item in extra_items]
+          assert len(extra_bodies) == len(set(extra_bodies)), 'Duplicate v1.1 article bodies detected'
           assert all(item.get('title', '').strip() and item.get('body', '').strip() and item.get('subcategory', '').strip() for item in items), 'An entry is missing title, body, or subcategory'
           assert not any(re.search(r'מדריך\s+\d+', item['title']) for item in items), 'Template filler title detected'
           bodies = [' '.join(item['body'].lower().split()) for item in items]
