@@ -60,8 +60,8 @@ public class MainActivity extends Activity {
         LinearLayout quick=row();Button favBtn=button("★  "+ui("מועדפים","Bookmarks"),Color.rgb(37,49,75));Button histBtn=button("◷  "+ui("אחרונים","Recent"),Color.rgb(37,49,75));LinearLayout.LayoutParams qp=new LinearLayout.LayoutParams(0,dp(42),1);qp.setMargins(0,0,dp(5),0);quick.addView(favBtn,qp);LinearLayout.LayoutParams hp=new LinearLayout.LayoutParams(0,dp(42),1);hp.setMargins(dp(5),0,0,0);quick.addView(histBtn,hp);favBtn.setOnClickListener(v->savedEntries(false));histBtn.setOnClickListener(v->savedEntries(true));content.addView(quick);gap(15);
         LinearLayout heading=row();LinearLayout htxt=column();htxt.addView(label(ui("תחומי ידע","Knowledge topics"),21,WHITE,true));htxt.addView(label(ui("בחר תחום כדי להתחיל","Choose a topic to begin"),13,MUTED,false));heading.addView(htxt,new LinearLayout.LayoutParams(0,-2,1));TextView badge=text(cats.length()+" "+ui("תחומים","topics"),12,CYAN,true);badge.setGravity(Gravity.CENTER);badge.setPadding(dp(10),dp(7),dp(10),dp(7));badge.setBackground(shape(Color.rgb(22,51,65),20));heading.addView(badge);content.addView(heading);gap(12);
         
-        android.widget.GridLayout grid=new android.widget.GridLayout(this);grid.setColumnCount(2);grid.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        for(int i=0;i<cats.length();i++)try{JSONObject c=cats.getJSONObject(i);View tile=categoryCard(c,i);android.widget.GridLayout.LayoutParams gp=new android.widget.GridLayout.LayoutParams(android.widget.GridLayout.spec(i/2),android.widget.GridLayout.spec(i%2,1,1f));gp.width=0;gp.height=-2;gp.setMargins(dp(4),dp(4),dp(4),dp(4));grid.addView(tile,gp);}catch(Exception ignored){}
+        android.widget.GridLayout grid=new android.widget.GridLayout(this);grid.setColumnCount(3);grid.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        for(int i=0;i<cats.length();i++)try{JSONObject c=cats.getJSONObject(i);View tile=categoryCard(c,i);android.widget.GridLayout.LayoutParams gp=new android.widget.GridLayout.LayoutParams(android.widget.GridLayout.spec(i/3),android.widget.GridLayout.spec(i%3,1,1f));gp.width=0;gp.height=-2;gp.setMargins(dp(4),dp(4),dp(4),dp(4));grid.addView(tile,gp);}catch(Exception ignored){}
         content.addView(grid,new LinearLayout.LayoutParams(-1,-2));
         gap(12);LinearLayout footer=column();footer.setPadding(dp(15),dp(13),dp(15),dp(13));footer.setBackground(shape(Color.rgb(16,23,38),16));footer.addView(label("◉  "+ui("עובד אופליין","Works offline"),14,CYAN,true));footer.addView(label(count()+" "+ui("ערכים זמינים כרגע במכשיר","entries available on this device"),12,MUTED,false));content.addView(footer);
         status.setText("●  "+ui("ללא אינטרנט","Offline")+"  ·  "+count()+" "+ui("ערכים","entries"));status.setTextColor(CYAN);
@@ -125,6 +125,7 @@ public class MainActivity extends Activity {
         about.addView(label(ui("מספר ערכים: ","Entries: ")+count(),13,WHITE,false));gap(5);
         about.addView(label(ui("פותח עבור למידה, עיון וגילוי ידע.","Made for learning, reading and discovery."),13,MUTED,false));
         about.addView(label("© "+java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)+" DA Applications",12,MUTED,false));
+        Button changelog=button("☷  "+ui("יומן שינויים בגרסאות","Version change log"),Color.rgb(38,55,85)); changelog.setOnClickListener(v->new android.app.AlertDialog.Builder(this).setTitle(ui("יומן שינויים — DA INFO","DA INFO — Change log")).setMessage(ui("גרסה 1.2: שלוש קוביות בכל שורה; יומן שינויים במסך אודות.\nגרסה 1.1: שיפורי ממשק וניווט.\nגרסה 1.0: 2,000 ערכים ב־45 תחומי ידע; חיפוש, מועדפים, היסטוריה ומצב כהה.","Version 1.2: three-column grids and About change log.\nVersion 1.1: interface and navigation refinements.\nVersion 1.0: 2,000 entries across 45 domains; search, bookmarks, history and dark mode.")).setPositiveButton(ui("סגירה","Close"),(d,w)->{}).show()); content.addView(changelog,new LinearLayout.LayoutParams(-1,dp(46))); gap(8);
         content.addView(about);
         status.setText("●  "+ui("הגדרות","Settings")+"  ·  v"+version);
     }
@@ -167,7 +168,7 @@ public class MainActivity extends Activity {
                 TextView name=label(subName,15,WHITE,true);name.setPadding(0,dp(10),0,dp(4));name.setMinHeight(dp(42));name.setMaxLines(2);name.setEllipsize(android.text.TextUtils.TruncateAt.END);tile.addView(name);
                 tile.addView(label(entries.size()+" "+ui("ערכים","entries"),12,CYAN,true));
                 TextView open=label(ui("פתיחה  ›","Open  ›"),12,MUTED,false);open.setPadding(0,dp(8),0,0);tile.addView(open);
-                android.widget.GridLayout.LayoutParams gp=new android.widget.GridLayout.LayoutParams(android.widget.GridLayout.spec(index[0]/2),android.widget.GridLayout.spec(index[0]%2,1,1f));gp.width=0;gp.height=-2;gp.setMargins(dp(4),dp(4),dp(4),dp(4));grid.addView(tile,gp);
+                android.widget.GridLayout.LayoutParams gp=new android.widget.GridLayout.LayoutParams(android.widget.GridLayout.spec(index[0]/3),android.widget.GridLayout.spec(index[0]%3,1,1f));gp.width=0;gp.height=-2;gp.setMargins(dp(4),dp(4),dp(4),dp(4));grid.addView(tile,gp);
                 tile.setOnClickListener(v->showSubcategory(c,subName,entries));
                 index[0]++;
             }
