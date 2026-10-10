@@ -40,14 +40,18 @@ public class MainActivity extends Activity {
             for(int i=0;i<extra.length();i++){
                 JSONObject add=extra.getJSONObject(i);String id=add.optString("id");
                 JSONArray addItems=add.optJSONArray("items");if(addItems==null)continue;
+                boolean matched=false;
                 for(int j=0;j<cats.length();j++){
                     JSONObject base=cats.getJSONObject(j);
                     if(base.optString("id").equals(id)){
                         JSONArray target=base.getJSONArray("items");
                         for(int k=0;k<addItems.length();k++)target.put(addItems.getJSONObject(k));
+                        matched=true;
                         break;
                     }
                 }
+                // Preserve entirely new categories from the versioned pack as well.
+                if(!matched && addItems.length()>0) cats.put(add);
             }
         }catch(Exception ignored){}
     }
