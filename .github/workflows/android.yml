@@ -1,7 +1,7 @@
 name: Build DA INFO and OSIRIS
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "da-info-v1.1" ]
   workflow_dispatch:
 jobs:
   build:
