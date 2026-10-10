@@ -54,6 +54,25 @@ public class MainActivity extends Activity {
                 if(!matched && addItems.length()>0) cats.put(add);
             }
         }catch(Exception ignored){}
+        // Version 1.3 content pack: additive only; never replaces earlier entries.
+        try(InputStream in=getAssets().open("data_v1_3.json")){
+            byte[] x=new byte[in.available()];in.read(x);
+            JSONArray extra=new JSONObject(new String(x,StandardCharsets.UTF_8)).getJSONArray("categories");
+            for(int i=0;i<extra.length();i++){
+                JSONObject add=extra.getJSONObject(i);String id=add.optString("id");
+                JSONArray addItems=add.optJSONArray("items");if(addItems==null)continue;
+                boolean matched=false;
+                for(int j=0;j<cats.length();j++){
+                    JSONObject base=cats.getJSONObject(j);
+                    if(base.optString("id").equals(id)){
+                        JSONArray target=base.getJSONArray("items");
+                        for(int k=0;k<addItems.length();k++)target.put(addItems.getJSONObject(k));
+                        matched=true;break;
+                    }
+                }
+                if(!matched && addItems.length()>0)cats.put(add);
+            }
+        }catch(Exception ignored){}
     }
     String normalizeSearch(String value){
         if(value==null)return "";
@@ -205,11 +224,16 @@ public class MainActivity extends Activity {
         TextView back=text("←",22,CYAN,true);back.setGravity(Gravity.CENTER);back.setBackground(shape(CARD,50));
         header.addView(back,new LinearLayout.LayoutParams(dp(42),dp(42)));back.setOnClickListener(v->settings());
         content.addView(header);gap(14);
-        addChangelogEntry("1.2",ui("גרסה נוכחית — יומן שינויים","Current version — changelog"),new String[]{
-            ui("נוסף לחצן חדש באודות לפתיחת יומן השינויים.","Added a new About button to open the version changelog."),
+        addChangelogEntry("1.3",ui("הרחבת מאגר הידע","Expanded knowledge library"),new String[]{
+            ui("נוסף מבנה לתוכן מורחב שנפתח בלחצן ייעודי מתוך הערך.","Added an expandable in-depth section opened from each article."),
+            ui("נוספה חבילת תוכן נפרדת לגרסה 1.3, בלי לדרוס את חבילות 1.0 ו־1.1.","Added a separate v1.3 content pack without replacing earlier packs."),
+            ui("המאגר מתרחב בתחומי ידע נוספים, כולל חברה, אזרחות ומדיניות ציבורית.","Expanded the library across more topics, including civics and public policy.")
+        },true);
+        addChangelogEntry("1.2",ui("יומן שינויים וגרסה מעודכנת","Changelog and version update"),new String[]{
+            ui("נוסף לחצן חדש באודות לפתיחת יומן השינויים.","Added an About button to open the version changelog."),
             ui("נוסף מסך מסודר עם פירוט השינויים לפי גרסה.","Added a dedicated screen listing changes by version."),
             ui("עודכנו מספר הגרסה וקוד הגרסה ל־1.2.","Updated the app version name and code to 1.2.")
-        },true);
+        },false);
         addChangelogEntry("1.1",ui("ניווט, חיפוש והרחבת המאגר","Navigation, search and library expansion"),new String[]{
             ui("נוספו 331 ערכים חדשים — 2,331 ערכים בסך הכול.","Added 331 entries — 2,331 entries total."),
             ui("שופרו הצעות החיפוש והדגשת מונחים בתוצאות.","Improved search suggestions and matching-term highlighting."),
@@ -222,7 +246,7 @@ public class MainActivity extends Activity {
             ui("שמירת מועדפים והיסטוריית צפייה במכשיר.","On-device bookmarks and viewing history.")
         },false);
         gap(8);content.addView(label(ui("הערה: יומן זה מתעד את השינויים הידועים בגרסאות המפורטות כאן. בגרסאות עתידיות יתווסף סעיף חדש בראש הרשימה.","Note: this log documents known changes for the versions listed here. Future releases will add a new entry at the top."),12,MUTED,false));
-        status.setText("●  "+ui("יומן שינויים","Changelog")+"  ·  1.2");
+        status.setText("●  "+ui("יומן שינויים","Changelog")+"  ·  1.3");
     }
     void addChangelogEntry(String version,String heading,String[] changes,boolean current){
         LinearLayout card=column();card.setPadding(dp(16),dp(15),dp(16),dp(15));card.setBackground(shape(CARD,16));card.setElevation(dp(2));
@@ -301,6 +325,15 @@ public class MainActivity extends Activity {
     void readArticle(JSONObject it,String category,Runnable returnToPrevious){
         clear();screen="article";recordHistory(entryKey(category,it.optString("title")));backAction=()->{if(returnToPrevious!=null)returnToPrevious.run();else home();};TextView cat=label(category,13,CYAN,true);content.addView(cat);gap(5);content.addView(label(it.optString("title"),27,WHITE,true));gap(14);
         LinearLayout panel=column();panel.setPadding(dp(18),dp(18),dp(18),dp(18));panel.setBackground(shape(CARD,18));TextView body=label(it.optString("body"),prefs.getBoolean("large_text",false)?21:18,Color.rgb(220,226,241),false);body.setLineSpacing(dp(8),1.12f);body.setTextIsSelectable(true);panel.addView(body);content.addView(panel);
+        String expandedText=it.optString("expanded","").trim();
+        if(!expandedText.isEmpty()){
+            gap(12);
+            Button expand=button("＋  "+ui("להרחבת הערך","Expand this entry"),Color.rgb(37,76,105));
+            LinearLayout expandedPanel=column();expandedPanel.setPadding(dp(18),dp(18),dp(18),dp(18));expandedPanel.setBackground(shape(CARD,18));expandedPanel.setVisibility(View.GONE);
+            TextView expandedBody=label(expandedText,prefs.getBoolean("large_text",false)?20:17,Color.rgb(220,226,241),false);expandedBody.setLineSpacing(dp(8),1.12f);expandedBody.setTextIsSelectable(true);expandedPanel.addView(expandedBody);
+            expand.setOnClickListener(v->{boolean opening=expandedPanel.getVisibility()!=View.VISIBLE;expandedPanel.setVisibility(opening?View.VISIBLE:View.GONE);expand.setText((opening?"−  ":"＋  ")+ui(opening?"הסתרת ההרחבה":"להרחבת הערך",opening?"Hide expanded text":"Expand this entry"));});
+            content.addView(expand,new LinearLayout.LayoutParams(-1,dp(46)));gap(8);content.addView(expandedPanel);
+        }
         gap(16);Button fav=button(prefs.getStringSet("favorites",new java.util.HashSet<>()).contains(entryKey(category,it.optString("title")))? "★  "+ui("הסר מהמועדפים","Remove bookmark"):"☆  "+ui("הוסף למועדפים","Add bookmark"),ACC);fav.setOnClickListener(v->{java.util.Set<String> keys=new java.util.HashSet<>(prefs.getStringSet("favorites",new java.util.HashSet<>()));String key=entryKey(category,it.optString("title"));if(keys.contains(key))keys.remove(key);else keys.add(key);prefs.edit().putStringSet("favorites",keys).apply();readArticle(it,category);});content.addView(fav,new LinearLayout.LayoutParams(-1,dp(46)));gap(8);content.addView(label(ui("מושג מתוך מאגר DA מידע","An entry from the DA INFO library"),12,MUTED,false));status.setText("●  קריאה אופליין");
     }
     void search(String q){
